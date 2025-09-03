@@ -1,0 +1,142 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6">
+  <diagram name="Circuit Breaker Pattern" id="dkoClyU12HXPn1E9RN4F">
+    <mxGraphModel dx="2915" dy="1616" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-1" value="CIRCUIT BREAKER PATTERN - ADAPTADORES SISTEMAS LEGADOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="307" y="150" width="1040" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-2" value="MS-Clientes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="240" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-3" value="MS-Facturación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="340" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-4" value="MS-Pagos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="440" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-5" value="Circuit Breaker&#xa;Oracle Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="527" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-6" value="Circuit Breaker&#xa;Mainframe Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="527" y="330" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-7" value="Circuit Breaker&#xa;Telecom Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="527" y="430" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-8" value="Oracle Solaris&#xa;(Acueducto)&#xa;• Latencia: 30s&#xa;• PL/SQL Legacy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="767" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-9" value="Mainframe IBM Z&#xa;(Energía)&#xa;• Terminal 3270&#xa;• COBOL Legacy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="767" y="330" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-10" value="Sistemas Modernos&#xa;(Telecomunicaciones)&#xa;• REST/SOAP APIs&#xa;• Respuesta rápida" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="767" y="430" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-11" value="ESTADOS DEL CIRCUIT BREAKER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="550" width="560" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-12" value="ESTADO: CERRADO (CLOSED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="590" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-13" value="• Requests pasan normalmente&#xa;• Monitorea fallos&#xa;• Cuenta errores consecutivos&#xa;• Umbral: 5 fallos en 60s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="630" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-14" value="ESTADO: ABIERTO (OPEN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="507" y="590" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-15" value="• Rechaza requests inmediatamente&#xa;• Retorna fallback/cache&#xa;• Timer: 30s antes de HALF_OPEN&#xa;• Evita cascading failures" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="507" y="630" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-16" value="ESTADO: MEDIO ABIERTO (HALF_OPEN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="687" y="590" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-17" value="• Permite 1 request de prueba&#xa;• Si éxito → CLOSED&#xa;• Si fallo → OPEN (30s más)&#xa;• Probe health del sistema" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="687" y="630" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-18" value="CONFIGURACIÓN RESILIENCE4J" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="947" y="230" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-19" value="Oracle Adapter Configuration:&#xa;• failureRateThreshold: 50%&#xa;• waitDurationInOpenState: 30s&#xa;• slidingWindowSize: 10&#xa;• minimumNumberOfCalls: 5&#xa;• permittedNumberOfCallsInHalfOpenState: 3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="947" y="270" width="380" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-20" value="Mainframe Adapter Configuration:&#xa;• failureRateThreshold: 60%&#xa;• waitDurationInOpenState: 45s&#xa;• slidingWindowSize: 8&#xa;• minimumNumberOfCalls: 3&#xa;• slowCallDurationThreshold: 4s (3270 terminal)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="947" y="380" width="380" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-21" value="ESTRATEGIAS DE FALLBACK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="947" y="504" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-22" value="1. Cache Fallback:&#xa;   • Retornar última consulta exitosa (TTL: 24h)&#xa;   • Marcar datos como &#39;cached&#39; con timestamp&#xa;&#xa;2. Default Values:&#xa;   • Saldo = 0 con mensaje &#39;No disponible&#39;&#xa;   • Status = &#39;MAINTENANCE&#39;&#xa;&#xa;3. Degraded Service:&#xa;   • Funcionalidad limitada&#xa;   • Solo lectura, no transacciones&#xa;&#xa;4. Queue for Later:&#xa;   • Encolar operaciones críticas&#xa;   • Procesar cuando servicio se recupere" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="947" y="544" width="380" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-23" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-2" target="-WiJnSE-CEKStWPzdQ9r-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="437" y="270" as="sourcePoint" />
+            <mxPoint x="517" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-24" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-5" target="-WiJnSE-CEKStWPzdQ9r-8" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="657" y="270" as="sourcePoint" />
+            <mxPoint x="757" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-25" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-3" target="-WiJnSE-CEKStWPzdQ9r-6" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="437" y="350" as="sourcePoint" />
+            <mxPoint x="517" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-26" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-6" target="-WiJnSE-CEKStWPzdQ9r-9" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="657" y="370" as="sourcePoint" />
+            <mxPoint x="757" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-27" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-4" target="-WiJnSE-CEKStWPzdQ9r-7" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="437" y="430" as="sourcePoint" />
+            <mxPoint x="517" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-28" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;fontColor=#000000;" parent="1" source="-WiJnSE-CEKStWPzdQ9r-7" target="-WiJnSE-CEKStWPzdQ9r-10" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="657" y="470" as="sourcePoint" />
+            <mxPoint x="757" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-29" value="5 fallos&#xa;en 60s" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="407" y="765" as="sourcePoint" />
+            <mxPoint x="507" y="765" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-30" value="30s timer" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="587" y="765" as="sourcePoint" />
+            <mxPoint x="687" y="765" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-31" value="Éxito" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;curved=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="767" y="785" as="sourcePoint" />
+            <mxPoint x="407" y="785" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-32" value="Fallo" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;curved=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="687" y="805" as="sourcePoint" />
+            <mxPoint x="587" y="805" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-33" value="MONITOREO Y MÉTRICAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="824" width="1000" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-WiJnSE-CEKStWPzdQ9r-34" value="Prometheus Metrics:&#xa;• resilience4j_circuitbreaker_state{name=&#39;oracle-adapter&#39;, state=&#39;open|closed|half_open&#39;}&#xa;• resilience4j_circuitbreaker_calls_total{name=&#39;mainframe-adapter&#39;, kind=&#39;successful|failed|not_permitted&#39;}&#xa;• resilience4j_circuitbreaker_call_duration{name=&#39;telecom-adapter&#39;}&#xa;&#xa;Grafana Dashboards:&#xa;• Circuit Breaker State por Adaptador  • Failure Rate Trends  • Response Time Percentiles&#xa;• Fallback Usage Statistics  • System Recovery Times" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#82b366;align=left;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="327" y="864" width="1000" height="156" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

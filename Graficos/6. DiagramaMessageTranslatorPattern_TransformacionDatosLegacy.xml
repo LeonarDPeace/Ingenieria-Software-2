@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" version="22.1.16" etag="example" type="device">
+  <diagram name="Message Translator Pattern" id="message_translator_pattern">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TITLE -->
+        <mxCell id="title" value="MESSAGE TRANSLATOR PATTERN - TRANSFORMACIÓN DATOS LEGACY SERVICIUDAD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="1520" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGACY SYSTEMS DATA FORMATS -->
+        <mxCell id="legacy_formats_title" value="FORMATOS DE DATOS SISTEMAS LEGACY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="480" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- MAINFRAME EBCDIC -->
+        <mxCell id="mainframe_format" value="Mainframe IBM Z - EBCDIC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="220" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ebcdic_sample" value="Registro COBOL (EBCDIC):&#xa;01 CLIENTE-ENERGIA.&#xa;   05 COD-CLIENTE     PIC X(10).&#xa;   05 NOM-CLIENTE     PIC X(50).&#xa;   05 SALDO-ENERGIA   PIC 9(12)V99.&#xa;   05 ESTADO          PIC X(1).&#xa;   05 FECHA-ULT-PAGO  PIC 9(8).&#xa;&#xa;Ejemplo binario EBCDIC:&#xa;F0F0F0F1F2F3...D1D6C8C5..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;fontFamily=monospace;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="220" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- ORACLE FIXED WIDTH -->
+        <mxCell id="oracle_format" value="Oracle Solaris - Fixed Width" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="180" width="220" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fixed_width_sample" value="Archivo Fixed Width (PL/SQL Export):&#xa;0000012345JUAN CARLOS RODRIGUEZ MESA    000000150000A20241201&#xa;0000023456MARIA FERNANDA LOPEZ GARCIA   000000080000A20241201&#xa;0000034567CARLOS EDUARDO MARTINEZ RUIZ  000000000000I20241130&#xa;&#xa;Campos:&#xa;Pos 1-10:   Código Cliente&#xa;Pos 11-50:  Nombre Cliente&#xa;Pos 51-62:  Saldo (12 dígitos)&#xa;Pos 63:     Estado (A/I)&#xa;Pos 64-71:  Fecha última consulta" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;fontFamily=monospace;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="220" width="220" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- MESSAGE TRANSLATORS -->
+        <mxCell id="translator_title" value="MESSAGE TRANSLATORS (CAPA ANTICORRUPCIÓN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="120" width="480" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- EBCDIC TRANSLATOR -->
+        <mxCell id="ebcdic_translator" value="EBCDIC to JSON Translator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="180" width="220" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ebcdic_translator_code" value="@Component&#xa;public class ServiCiudadEbcdicTranslator {&#xa;    &#xa;    @Autowired&#xa;    private EbcdicDecoder ebcdicDecoder;&#xa;    &#xa;    public ClienteEnergiaDTO translate(&#xa;        byte[] mainframeData) {&#xa;        &#xa;        // Decodificar EBCDIC IBM Z a ASCII&#xa;        String asciiData = ebcdicDecoder&#xa;            .decode(mainframeData);&#xa;        &#xa;        // Parsear campos COBOL específicos&#xa;        return ClienteEnergiaDTO.builder()&#xa;            .codigoServiCiudad(asciiData&#xa;                .substring(0,10))&#xa;            .nombreCompleto(asciiData&#xa;                .substring(10,60).trim())&#xa;            .saldoEnergia(parseCurrencyCOP(&#xa;                asciiData.substring(60,74)))&#xa;            .estadoServicio(parseEstado(&#xa;                asciiData.charAt(74)))&#xa;            .fechaUltimoPago(parseDate(&#xa;                asciiData.substring(75,83)))&#xa;            .build();&#xa;    }&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;fontFamily=monospace;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="640" y="220" width="220" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- FIXED WIDTH TRANSLATOR -->
+        <mxCell id="fixed_translator" value="Fixed Width to JSON Translator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="180" width="220" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fixed_translator_code" value="@Component&#xa;public class FixedWidthToJsonTranslator {&#xa;    &#xa;    private final FixedWidthParser parser;&#xa;    &#xa;    public ClienteAcueductoDTO translate(&#xa;        String fixedWidthLine) {&#xa;        &#xa;        return ClienteAcueductoDTO.builder()&#xa;            .codigo(parser.extractField(&#xa;                fixedWidthLine, 1, 10))&#xa;            .nombre(parser.extractField(&#xa;                fixedWidthLine, 11, 50)&#xa;                .trim())&#xa;            .saldoAcueducto(&#xa;                parseCurrency(parser&#xa;                .extractField(fixedWidthLine, &#xa;                51, 62)))&#xa;            .estado(fixedWidthLine.charAt(62))&#xa;            .fechaUltimaConsulta(parseDate(&#xa;                parser.extractField(&#xa;                fixedWidthLine, 64, 71)))&#xa;            .build();&#xa;    }&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;fontFamily=monospace;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="900" y="220" width="220" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- JSON OUTPUT -->
+        <mxCell id="json_output_title" value="SALIDA JSON UNIFICADA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="120" width="360" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="json_energia" value="Cliente Energía JSON:" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="180" width="170" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="json_energia_sample" value="{&#xa;  &quot;codigo&quot;: &quot;0000012345&quot;,&#xa;  &quot;nombre&quot;: &quot;Juan Carlos Rodriguez&quot;,&#xa;  &quot;saldoEnergia&quot;: 150000.00,&#xa;  &quot;estado&quot;: &quot;ACTIVO&quot;,&#xa;  &quot;fechaUltimoPago&quot;: &quot;2024-12-01&quot;,&#xa;  &quot;tipoServicio&quot;: &quot;ENERGIA&quot;,&#xa;  &quot;timestamp&quot;: &quot;2024-12-15T10:30:00Z&quot;&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontFamily=monospace;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="220" width="170" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="json_acueducto" value="Cliente Acueducto JSON:" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="180" width="170" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="json_acueducto_sample" value="{&#xa;  &quot;codigo&quot;: &quot;0000023456&quot;,&#xa;  &quot;nombre&quot;: &quot;Maria Fernanda Lopez&quot;,&#xa;  &quot;saldoAcueducto&quot;: 80000.00,&#xa;  &quot;estado&quot;: &quot;ACTIVO&quot;,&#xa;  &quot;fechaUltimaConsulta&quot;: &quot;2024-12-01&quot;,&#xa;  &quot;tipoServicio&quot;: &quot;ACUEDUCTO&quot;,&#xa;  &quot;timestamp&quot;: &quot;2024-12-15T10:30:00Z&quot;&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontFamily=monospace;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="220" width="170" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- TRANSFORMATION FLOW -->
+        <mxCell id="flow_title" value="FLUJO DE TRANSFORMACIÓN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="420" width="1480" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- STEP 1: EXTRACTION -->
+        <mxCell id="step1_title" value="1. EXTRACCIÓN DE DATOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="extraction_details" value="Mainframe (3270 Terminal Emulation):&#xa;• JCL batch jobs ejecutados nocturnamente&#xa;• Salida a datasets EBCDIC&#xa;• Transferencia vía FTP a staging area&#xa;&#xa;Oracle (PL/SQL Procedures):&#xa;• UTL_FILE para generar archivos planos&#xa;• SPOOL files con formato fixed-width&#xa;• Cron job Linux para recolección" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="520" width="300" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- STEP 2: TRANSFORMATION -->
+        <mxCell id="step2_title" value="2. TRANSFORMACIÓN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="480" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="transformation_details" value="Message Translator Components:&#xa;• EbcdicDecoder: IBM EBCDIC → ASCII&#xa;• FixedWidthParser: Campo posicional&#xa;• DataTypeConverter: COBOL → Java types&#xa;• ValidationEngine: Reglas de negocio&#xa;• JsonSerializer: DTO → JSON&#xa;&#xa;Error Handling:&#xa;• Invalid data → Dead Letter Queue&#xa;• Parsing errors → Retry with backoff&#xa;• Schema validation → Alert admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="520" width="300" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- STEP 3: DELIVERY -->
+        <mxCell id="step3_title" value="3. ENTREGA A MICROSERVICIOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="480" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="delivery_details" value="Kafka Event Publishing:&#xa;• Topic: cliente-energia-updated&#xa;• Topic: cliente-acueducto-updated&#xa;• Partitioning por código cliente&#xa;• Retention: 168 hours (7 days)&#xa;&#xa;Direct API Calls:&#xa;• Circuit breaker protected&#xa;• Async processing with CompletableFuture&#xa;• Bulk operations for performance&#xa;• Metrics via Micrometer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="520" width="300" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- STEP 4: CACHING -->
+        <mxCell id="step4_title" value="4. CACHE Y PERSISTENCIA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="480" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="caching_details" value="Redis Distributed Cache:&#xa;• TTL: 24 horas para consultas&#xa;• Pattern: cliente:{codigo}:{servicio}&#xa;• Eviction policy: LRU&#xa;• Cluster mode para alta disponibilidad&#xa;&#xa;Database Persistence:&#xa;• PostgreSQL para datos estructurados&#xa;• MongoDB para documentos JSON&#xa;• Event sourcing para auditoría&#xa;• Backup incremental diario" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="520" width="300" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- TRANSFORMATION RULES -->
+        <mxCell id="rules_title" value="REGLAS DE TRANSFORMACIÓN Y VALIDACIÓN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="1480" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validation_rules" value="REGLAS DE VALIDACIÓN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="740" width="460" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="validation_details" value="Validaciones de Datos:&#xa;• Código cliente: 10 dígitos numéricos&#xa;• Saldo: Máximo 999,999,999.99&#xa;• Estado: Solo 'A' (Activo) o 'I' (Inactivo)&#xa;• Fechas: Formato YYYYMMDD válido&#xa;• Nombres: Sin caracteres especiales EBCDIC&#xa;&#xa;Transformaciones de Negocio:&#xa;• Estado 'A' → 'ACTIVO', 'I' → 'INACTIVO'&#xa;• Saldos negativos → 0.00 (con warning log)&#xa;• Fechas 00000000 → null&#xa;• Nombres vacíos → 'CLIENTE SIN NOMBRE'&#xa;• Códigos duplicados → Usar timestamp como tie-breaker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="780" width="460" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="performance_rules" value="OPTIMIZACIONES DE PERFORMANCE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="740" width="460" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="performance_details" value="Procesamiento en Paralelo:&#xa;• ThreadPoolExecutor: 8 threads core, 16 max&#xa;• Batch size: 1000 registros por thread&#xa;• Memoria heap: -Xmx2G para JVM&#xa;• NIO2 para lectura de archivos grandes&#xa;&#xa;Streaming Processing:&#xa;• Apache Kafka Streams para real-time&#xa;• Windowing: 5 minutos para agregaciones&#xa;• Checkpointing cada 30 segundos&#xa;• Exactly-once semantics habilitado&#xa;&#xa;Monitoring:&#xa;• Métricas: registros/segundo procesados&#xa;• Alertas: Si latencia > 30 segundos&#xa;• Dashboards: Grafana con estado de pipelines" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="780" width="460" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="error_handling" value="MANEJO DE ERRORES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="740" width="460" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="error_details" value="Estrategias de Error:&#xa;• Parse Error → Dead Letter Queue (DLQ)&#xa;• Invalid Data → Transformar a default + warning&#xa;• Network Timeout → Retry 3 veces con exponential backoff&#xa;• EBCDIC Corruption → Skip record + alert admin&#xa;• Duplicate Key → Update instead of insert&#xa;&#xa;Recovery Mechanisms:&#xa;• Dead Letter Queue processing job (diario)&#xa;• Manual data correction interface&#xa;• Rollback capability para batch jobs&#xa;• Emergency fallback a último dataset válido&#xa;&#xa;Alerting:&#xa;• Slack notification si error rate > 5%&#xa;• PagerDuty para errores críticos&#xa;• Email digest para administradores" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="780" width="460" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- FLOW ARROWS -->
+        <mxCell id="arrow1" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="300" as="sourcePoint" />
+            <mxPoint x="640" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow1_label" value="EBCDIC Binary" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="280" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="300" as="sourcePoint" />
+            <mxPoint x="900" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow2_label" value="Fixed Width Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="280" width="120" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="260" as="sourcePoint" />
+            <mxPoint x="1200" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow3_label" value="JSON" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="240" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1120" y="260" as="sourcePoint" />
+            <mxPoint x="1390" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow4_label" value="JSON" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="240" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGEND -->
+        <mxCell id="legend_title" value="LEYENDA - PATRONES Y TECNOLOGÍAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="980" width="1480" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_pattern" value="✓ Message Translator Pattern" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1020" width="180" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_anticorruption" value="✓ Anti-Corruption Layer" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="1020" width="180" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_adapter" value="✓ Adapter Pattern" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1020" width="180" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_streaming" value="✓ Stream Processing" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="680" y="1020" width="180" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_colors" value="🔴 Rojo: Legacy Data | 🟢 Verde: Transformadores | 🟡 Amarillo: JSON Output | 🟠 Naranja: Cache/Storage" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="880" y="1020" width="680" height="25" as="geometry" />
+        </mxCell>

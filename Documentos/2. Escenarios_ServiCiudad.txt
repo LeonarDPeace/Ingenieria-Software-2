@@ -1,0 +1,133 @@
+Escenarios de Calidad – Sistema ServiCiudad Conectada  
+1. ⚡ Performance / Rendimiento  
+ 
+Código  Descripción  Interesado  Entorno  Artefacto  Respuesta 
+esperada  Métrica  
+PER_BD01  Tiempo de respuesta 
+en consultas de 
+saldos consolidados  Ciudadano  Operación 
+normal, 80% 
+carga, horario 
+pico  BD de caché 
+consolidada  Recuperar y 
+mostrar saldos 
+(energía, 
+acueducto, 
+telecom)  ≤ 2s en 99% casos  
+PER_SRV02  Procesamiento de 
+pagos en línea  Ciudadano  Carga moderada 
+60%, pasarela 
+activa  MS-Pagos  Procesar pago 
+múltiple y 
+actualizar 
+sistemas  ≤ 5s por pago, 100 TPS  
+PER_COD03  Transformación de 
+datos legados  Desarrolladores  Batch nocturno, 
+ventana 
+mantenimiento  Message Translator  Convertir EBCDIC 
+→ JSON (10k 
+registros)  ≥ 1k registros/s, CPU < 
+70%  
+PER_BAL04  Balanceo de carga en 
+picos  Admin sistema  Día de 
+vencimiento, 
+5000 solicitudes 
+concurrentes  API 
+Gateway/Balanceador  Distribuir tráfico 
+entre instancias  Latencia ≤ 50ms, 
+desvío < 10%  
+  
+
+--- Página 1 ---
+
+2. 🔒 Seguridad  
+ 
+Código  Descripción  Interesado  Entorno  Artefacto  Respuesta esperada  Métrica  
+SEG_B
+D01  Protección de datos en 
+BD Seguridad/C
+iudadano  Producción, 
+monitoreo activo  Base de datos  Bloquear accesos y alertar  Bloqueo < 100ms, 0 accesos 
+exitosos  
+SEG_SR
+V02  Autenticación/Autoriza
+ción  Ciudadano/
+Admin  Normal, roles 
+activos  Microservicio 
+Auth  Validar token JWT y 
+permisos  Validación < 200ms, 100% 
+tokens inválidos rechazados  
+SEG_CO
+D03  Cifrado de datos 
+sensibles  Cumplimien
+to/Auditor  Comunicación MS – 
+pasarela  Cifrado/descifra
+do AES -256 + TLS 1.3  100% cifrado, overhead < 
+10ms  
+SEG_RE
+D04  Mitigación DDoS  Admin infra  Ataque 100k req/s  Firewall/WAF  Detectar, mitigar, mantener 
+servicio  Detección < 5s, mitigación < 
+30s, >95% disponibilidad  
+
+--- Página 2 ---
+
+3. ☁️ Disponibilidad  
+ 
+Código  Descripción  Interesado  Entorno  Artefacto  Respuesta esperada  Métrica  
+DISP_MON01  Monitoreo activo 
+de servicios 
+críticos  Admin 
+sistema  Producción 24/7  Prometheus + 
+Grafana  Detectar caídas y alertar  Alerta < 1 min, 99.9% uptime  
+DISP_FAIL02  Failover  
+automático en 
+caída de 
+microservicio  Ciudadano  Operación en nube 
+con K8s  Orquestador 
+Kubernetes  Redirigir tráfico a 
+instancias sanas  Recuperación < 30s  
+DISP_BKP03  Recuperación de 
+BD Admin datos  Caída nodo 
+principal BD  Cluster BD 
+replicado  Promover réplica a 
+principal  Recuperación < 5 min, 0 
+pérdida  
+DISP_NET04  Resiliencia en red  Admin red  Falla enlace ISP  Router 
+redundante  Conmutación a backup  Conmutación < 1 min, 
+disponibilidad > 99.95%  
+ 
+
+--- Página 3 ---
+
+4. 🎨 Usabilidad  
+ 
+Código  Descripción  Interesado  Entorno  Artefacto  Respuesta esperada  Métrica  
+USA_UI01  Navegación en 
+portal ciudadano  Ciudadano  Normal, PC y móvil  Frontend 
+Web/Móvil  Menú claro, flujo ≤ 3 
+clics  90% tareas completadas en 
+1er intento  
+USA_ACC02  Accesibilidad para 
+personas con 
+discapacidad visual  Ciudadano 
+con 
+discapacidad  Uso lector pantalla  Frontend accesible 
+(WCAG 2.1)  Compatibilidad total 
+lector pantalla  ≥ 95% elementos accesibles  
+USA_ERR03  Mensajes de error 
+claros  Ciudadano  Entrada incorrecta 
+en formulario  Validación 
+frontend/backend  Mostrar mensaje claro 
+con corrección 
+sugerida  ≥ 90% usuarios entienden sin 
+ayuda  
+USA_MOB04  Adaptación en 
+móviles  Ciudadano  Navegación desde 
+smartphone  Frontend 
+responsive  Interfaz fluida y 
+accesible  Tiempo carga ≤ 3s, 95% 
+usabilidad móvil  
+ 
+
+--- Página 4 ---
+

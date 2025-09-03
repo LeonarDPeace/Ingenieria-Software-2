@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" version="22.1.16" etag="example" type="device">
+  <diagram name="Arquitectura Hexagonal - MS Pagos" id="hexagonal_microservice">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- HEXAGON SHAPE -->
+        <mxCell id="hexagon" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;size=80;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="400" height="300" as="geometry" />
+        </mxCell>
+        
+        <!-- DOMAIN CORE -->
+        <mxCell id="domain_core" value="DOMAIN CORE&#xa;MS-PAGOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="350" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- DOMAIN SERVICES -->
+        <mxCell id="payment_service" value="PaymentService&#xa;• procesarPagoDistribuido()&#xa;• validarClienteServiCiudad()&#xa;• calcularMontoUnificado()&#xa;• manejarCircuitBreaker()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="430" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="saga_orchestrator" value="SagaOrchestrator&#xa;• coordinarPagoServicios()&#xa;• rollbackMainframeOracle()&#xa;• confirmarPagoUnificado()&#xa;• manejarCompensaciones()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="610" y="430" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="domain_model" value="Domain Model&#xa;• PagoUnificado&#xa;• TransaccionDistribuida&#xa;• ServicioLegacy&#xa;• PaymentStatus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="530" y="530" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- PRIMARY PORTS (LEFT SIDE) -->
+        <mxCell id="port_api" value="PaymentAPI Port&#xa;(Input)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port_events" value="EventHandler Port&#xa;(Input)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- SECONDARY PORTS (RIGHT SIDE) -->
+        <mxCell id="port_persistence" value="PaymentRepository&#xa;Port (Output)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port_gateway" value="PaymentGateway&#xa;Port (Output)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port_notification" value="NotificationService&#xa;Port (Output)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port_legacy_energy" value="LegacyEnergyService&#xa;Port (Output)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="620" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port_legacy_water" value="LegacyWaterService&#xa;Port (Output)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- PRIMARY ADAPTERS (LEFT SIDE) -->
+        <mxCell id="rest_adapter" value="REST Controller&#xa;PaymentController&#xa;@RestController&#xa;@PostMapping(/pagos)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="kafka_listener" value="Kafka Listener&#xa;PaymentEventListener&#xa;@KafkaListener&#xa;(topics = 'payment-events')" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- SECONDARY ADAPTERS (RIGHT SIDE) -->
+        <mxCell id="jpa_adapter" value="JPA Repository&#xa;PaymentJpaAdapter&#xa;@Repository&#xa;implements PaymentRepository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="360" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pse_adapter" value="PSE Gateway Adapter&#xa;ServiCiudadPSEAdapter&#xa;implements PaymentGateway&#xa;• Circuit Breaker&#xa;• Resilience4j" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="480" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="kafka_publisher" value="Kafka Publisher&#xa;NotificationAdapter&#xa;@Component&#xa;• Async messaging&#xa;• Event publishing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="600" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGACY SYSTEM ADAPTERS -->
+        <mxCell id="mainframe_adapter" value="Mainframe Adapter&#xa;MainframeEnergyAdapter&#xa;• Circuit Breaker&#xa;• 3270 Terminal&#xa;• EBCDIC Translator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="480" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="oracle_adapter" value="Oracle Adapter&#xa;OracleSolarisAdapter&#xa;• Circuit Breaker&#xa;• Fixed Width Parser&#xa;• PL/SQL Interface" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="600" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- EXTERNAL SYSTEMS -->
+        <mxCell id="database" value="PostgreSQL&#xa;Database&#xa;payments_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="350" width="100" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pse_gateway" value="PSE Payment&#xa;Gateway&#xa;External API" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="470" width="100" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="kafka_broker" value="Apache Kafka&#xa;Message Broker&#xa;payment-events" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="590" width="100" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- EXTERNAL CLIENTS -->
+        <mxCell id="api_gateway_client" value="API Gateway&#xa;Spring Cloud&#xa;Gateway" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="100" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="event_source" value="Event Sources&#xa;• MS-Clientes&#xa;• MS-Facturación" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="100" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- CONNECTIONS -->
+        <mxCell id="conn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;" edge="1" parent="1" source="api_gateway_client" target="rest_adapter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1" source="rest_adapter" target="port_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="port_api" target="payment_service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;" edge="1" parent="1" source="event_source" target="kafka_listener">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1" source="kafka_listener" target="port_events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="port_events" target="saga_orchestrator">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="payment_service" target="port_persistence">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1" source="port_persistence" target="jpa_adapter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="jpa_adapter" target="database">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="payment_service" target="port_gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1" source="port_gateway" target="pse_adapter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="pse_adapter" target="pse_gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="saga_orchestrator" target="port_notification">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1" source="port_notification" target="kafka_publisher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="kafka_publisher" target="kafka_broker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGEND -->
+        <mxCell id="legend_title" value="LEYENDA - ARQUITECTURA HEXAGONAL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_domain" value="🟢 Verde: Dominio Central (Business Logic)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_primary" value="🔵 Azul: Puertos Primarios (Input)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="250" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_secondary" value="🔴 Rojo: Puertos Secundarios (Output)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="250" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_adapters" value="🟡 Amarillo: Adaptadores (Infrastructure)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_external" value="⚪ Externo: Sistemas y Clientes Externos" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="110" width="250" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- PATTERNS APPLIED -->
+        <mxCell id="patterns_title" value="PATRONES APLICADOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="40" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pattern1" value="✓ Hexagonal Architecture" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="180" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pattern2" value="✓ Dependency Inversion" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="105" width="180" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pattern3" value="✓ Adapter Pattern" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="130" width="180" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pattern4" value="✓ Saga Pattern" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="155" width="180" height="20" as="geometry" />
+        </mxCell>

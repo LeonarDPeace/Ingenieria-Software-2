@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" version="22.1.16" etag="example" type="device">
+  <diagram name="Circuit Breaker Pattern" id="circuit_breaker_pattern">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TITLE -->
+        <mxCell id="title" value="CIRCUIT BREAKER PATTERN - ADAPTADORES SISTEMAS LEGADOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="1040" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- MICROSERVICES -->
+        <mxCell id="ms_clientes" value="MS-Clientes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_facturacion" value="MS-Facturación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="200" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_pagos" value="MS-Pagos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- CIRCUIT BREAKERS -->
+        <mxCell id="cb_oracle" value="Circuit Breaker&#xa;Oracle Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="cb_mainframe" value="Circuit Breaker&#xa;Mainframe Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="220" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="cb_telecom" value="Circuit Breaker&#xa;Telecom Adapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGACY SYSTEMS -->
+        <mxCell id="oracle_system" value="Oracle Solaris&#xa;(Acueducto)&#xa;• Latencia: 30s&#xa;• PL/SQL Legacy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mainframe_system" value="Mainframe IBM Z&#xa;(Energía)&#xa;• Terminal 3270&#xa;• COBOL Legacy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="telecom_system" value="Sistemas Modernos&#xa;(Telecomunicaciones)&#xa;• REST/SOAP APIs&#xa;• Respuesta rápida" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="520" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- CIRCUIT BREAKER STATES -->
+        <mxCell id="states_title" value="ESTADOS DEL CIRCUIT BREAKER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="440" width="560" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- CLOSED STATE -->
+        <mxCell id="closed_state" value="ESTADO: CERRADO (CLOSED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="160" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="closed_desc" value="• Requests pasan normalmente&#xa;• Monitorea fallos&#xa;• Cuenta errores consecutivos&#xa;• Umbral: 5 fallos en 60s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="520" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- OPEN STATE -->
+        <mxCell id="open_state" value="ESTADO: ABIERTO (OPEN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="480" width="160" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="open_desc" value="• Rechaza requests inmediatamente&#xa;• Retorna fallback/cache&#xa;• Timer: 30s antes de HALF_OPEN&#xa;• Evita cascading failures" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="260" y="520" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- HALF OPEN STATE -->
+        <mxCell id="half_open_state" value="ESTADO: MEDIO ABIERTO (HALF_OPEN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="480" width="160" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="half_open_desc" value="• Permite 1 request de prueba&#xa;• Si éxito → CLOSED&#xa;• Si fallo → OPEN (30s más)&#xa;• Probe health del sistema" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="520" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- CONFIGURATION -->
+        <mxCell id="config_title" value="CONFIGURACIÓN RESILIENCE4J" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="120" width="380" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="oracle_config" value="Oracle Adapter Configuration:&#xa;• failureRateThreshold: 50%&#xa;• waitDurationInOpenState: 30s&#xa;• slidingWindowSize: 10&#xa;• minimumNumberOfCalls: 5&#xa;• permittedNumberOfCallsInHalfOpenState: 3&#xa;• slowCallDurationThreshold: 30s (PL/SQL timeout)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;" vertex="1" parent="1">
+          <mxGeometry x="700" y="160" width="380" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mainframe_config" value="Mainframe Adapter Configuration:&#xa;• failureRateThreshold: 60%&#xa;• waitDurationInOpenState: 45s&#xa;• slidingWindowSize: 8&#xa;• minimumNumberOfCalls: 3&#xa;• slowCallDurationThreshold: 4s (3270 terminal)&#xa;• recordExceptions: TimeoutException, ConnectionException" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;" vertex="1" parent="1">
+          <mxGeometry x="700" y="250" width="380" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fallback_title" value="ESTRATEGIAS DE FALLBACK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="350" width="380" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fallback_strategies" value="1. Cache Fallback:&#xa;   • Retornar última consulta exitosa (TTL: 24h)&#xa;   • Marcar datos como 'cached' con timestamp&#xa;&#xa;2. Default Values:&#xa;   • Saldo = 0 con mensaje 'No disponible'&#xa;   • Status = 'MAINTENANCE'&#xa;&#xa;3. Degraded Service:&#xa;   • Funcionalidad limitada&#xa;   • Solo lectura, no transacciones&#xa;&#xa;4. Queue for Later:&#xa;   • Encolar operaciones críticas&#xa;   • Procesar cuando servicio se recupere" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="380" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- FLOW ARROWS -->
+        <mxCell id="arrow1" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="ms_clientes" target="cb_oracle">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="160" as="sourcePoint" />
+            <mxPoint x="270" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow2" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="cb_oracle" target="oracle_system">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="160" as="sourcePoint" />
+            <mxPoint x="510" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow3" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="ms_facturacion" target="cb_mainframe">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="240" as="sourcePoint" />
+            <mxPoint x="270" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow4" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="cb_mainframe" target="mainframe_system">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="260" as="sourcePoint" />
+            <mxPoint x="510" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow5" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="ms_pagos" target="cb_telecom">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="320" as="sourcePoint" />
+            <mxPoint x="270" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow6" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="cb_telecom" target="telecom_system">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="360" as="sourcePoint" />
+            <mxPoint x="510" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- STATE TRANSITION ARROWS -->
+        <mxCell id="transition1" value="5 fallos&#xa;en 60s" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="610" as="sourcePoint" />
+            <mxPoint x="260" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="transition2" value="30s timer" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="610" as="sourcePoint" />
+            <mxPoint x="440" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="transition3" value="Éxito" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;curved=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="630" as="sourcePoint" />
+            <mxPoint x="160" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="transition4" value="Fallo" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;curved=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="650" as="sourcePoint" />
+            <mxPoint x="340" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- MONITORING -->
+        <mxCell id="monitoring_title" value="MONITOREO Y MÉTRICAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="1000" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="monitoring_details" value="Prometheus Metrics:&#xa;• resilience4j_circuitbreaker_state{name='oracle-adapter', state='open|closed|half_open'}&#xa;• resilience4j_circuitbreaker_calls_total{name='mainframe-adapter', kind='successful|failed|not_permitted'}&#xa;• resilience4j_circuitbreaker_call_duration{name='telecom-adapter'}&#xa;&#xa;Grafana Dashboards:&#xa;• Circuit Breaker State por Adaptador  • Failure Rate Trends  • Response Time Percentiles&#xa;• Fallback Usage Statistics  • System Recovery Times" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#82b366;align=left;" vertex="1" parent="1">
+          <mxGeometry x="80" y="720" width="1000" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

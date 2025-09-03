@@ -1,0 +1,259 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6">
+  <diagram name="Saga Pattern - Pago Distribuido" id="vLEdXwjBE1w9nyPpbA-0">
+    <mxGraphModel dx="2915" dy="1616" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NtI9UldXud9bfMApvNYz-1" value="SAGA PATTERN - PAGO DISTRIBUIDO SERVICIUDAD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="57" y="9" width="1520" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-2" value="Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="77" y="109" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-3" value="API Gateway" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="177" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-4" value="MS-Pagos&#xa;(Saga Orchestrator)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="337" y="109" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-5" value="MS-Clientes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="517" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-6" value="Pasarela PSE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="677" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-7" value="Adaptador&#xa;Mainframe" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="837" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-8" value="Adaptador&#xa;Oracle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="997" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-9" value="MS-Notificaciones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1157" y="109" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-10" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="92" y="189" as="sourcePoint" />
+            <mxPoint x="92" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-11" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="227" y="189" as="sourcePoint" />
+            <mxPoint x="227" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-12" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="189" as="sourcePoint" />
+            <mxPoint x="397" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-13" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="567" y="189" as="sourcePoint" />
+            <mxPoint x="567" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-14" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="727" y="189" as="sourcePoint" />
+            <mxPoint x="727" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-15" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="887" y="189" as="sourcePoint" />
+            <mxPoint x="887" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-16" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1047" y="189" as="sourcePoint" />
+            <mxPoint x="1047" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-17" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1207" y="189" as="sourcePoint" />
+            <mxPoint x="1207" y="1069" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-18" value="1. POST /pagos&#xa;{energia: 150000, agua: 80000}" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="92" y="219" as="sourcePoint" />
+            <mxPoint x="227" y="219" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-19" value="2. Enrutar a MS-Pagos" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="227" y="249" as="sourcePoint" />
+            <mxPoint x="397" y="249" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-20" value="3. Iniciar Saga: PagoDistribuidoSaga" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="317" y="269" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-21" value="4. Validar Cliente" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="319" as="sourcePoint" />
+            <mxPoint x="567" y="319" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-22" value="✅ Cliente Válido" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="567" y="349" as="sourcePoint" />
+            <mxPoint x="397" y="349" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-23" value="5. Procesar Pago PSE" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="389" as="sourcePoint" />
+            <mxPoint x="727" y="389" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-24" value="✅ Pago Autorizado&#xa;TransactionId: TXN123" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="727" y="429" as="sourcePoint" />
+            <mxPoint x="397" y="429" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-25" value="6. Actualizar Saldo Energía" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="469" as="sourcePoint" />
+            <mxPoint x="887" y="469" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-26" value="✅ Saldo Actualizado" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="887" y="499" as="sourcePoint" />
+            <mxPoint x="397" y="499" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-27" value="7. Actualizar Saldo Agua" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="539" as="sourcePoint" />
+            <mxPoint x="1047" y="539" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-28" value="✅ Saldo Actualizado" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1047" y="569" as="sourcePoint" />
+            <mxPoint x="397" y="569" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-29" value="8. Enviar Notificación" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="609" as="sourcePoint" />
+            <mxPoint x="1207" y="609" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-30" value="✅ SMS/Email Enviado" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1207" y="639" as="sourcePoint" />
+            <mxPoint x="397" y="639" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-31" value="9. Saga Completada" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="317" y="669" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-32" value="10. HTTP 200 OK&#xa;{status: &#39;SUCCESS&#39;, transactionId: &#39;TXN123&#39;}" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="719" as="sourcePoint" />
+            <mxPoint x="227" y="719" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-33" value="11. Respuesta Final" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="227" y="749" as="sourcePoint" />
+            <mxPoint x="92" y="749" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-34" value="ESCENARIO DE ROLLBACK - FALLA EN ACTUALIZACIÓN ORACLE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="57" y="789" width="1200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-35" value="❌ 7. Falla Actualizar Agua (Oracle)" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="839" as="sourcePoint" />
+            <mxPoint x="1047" y="839" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-36" value="❌ ERROR: Timeout 30s" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1047" y="869" as="sourcePoint" />
+            <mxPoint x="397" y="869" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-37" value="8. Iniciar Rollback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="317" y="889" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-38" value="9. Compensar Saldo Energía" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="939" as="sourcePoint" />
+            <mxPoint x="887" y="939" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-39" value="✅ Saldo Revertido" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="887" y="969" as="sourcePoint" />
+            <mxPoint x="397" y="969" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-40" value="10. Reversar Pago PSE" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="397" y="1009" as="sourcePoint" />
+            <mxPoint x="727" y="1009" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-41" value="✅ Pago Revertido" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="727" y="1039" as="sourcePoint" />
+            <mxPoint x="397" y="1039" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-42" value="PATRONES Y COMPONENTES SAGA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="219" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-43" value="Saga Orchestrator&#xa;• Coordina todas las transacciones&#xa;• Mantiene estado de la saga&#xa;• Ejecuta compensaciones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="269" width="280" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-44" value="Participantes de la Saga&#xa;• MS-Clientes: Validar cliente&#xa;• Pasarela PSE: Procesar pago&#xa;• Adaptador Mainframe: Actualizar energía&#xa;• Adaptador Oracle: Actualizar agua&#xa;• MS-Notificaciones: Enviar confirmación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="369" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-45" value="Acciones de Compensación&#xa;• Revertir saldo energía en mainframe&#xa;• Cancelar/reversar pago en PSE&#xa;• Enviar notificación de falla&#xa;• Marcar transacción como fallida" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="509" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-46" value="Estados de la Saga&#xa;• STARTED: Saga iniciada&#xa;• IN_PROGRESS: En ejecución&#xa;• COMPENSATING: Ejecutando rollback&#xa;• COMPLETED: Exitosa&#xa;• FAILED: Fallida con compensación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="629" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-47" value="Patrones de Resiliencia&#xa;• Circuit Breaker: En adaptadores&#xa;• Timeout: 30s máximo por operación&#xa;• Retry: 3 intentos con backoff&#xa;• Fallback: Usar datos en caché&#xa;• Bulkhead: Aislar recursos por servicio" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="1317" y="769" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-48" value="LEYENDA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="57" y="1089" width="1200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-49" value="→ Línea Sólida: Llamada exitosa" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="77" y="1139" as="sourcePoint" />
+            <mxPoint x="197" y="1139" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-50" value="⟵ Línea Punteada: Respuesta" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="277" y="1139" as="sourcePoint" />
+            <mxPoint x="397" y="1139" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-51" value="→ Línea Roja: Llamada fallida/compensación" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;fontColor=#000000;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="477" y="1139" as="sourcePoint" />
+            <mxPoint x="647" y="1139" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NtI9UldXud9bfMApvNYz-52" value="🟢 Verde: Éxito | 🔵 Azul: Proceso | 🔴 Rojo: Falla | 🟡 Amarillo: MS Core" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="727" y="1129" width="530" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

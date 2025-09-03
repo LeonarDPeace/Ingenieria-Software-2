@@ -1,0 +1,940 @@
+Proyecto: ServiCiudad Conectada  
+Artefactos de Análisis y Requerimientos – Fases 1, 2 y 3 (Scrum)  
+Resumen de Contexto y Alcance n 
+ServiCiudad  Cali requiere transformar su experiencia digital unificando portales y 
+habilitando una app móvil, con integración a sistemas legados (Mainframe IBM Z, Oracle y 
+otros), garantizando resiliencia, seguridad y cumplimiento de la política ‘Cali Conectada’.  
+Usuarios principales: Ciudadanos, Operadores Internos, Técnicos de Campo y 
+Administradores.  
+Funcionalidad mínima Día 1: Consulta de saldos y pago en línea.  
+Restricciones técnicas: arquitectura basada en microservicios, disponibilidad del 
+mainframe, y capa anticorrupción para salvaguardar integridad e idoneidad de datos.  
+Prioridad: consultas de saldo, pagos y garantizar el uso seguro de sistemas legados.  
+  
+
+--- Página 1 ---
+
+FASE 1: Requerimientos Funcionales  
+RF-001: Consulta de Saldos Unificada  
+Descripción: El sistema debe permitir a los ciudadanos consultar, desde el portal web y la 
+app móvil, el saldo actualizado de sus servicios (energía, acueducto, telecomunicaciones) de 
+manera centralizada y unificada, mostrando información obtenida en tiempo real desde los 
+sistemas legados.  
+Criterios de validación:  
+• - El usuario visualiza en un solo lugar el saldo de todos sus servicios.  
+• - La consulta de saldo es posible desde web y móvil.  
+• - El saldo corresponde a la información actual del sistema legado (incluyendo el 
+mainframe y Oracle).  
+• - El tiempo de respuesta es menor a 10 segundos bajo condiciones normales.  
+Prioridad: Alta  
+Dependencias: RF -002; Integración con sistemas legados  
+ 
+RF-002: Pago en Línea de Servicios  
+Descripción: El sistema debe permitir a los ciudadanos realizar el pago en línea de sus 
+servicios públicos (energía, acueducto, telecomunicaciones) a través del portal web y la app 
+móvil, permitiendo seleccionar uno o varios servicios en una sola transacción.  
+Criterios de validación:  
+• - El usuario puede pagar cualquier servicio de forma individual o combinada.  
+• - El sistema muestra confirmación inmediata de pago exitoso o fallido.  
+• - El pago se refleja en el saldo de los servicios en menos de 15 minutos.  
+• - Integración segura con la pasarela de pagos y los sistemas legados.  
+Prioridad: Alta  
+Dependencias: RF -001; Integración con sistemas de pago y legados  
+ 
+  
+
+--- Página 2 ---
+
+RF-003: Gestión de Acceso y Autenticación Segura  
+Descripción: El sistema debe permitir el registro, autenticación y gestión de usuarios 
+(ciudadanos, operadores internos, técnicos de campo y administradores) con mecanismos 
+de seguridad alineados a buenas prácticas (por ejemplo, autenticación multifactor para 
+perfiles administrativos).  
+Criterios de validación:  
+• - El acceso a funcionalidades está controlado según el tipo de usuario.  
+• - Se emplea autenticación segura (OAuth2, JWT, MFA para admins).  
+• - El sistema registra intentos de acceso fallidos y permite recuperación de contraseña.  
+• - Cumple con normativas de seguridad de la información (ISO 27001).  
+Prioridad: Alta  
+Dependencias: Integración con sistemas de autenticación y gestión de usuarios  
+ 
+RF-004: Integración con Sistemas Legados (Capa Anticorrupción)  
+Descripción: El sistema debe implementar una capa de microservicios (“anticorrupción”) 
+que permita integrar la nueva solución digital con los sistemas legados (mainframe IBM Z, 
+Oracle, sistemas modernos), garantizando la disponibilidad, integridad y consistencia de los 
+datos.  
+Criterios de validación:  
+• - Los datos consultados/procesados provienen de sistemas legados y son consistentes.  
+• - La capa de integración debe ser transparente para el usuario final.  
+• - La indisponibilidad del mainframe debe estar gestionada y notificada apropiadamente.  
+• - Permite la extensibilidad para nuevos sistemas.  
+Prioridad: Alta  
+Dependencias: RF -001, RF -002  
+ 
+  
+
+--- Página 3 ---
+
+RF-005: Visualización y Gestión de Factura Unificada  
+Descripción: El sistema debe generar y mostrar una factura unificada que consolide todos 
+los servicios del usuario en un solo documento digital, descargable desde el portal web y 
+app móvil.  
+Criterios de validación:  
+• - El usuario puede visualizar y descargar la factura unificada.  
+• - La factura contiene desglose por servicio y totales.  
+• - Los datos de la factura se actualizan automáticamente con base en los sistemas 
+legados.  
+• - Soporta formatos PDF y envío por correo electrónico.  
+Prioridad: Media -Alta  
+Dependencias: RF -001, RF -004  
+ 
+RF-006: Reporte Interactivo de Fallas e Incidentes  
+Descripción: El sistema debe permitir a los ciudadanos reportar fallas en sus servicios de 
+forma interactiva y visualizar el estado de los reportes, así como recibir notificaciones 
+automáticas de avances y resoluciones.  
+Criterios de validación:  
+• - El usuario puede reportar una incidencia desde web o app móvil.  
+• - Se asigna un ticket y puede consultar el estado del mismo.  
+• - Recibe notificaciones automáticas sobre actualizaciones.  
+• - El reporte se enruta automáticamente al área responsable.  
+Prioridad: Media  
+Dependencias: RF -003, RF -004  
+ 
+  
+
+--- Página 4 ---
+
+RF-007: Notificaciones y Alertas Personalizadas  
+Descripción: El sistema debe enviar notificaciones (push , SMS, email) a los ciudadanos 
+sobre estados de pago, recordatorios, avisos de mantenimiento y emergencias, según sus 
+preferencias de contacto.  
+Criterios de validación:  
+• - El usuario puede gestionar y personalizar qué notificaciones recibe.  
+• - Notificaciones enviadas en tiempo real ante eventos críticos (p. ej., apagón, 
+vencimiento de factura).  
+• - Historial de notificaciones accesible en el portal/app.  
+Prioridad: Media  
+Dependencias: RF -001, RF -002, RF -006  
+ 
+RF-008: Panel de Administración y Monitoreo  
+Descripción: El sistema debe proveer a los administradores un panel centralizado para 
+monitoreo en tiempo real del estado de los servicios, incidentes reportados, disponibilidad 
+de sistemas legados y métricas clave de uso.  
+Criterios de validación:  
+• - Panel accesible solo para administradores autenticados.  
+• - Visualización de métricas de disponibilidad y uso.  
+• - Alertas automáticas ante caídas o problemas de integración.  
+• - Permite exportar reportes y logs.  
+Prioridad: Media  
+Dependencias: RF -004 
+ 
+  
+
+--- Página 5 ---
+
+RF-009: Gestión de Resiliencia y Disponibilidad  
+Descripción: El sistema debe asegurar la resiliencia y alta disponibilidad, gestionando de 
+forma transparente para el usuario las ventanas de mantenimiento, caídas de sistemas 
+legados y recuperaciones ante fallas.  
+Criterios de validación:  
+• - El usuario es informado proactivamente ante indisponibilidad de servicios.  
+• - El sistema implementa mecanismos de retry, circuit breaker y fallback.  
+• - Monitoreo y alertas en tiempo real sobre incidentes de disponibilidad.  
+Prioridad: Alta  
+Dependencias: RF -004, RF -008  
+ 
+RF-010: Trazabilidad y Auditoría de Operaciones  
+Descripción: El sistema debe registrar todas las operaciones críticas realizadas por los 
+usuarios y generar un historial auditable conforme a normativas (p. ej., ISO 27001).  
+Criterios de validación:  
+• - Cada operación queda registrada con timestamp, usuario y acción.  
+• - Los logs de auditoría son accesibles solo para roles autorizados.  
+• - Soporte para exportar logs bajo requerimiento normativo.  
+Prioridad: Alta  
+Dependencias: RF -003, RF -008  
+ 
+  
+
+--- Página 6 ---
+
+RF-011: Gestión de Perfil y Preferencias del Usuario  
+Descripción: El sistema debe permitir a los ciudadanos y operadores actualizar su 
+información personal, gestionar preferencias de comunicación, cambiar contraseñas y 
+administrar métodos de pago de forma segura.  
+Criterios de validación:  
+• - El usuario puede editar y guardar su información personal.  
+• - Es posible cambiar contraseña y gestionar autenticación adicional.  
+• - Preferencias de notificación y métodos de pago se pueden gestionar desde la 
+plataforma.  
+Prioridad: Media  
+Dependencias: RF -003 
+ 
+RF-012: Consulta y Descarga de Historial de Consumo  
+Descripción: El usuario debe poder visualizar y descargar el historial de consumo y pagos 
+de cada servicio durante al menos los últimos 24 meses, tanto desde el portal como desde la 
+app.  
+Criterios de validación:  
+• - El usuario accede a reportes históricos de consumo y pagos.  
+• - Puede descargar los reportes en formatos PDF o Excel.  
+• - Datos consistentes con los sistemas legados.  
+Prioridad: Media  
+Dependencias: RF -004 
+ 
+  
+
+--- Página 7 ---
+
+RF-013: Soporte Multicanal y Atención Automatizada  
+Descripción: El sistema debe ofrecer soporte al usuario a través de un chatbot y FAQs en la 
+web/app, así como canalizar solicitudes complejas al call center o áreas internas según el 
+tipo de incidente.  
+Criterios de validación:  
+• - El chatbot responde consultas frecuentes y guía en la navegación.  
+• - El usuario puede solicitar atención humana si lo requiere.  
+• - Escalamiento automático de solicitudes complejas.  
+Prioridad: Media  
+Dependencias: RF -006, RF -008  
+ 
+RF-014: Gestión de Roles y Permisos  
+Descripción: La plataforma debe permitir administrar los diferentes roles de usuarios y sus 
+permisos asociados para cada módulo o funcionalidad.  
+Criterios de validación:  
+• - Los roles se pueden crear, editar y eliminar desde el panel de administración.  
+• - Permisos diferenciados para cada funcionalidad.  
+• - Auditoría de cambios de roles/permisos.  
+Prioridad: Media  
+Dependencias: RF -003, RF -008  
+ 
+RF-015: Gestión de Solicitudes y Trámites en Línea  
+Descripción: El usuario debe poder gestionar solicitudes administrativas (p. ej., cambio de 
+titular, actualización de datos, solicitudes de servicios adicionales) desde la plataforma, con 
+seguimiento del estado de cada trámite.  
+Criterios de validación:  
+• - El usuario inicia, consulta y recibe actualización de estado de sus solicitudes.  
+• - Notificaciones automáticas ante cambios de estado.  
+• - Integración con áreas administrativas internas.  
+Prioridad: Media  
+Dependencias: RF -003, RF -007  
+
+--- Página 8 ---
+
+FASE 2: Casos de Uso Detallados  
+CU-001: Consultar Saldos Unificados  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - El usuario debe estar autenticado.  
+• - Los sistemas legados están disponibles o su último estado ha sido cacheado.  
+FLUJO PRINCIPAL:  
+1. 1. El usuario accede al portal web o app móvil.  
+2. 2. Selecciona la opción “Consultar saldo”.  
+3. 3. El sistema solicita al microservicio de integración los saldos actualizados de cada 
+servicio.  
+4. 4. El microservicio consulta los sistemas legados (mainframe, Oracle, etc.) y transforma 
+los datos.  
+5. 5. El sistema muestra el saldo unificado y el desglose por servicio al usuario.  
+FLUJOS ALTERNOS:  
+3a. Si Si uno de los sistemas legados está en mantenimiento:  
+6. 3a.1 El sistema indica que los datos corresponden a la última actualización disponible.  
+7. 3a.2 El usuario puede consultar el saldo anterior y recibe una notificación de 
+indisponibilidad parcial.  
+8. 3a.3 Continúa en el paso 4.  
+FLUJOS DE EXCEPCIÓN:  
+4x. Si Si falla la integración con todos los sistemas legados:  
+9. 4x.1 El sistema muestra un mensaje de error y sugiere intentar más tarde.  
+10. 4x.2 Registra el error en los logs y notifica al administrador.  
+11. 4x.3 Retorna al paso 2.  
+POSTCONDICIONES:  
+• - El usuario visualiza el saldo consolidado y la fecha/hora de última actualización 
+exitosa.  
+ 
+
+--- Página 9 ---
+
+CU-002: Realizar Pago en Línea de Servicios  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - El usuario debe estar autenticado y tener saldo pendiente en uno o más servicios.  
+• - El sistema debe estar integrado a la pasarela de pagos.  
+FLUJO PRINCIPAL:  
+12. 1. El usuario selecciona la opción “Pagar servicios” desde el portal/app.  
+13. 2. Escoge los servicios a pagar (uno, varios o todos).  
+14. 3. Ingresa método de pago (tarjeta, PSE, etc.).  
+15. 4. El sistema conecta con la pasarela de pagos y procesa la transacción.  
+16. 5. Recibe confirmación de pago exitoso y actualiza los saldos en los sistemas legados.  
+17. 6. El usuario recibe confirmación visual y notificación automática.  
+FLUJOS ALTERNOS:  
+3a. Si Si el usuario cancela antes de confirmar:  
+18. 3a.1 El sistema retorna al menú de inicio sin procesar el pago.  
+19. 3a.2 Fin del flujo alterno. Retorna al paso 1.  
+FLUJOS DE EXCEPCIÓN:  
+4x. Si Si la pasarela de pagos rechaza la transacción:  
+20. 4x.1 El sistema informa el error y permite reintentar con otro método.  
+21. 4x.2 Retorna al paso 3.  
+5x. Si Si no se puede actualizar el saldo en sistemas legados:  
+22. 5x.1 El pago queda en estado “pendiente” y se reintenta la actualización posteriormente 
+con colas de mensajería.  
+23. 5x.2 Se notifica al usuario del estado pendiente.  
+24. 5x.3 Fin del flujo de excepción.  
+POSTCONDICIONES:  
+• - El usuario recibe confirmación de pago y el saldo actualizado se refleja correctamente 
+en los sistemas.  
+ 
+
+--- Página 10 ---
+
+CU-003: Registro y Autenticación de Usuarios  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno, Administrador  
+PRECONDICIONES:  
+• - El usuario tiene acceso al portal/app.  
+• - Dispone de correo electrónico y/o número de identificación válido.  
+FLUJO PRINCIPAL:  
+25. 1. El usuario accede a la opción “Registrarse” o “Iniciar sesión”.  
+26. 2. Ingresa sus datos de identificación, correo, teléfono y crea una contraseña.  
+27. 3. El sistema valida la información y envía un código de verificación (email/SMS).  
+28. 4. El usuario ingresa el código recibido.  
+29. 5. El sistema activa la cuenta y permite acceso a las funcionalidades.  
+FLUJOS ALTERNOS:  
+2a. Si Si el usuario se registra con un proveedor social (OAuth2):  
+30. 2a.1 El sistema valida la identidad vía OAuth2 y continúa con el flujo.  
+31. 2a.2 Continúa en el paso 4.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si el código de verificación es incorrecto o expira:  
+32. 3x.1 El sistema informa el error y permite reenviar el código.  
+33. 3x.2 Retorna al paso 3.  
+POSTCONDICIONES:  
+• - Usuario registrado o autenticado y con acceso a la plataforma.  
+ 
+  
+
+--- Página 11 ---
+
+CU-004: Actualización de Perfil y Preferencias  
+ACTORES:  
+- Primario: Ciudadano, Operador Interno  
+- Secundario: Administrador  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+FLUJO PRINCIPAL:  
+34. 1. El usuario ingresa a “Mi perfil”.  
+35. 2. Edita datos personales, métodos de pago o preferencias de notificación.  
+36. 3. Guarda los cambios.  
+37. 4. El sistema valida, almacena y notifica confirmación.  
+FLUJOS ALTERNOS:  
+2a. Si Si modifica la contraseña:  
+38. 2a.1 El sistema solicita verificación adicional (código por email/SMS).  
+39. 2a.2 Continúa en el paso 3.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si algún dato es inválido:  
+40. 3x.1 El sistema muestra un mensaje de error y permite corrección.  
+41. 3x.2 Retorna al paso 2.  
+POSTCONDICIONES:  
+• - Información y preferencias actualizadas correctamente.  
+ 
+  
+
+--- Página 12 ---
+
+CU-005: Visualizar y Descargar Factura Unificada  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+• - Factura consolidada disponible.  
+FLUJO PRINCIPAL:  
+42. 1. El usuario selecciona “Ver factura unificada”.  
+43. 2. El sistema muestra la factura consolidada por servicios y totales.  
+44. 3. El usuario puede descargar el documento en PDF/Excel o solicitar envío por correo.  
+FLUJOS ALTERNOS:  
+3a. Si Si el usuario elige enviar por correo:  
+45. 3a.1 El sistema solicita o confirma dirección y realiza el envío.  
+46. 3a.2 Fin del flujo alterno.  
+FLUJOS DE EXCEPCIÓN:  
+2x. Si Si la factura no está disponible:  
+47. 2x.1 El sistema informa la razón (mantenimiento, error, etc.).  
+48. 2x.2 Sugiere volver a intentar más tarde.  
+POSTCONDICIONES:  
+• - El usuario visualiza, descarga o recibe su factura correctamente.  
+ 
+  
+
+--- Página 13 ---
+
+CU-006: Consultar y Descargar Historial de Consumo y Pagos  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+FLUJO PRINCIPAL:  
+49. 1. El usuario accede a “Historial de consumo/pagos”.  
+50. 2. Selecciona rango de fechas y tipo de reporte (consumo, pagos).  
+51. 3. El sistema presenta los datos y permite descargar en PDF/Excel.  
+FLUJOS ALTERNOS:  
+2a. Si Si el usuario no selecciona rango:  
+52. 2a.1 El sistema muestra últimos 12 meses por defecto.  
+53. 2a.2 Continúa en el paso 3.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si no hay datos:  
+54. 3x.1 El sistema informa que no existen registros para ese período.  
+55. 3x.2 Permite seleccionar otro rango.  
+POSTCONDICIONES:  
+• - Usuario accede y/o descarga el historial solicitado.  
+ 
+  
+
+--- Página 14 ---
+
+CU-007: Reportar Falla o Incidencia  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno, Técnico de Campo  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+FLUJO PRINCIPAL:  
+56. 1. El usuario accede a “Reportar falla/incidencia”.  
+57. 2. Selecciona tipo de servicio y describe el problema.  
+58. 3. El sistema registra la incidencia y genera un ticket.  
+59. 4. Asigna el caso al área/técnico responsable según reglas del servicio.  
+60. 5. El usuario recibe notificación con el número de ticket y estado.  
+FLUJOS ALTERNOS:  
+2a. Si Si el reporte es de emergencia (p. ej., apagón masivo):  
+61. 2a.1 El sistema activa protocolo especial y notifica automáticamente a los afectados.  
+62. 2a.2 Prioriza la atención del ticket.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si la descripción es insuficiente:  
+63. 3x.1 El sistema solicita información adicional antes de generar el ticket.  
+64. 3x.2 Retorna al paso 2.  
+POSTCONDICIONES:  
+• - El ticket queda registrado y asociado al usuario con trazabilidad.  
+ 
+  
+
+--- Página 15 ---
+
+CU-008: Seguimiento y Notificaciones de Incidencias  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno, Técnico de Campo  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+• - Ticket previamente generado.  
+FLUJO PRINCIPAL:  
+65. 1. El usuario ingresa a “Mis reportes/incidencias”.  
+66. 2. El sistema muestra la lista y estado actual de cada reporte.  
+67. 3. El usuario puede ver detalles, agregar comentarios o cerrar el ticket si está resuelto.  
+68. 4. Recibe notificaciones automáticas ante actualizaciones.  
+FLUJOS ALTERNOS:  
+3a. Si Si el técnico añade información:  
+69. 3a.1 El sistema notifica al usuario y actualiza el estado.  
+70. 3a.2 Fin del flujo alterno.  
+FLUJOS DE EXCEPCIÓN:  
+2x. Si Si  el sistema no puede consultar estado actual:  
+71. 2x.1 Muestra último estado conocido y notifica que hay demoras.  
+72. 2x.2 Intenta nueva sincronización en background.  
+POSTCONDICIONES:  
+• - El usuario puede hacer seguimiento en tiempo real y recibir alertas.  
+ 
+  
+
+--- Página 16 ---
+
+CU-009: Atención y Soporte Automatizado (Chatbot/FAQ)  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - Usuario autenticado o visitante.  
+FLUJO PRINCIPAL:  
+73. 1. El usuario accede al chatbot /FAQ desde la plataforma.  
+74. 2. Formula una consulta o selecciona una pregunta frecuente.  
+75. 3. El sistema responde automáticamente o guía en la navegación.  
+76. 4. Si la consulta es compleja, ofrece la opción de contactar un operador humano.  
+FLUJOS ALTERNOS:  
+2a. Si Si el usuario solicita atención humana:  
+77. 2a.1 El sistema canaliza la conversación a un operador interno.  
+78. 2a.2 Mantiene el historial del chat.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si el chatbot no puede responder:  
+79. 3x.1 Sugiere contacto por otro canal (call center, email).  
+80. 3x.2 Registra la pregunta para mejorar el conocimiento.  
+POSTCONDICIONES:  
+• - El usuario recibe soporte inmediato o es redirigido a un canal adecuado.  
+ 
+  
+
+--- Página 17 ---
+
+CU-010: Administración de Roles y Permisos  
+ACTORES:  
+- Primario: Administrador  
+PRECONDICIONES:  
+• - Usuario autenticado como administrador.  
+FLUJO PRINCIPAL:  
+81. 1. El administrador accede al módulo de roles/permisos.  
+82. 2. Visualiza la lista de roles existentes.  
+83. 3. Crea, edita o elimina roles/permisos.  
+84. 4. Asigna roles a usuarios o grupos.  
+FLUJOS ALTERNOS:  
+3a. Si Si se requiere duplicar un rol existente:  
+85. 3a.1 El sistema permite copiar configuración y ajustarla.  
+86. 3a.2 Continúa en el paso 4.  
+FLUJOS DE EXCEPCIÓN:  
+4x. Si Si un rol tiene permisos críticos:  
+87. 4x.1 El sistema solicita confirmación adicional antes de modificar/eliminar.  
+88. 4x.2 Registra la acción en auditoría.  
+POSTCONDICIONES:  
+• - Roles y permisos gestionados correctamente, con trazabilidad de cambios.  
+ 
+  
+
+--- Página 18 ---
+
+CU-011: Monitoreo y Panel de Administración  
+ACTORES:  
+- Primario: Administrador  
+PRECONDICIONES:  
+• - Usuario autenticado como administrador.  
+FLUJO PRINCIPAL:  
+89. 1. El administrador ingresa al panel de administración.  
+90. 2. Visualiza métricas en tiempo real sobre uso, disponibilidad, incidencias y pagos.  
+91. 3. Puede generar reportes y exportar datos.  
+92. 4. Recibe alertas ante incidentes críticos o caídas de sistemas.  
+FLUJOS ALTERNOS:  
+2a. Si Si personaliza el panel:  
+93. 2a.1 El sistema guarda las preferencias de visualización.  
+94. 2a.2 Se aplican en la próxima sesión.  
+FLUJOS DE EXCEPCIÓN:  
+2x. Si Si el sistema no puede recolectar métricas:  
+95. 2x.1 Informa al administrador y sugiere revisión técnica.  
+96. 2x.2 Registra alerta y continúa con datos disponibles.  
+POSTCONDICIONES:  
+• - Administrador con información relevante para la gestión operacional.  
+ 
+  
+
+--- Página 19 ---
+
+CU-012: Gestión de Solicitudes y Trámites Administrativos  
+ACTORES:  
+- Primario: Ciudadano  
+- Secundario: Operador Interno  
+PRECONDICIONES:  
+• - Usuario autenticado.  
+FLUJO PRINCIPAL:  
+97. 1. El usuario accede a “Solicitudes y trámites”.  
+98. 2. Selecciona el tipo de trámite y llena el formulario.  
+99. 3. El sistema valida y registra la solicitud.  
+100. 4. Asigna la solicitud al área interna correspondiente.  
+101. 5. El usuario puede consultar el estado y recibe notificaciones de avances.  
+FLUJOS ALTERNOS:  
+3a. Si Si se requieren documentos adjuntos:  
+102. 3a.1 El sistema permite subir archivos en formatos permitidos.  
+103. 3a.2 Valida tamaño y formato.  
+FLUJOS DE EXCEPCIÓN:  
+3x. Si Si  la solicitud es incompleta:  
+104. 3x.1 El sistema solicita corrección antes de registrar.  
+105. 3x.2 Retorna al paso 2.  
+POSTCONDICIONES:  
+• - Solicitud registrada, con seguimiento en línea y trazabilidad completa.  
+ 
+  
+
+--- Página 20 ---
+
+CU-013: Trazabilidad y Auditoría de Operaciones  
+ACTORES:  
+- Primario: Administrador  
+- Secundario: Auditor  
+PRECONDICIONES:  
+• - Usuario autenticado con permisos especiales.  
+FLUJO PRINCIPAL:  
+106. 1. El administrador/auditor accede al módulo de auditoría.  
+107. 2. Consulta registros de operaciones críticas filtrando por usuario, fecha y tipo de 
+operación.  
+108. 3. Visualiza y exporta logs de auditoría.  
+FLUJOS ALTERNOS:  
+2a. Si Si requiere informes detallados:  
+109. 2a.1 El sistema permite generar reportes personalizados.  
+110. 2a.2 Guarda filtros predefinidos.  
+FLUJOS DE EXCEPCIÓN:  
+2x. Si Si el acceso no está autorizado:  
+111. 2x.1 El sistema bloquea el intento y registra la incidencia.  
+112. 2x.2 Notifica al administrador de seguridad.  
+POSTCONDICIONES:  
+• - Auditoría y trazabilidad asegurada conforme a normativas.  
+ 
+  
+
+--- Página 21 ---
+
+FASE 3: Épicas e Historias de Usuario  
+ÉPICA 1: Consulta y Gestión de Saldos y Pagos  
+Descripción: Como ciudadano, quiero consultar mis saldos y realizar pagos de todos mis 
+servicios desde una única plataforma digital, para gestionar fácilmente mis obligaciones y 
+evitar retrasos o recargos.  
+Valor de negocio: Reduce la carga del call center, aumenta satisfacción del cliente y facilita la 
+recaudación.  
+Criterios de aceptación de la épica:  
+• - La consulta de saldos debe ser unificada, confiable y disponible 24/7.  
+• - Los pagos deben procesarse en línea y reflejarse en los sistemas legados rápidamente.  
+Estimación: XL (13+ SP)  
+Prioridad: 1 (Must Have)  
+ 
+ÉPICA 2: Experiencia Digital Integral y Personalización  
+Descripción: Como ciudadano, quiero gestionar mi perfil, preferencias, notificaciones y 
+consultar mi historial de consumo, para tener control total sobre mi información y cómo 
+interactúo con ServiCiudad.  
+Valor de negocio: Mejora la percepción de transparencia y empoderamiento del usuario.  
+Criterios de aceptación de la épica:  
+• - Los usuarios pueden editar sus datos, cambiar contraseña y personalizar 
+notificaciones.  
+• - El historial de consumo y pagos está siempre disponible y descargable.  
+Estimación: L (8 –13 SP)  
+Prioridad: 2 (Should Have)  
+ 
+  
+
+--- Página 22 ---
+
+ÉPICA 3: Soporte, Reportes y Trámites en Línea  
+Descripción: Como ciudadano, quiero reportar incidencias y gestionar trámites 
+administrativos desde la plataforma, para recibir soluciones rápidas y transparentes, sin 
+filas ni llamadas innecesarias.  
+Valor de negocio: Descongestiona oficinas físicas y call center, mejora la trazabilidad y la 
+atención ciudadana.  
+Criterios de aceptación de la épica:  
+• - El usuario puede reportar problemas, recibir tickets, y hacer seguimiento a sus 
+solicitudes.  
+• - Existe integración con áreas internas para gestionar y resolver solicitudes.  
+Estimación: L (8 –13 SP)  
+Prioridad: 2 (Should Have)  
+ 
+ÉPICA 4: Integración y Resiliencia con Sistemas Legados  
+Descripción: Como operador/administrador, quiero que la plataforma interactúe de forma 
+transparente y segura con los sistemas legados, para asegurar la continuidad y 
+disponibilidad de la información, aun ante fallas o mantenimientos.  
+Valor de negocio: Evita la caída del sistema completo ante indisponibilidad de legados y 
+permite evolución incremental.  
+Criterios de aceptación de la épica:  
+• - Capa de anticorrupción funcionando y resiliente.  
+• - Tiempos de indisponibilidad gestionados y notificados al usuario.  
+Estimación: XL (13+ SP)  
+Prioridad: 1 (Must Have)  
+ 
+  
+
+--- Página 23 ---
+
+ÉPICA 5: Panel de Administración, Auditoría y Seguridad  
+Descripción: Como administrador, quiero monitorear en tiempo real, auditar operaciones y 
+gestionar roles y permisos, para garantizar la seguridad, trazabilidad y cumplimiento 
+normativo.  
+Valor de negocio: Facilita la gestión, la prevención de fraudes y el cumplimiento de 
+normativas como ISO 27001.  
+Criterios de aceptación de la épica:  
+• - El panel muestra métricas en tiempo real y permite exportar reportes.  
+• - Auditoría de operaciones crítica, roles y permisos totalmente gestionables.  
+Estimación: L (8 –13 SP)  
+Prioridad: 1 (Must Have)  
+ 
+HU-001 - Consulta de saldo unificado  
+Como Ciudadano, quiero ver el saldo consolidado de todos mis servicios en un solo lugar, 
+para conocer rápidamente cuánto debo pagar.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO accede a la opción “Consultar saldo”  
+• - ENTONCES el sistema muestra el saldo actualizado por cada servicio y el total.  
+Definición de terminado:  
+• - [ ] Código implementado  
+• - [ ] Pruebas unitarias  
+• - [ ] Pruebas de aceptación  
+• - [ ] Documentación y manuales  
+Estimación: 3 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: HU -002 (Autenticación)  
+ 
+  
+
+--- Página 24 ---
+
+HU-002 - Pago en línea de servicios  
+Como Ciudadano, quiero pagar mis servicios en línea desde el portal o app móvil, para no 
+tener que desplazarme ni hacer filas.  
+Criterios de aceptación:  
+• - DADO QUE el usuario tiene saldo pendiente  
+• - CUANDO selecciona servicios y método de pago  
+• - ENTONCES el sistema procesa la transacción y actualiza los saldos.  
+Definición de terminado:  
+• - [ ] Código y pruebas desarrolladas  
+• - [ ] Integración con pasarela de pagos  
+• - [ ] Pruebas de aceptación  
+• - [ ] Manual actualizado  
+Estimación: 5 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: HU -001, HU -003 
+ 
+HU-003 - Notificación automática de pago  
+Como Ciudadano, quiero recibir confirmación inmediata por email/SMS/push cuando 
+realice un pago, para tener certeza de que mi transacción fue exitosa.  
+Criterios de aceptación:  
+• - DADO QUE el usuario realiza un pago  
+• - CUANDO la transacción es confirmada  
+• - ENTONCES el usuario recibe notificación con los detalles.  
+Definición de terminado:  
+• - [ ] Notificaciones funcionales  
+• - [ ] Pruebas de integración  
+• - [ ] Plantilla de mensajes lista  
+Estimación: 2 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: HU -002 
+ 
+
+--- Página 25 ---
+
+HU-004 - Visualización de historial de pagos y consumos  
+Como Ciudadano, quiero ver y descargar mi historial de pagos y consumos de servicios, para 
+tener control sobre mis gastos y validar facturación.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO accede a historial  
+• - ENTONCES puede ver los movimientos por servicio y descargar en PDF/Excel.  
+Definición de terminado:  
+• - [ ] Consulta implementada  
+• - [ ] Exportación a PDF/Excel  
+• - [ ] Pruebas de aceptación  
+Estimación: 3 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: - 
+ 
+HU-005 - Gestión de perfil y datos personales  
+Como Ciudadano, quiero actualizar mis datos personales y preferencias, para asegurar que 
+mi información esté correcta y recibir comunicaciones adecuadas.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO accede a su perfil y edita datos  
+• - ENTONCES el sistema guarda los cambios y notifica confirmación.  
+Definición de terminado:  
+• - [ ] Edición de datos implementada  
+• - [ ] Pruebas unitarias  
+• - [ ] Manual actualizado  
+Estimación: 3 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: - 
+ 
+
+--- Página 26 ---
+
+HU-006 - Configuración de preferencias de notificación  
+Como Ciudadano, quiero elegir cómo y cuándo recibir notificaciones, para estar informado 
+solo de lo que me interesa y por mi canal preferido.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO configura preferencias  
+• - ENTONCES el sistema guarda las opciones y actúa acorde a ellas.  
+Definición de terminado:  
+• - [ ] Gestión de preferencias  
+• - [ ] Pruebas  
+• - [ ] Documentación  
+Estimación: 2 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: HU -005 
+ 
+HU-007 - Cambiar contraseña y autenticación  
+Como Ciudadano, quiero poder cambiar mi contraseña y activar autenticación reforzada, 
+para mantener la seguridad de mi cuenta.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO solicita cambio de contraseña  
+• - ENTONCES el sistema valida y aplica el cambio.  
+Definición de terminado:  
+• - [ ] Funcionalidad implementada  
+• - [ ] MFA para admins  
+• - [ ] Pruebas y manual  
+Estimación: 2 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: - 
+ 
+
+--- Página 27 ---
+
+HU-008 - Reporte de falla/Incidencia en servicios  
+Como Ciudadano, quiero reportar fallas o incidencias en mis servicios desde la plataforma, 
+para recibir atención y solución oportuna.  
+Criterios de aceptación:  
+• - DADO QUE el usuario está autenticado  
+• - CUANDO llena y envía un reporte  
+• - ENTONCES el sistema asigna ticket y notifica seguimiento.  
+Definición de terminado:  
+• - [ ] Reporte funcional  
+• - [ ] Generación automática de tickets  
+• - [ ] Pruebas de aceptación  
+Estimación: 5 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: - 
+ 
+HU-009 - Seguimiento de tickets de soporte  
+Como Ciudadano, quiero consultar el estado de mis reportes y solicitudes, para saber en qué 
+etapa van y recibir actualizaciones.  
+Criterios de aceptación:  
+• - DADO QUE el usuario tiene tickets activos  
+• - CUANDO consulta el módulo de seguimiento  
+• - ENTONCES puede ver estados, detalles y comentarios de operadores.  
+Definición de terminado:  
+• - [ ] Consulta implementada  
+• - [ ] Notificaciones automáticas  
+• - [ ] Pruebas  
+Estimación: 3 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: HU -008 
+ 
+
+--- Página 28 ---
+
+HU-010 - Gestión de solicitudes y trámites administrativos  
+Como Ciudadano, quiero realizar trámites administrativos, para evitar visitas presenciales y 
+tener trazabilidad digital.  
+Criterios de aceptación:  
+• - DADO QUE el usuario inicia una solicitud  
+• - CUANDO llena el formulario y adjunta documentación  
+• - ENTONCES el sistema registra, asigna a un área y notifica avance.  
+Definición de terminado:  
+• - [ ] Flujo de trámites funcional  
+• - [ ] Seguimiento y notificación  
+• - [ ] Pruebas de aceptación  
+Estimación: 5 Story Points  
+Prioridad: 2 (Media)  
+Dependencias: - 
+ 
+HU-011 - Chatbot y atención automatizada  
+Como Ciudadano, quiero acceder a un chatbot  para dudas frecuentes, para resolver 
+problemas simples sin esperar atención humana.  
+Criterios de aceptación:  
+• - DADO QUE el usuario inicia chat  
+• - CUANDO formula una pregunta común  
+• - ENTONCES el chatbot responde o canaliza con operador si es necesario.  
+Definición de terminado:  
+• - [ ] Chatbot implementado  
+• - [ ] Canalización automática  
+• - [ ] Pruebas  
+Estimación: 3 Story Points  
+Prioridad: 3 (Baja)  
+Dependencias: - 
+ 
+
+--- Página 29 ---
+
+HU-012 - Consulta a sistemas legados a través de microservicios  
+Como Desarrollador, quiero que la plataforma consulte datos de sistemas legados vía 
+microservicios, para desacoplar la experiencia digital y facilitar la integración.  
+Criterios de aceptación:  
+• - DADO QUE una funcionalidad requiere datos legados  
+• - CUANDO la plataforma consulta saldos o movimientos  
+• - ENTONCES la integración se realiza por microservicios, con capa anticorrupción.  
+Definición de terminado:  
+• - [ ] Microservicios operativos  
+• - [ ] Capa anticorrupción validada  
+• - [ ] Pruebas de integración  
+Estimación: 8 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: - 
+ 
+HU-013 - Resiliencia y gestión de indisponibilidad  
+Como Ciudadano, quiero ser informado si algún servicio está temporalmente no disponible, 
+para entender la razón y recibir opciones de consulta alternativa.  
+Criterios de aceptación:  
+• - DADO QUE ocurre mantenimiento en sistemas legados  
+• - CUANDO el usuario intenta consultar  
+• - ENTONCES el sistema muestra mensaje informativo y opciones disponibles.  
+Definición de terminado:  
+• - [ ] Gestión de errores e indisponibilidad  
+• - [ ] Mensajes claros para el usuario  
+• - [ ] Pruebas de resiliencia  
+Estimación: 3 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: - 
+ 
+
+--- Página 30 ---
+
+HU-014 - Actualización asincrónica de pagos y operaciones  
+Como Operador Interno, quiero que los pagos y operaciones se sincronicen 
+automáticamente con los sistemas legados, para evitar inconsistencias y reducir reprocesos 
+manuales.  
+Criterios de aceptación:  
+• - DADO QUE ocurre un pago  
+• - CUANDO el sistema legado está temporalmente fuera de línea  
+• - ENTONCES la operación queda en cola y se procesa en cuanto esté disponible.  
+Definición de terminado:  
+• - [ ] Cola de mensajes implementada  
+• - [ ] Actualización automática  
+• - [ ] Pruebas de recuperación  
+Estimación: 5 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: HU -012 
+ 
+HU-015 - Panel de monitoreo y métricas  
+Como Administrador, quiero acceder a un panel con métricas en tiempo real, para 
+supervisar la operación y detectar incidentes rápidamente.  
+Criterios de aceptación:  
+• - DADO QUE el admin está autenticado  
+• - CUANDO ingresa al panel  
+• - ENTONCES visualiza indicadores clave, estados y alertas.  
+Definición de terminado:  
+• - [ ] Panel funcional  
+• - [ ] Visualización de métricas  
+• - [ ] Pruebas  
+Estimación: 5 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: - 
+ 
+
+--- Página 31 ---
+
+HU-016 - Gestión de roles y permisos  
+Como Administrador, quiero crear, editar y asignar roles/permiso a los usuarios, para 
+controlar el acceso y mantener la seguridad.  
+Criterios de aceptación:  
+• - DADO QUE el admin accede al módulo de roles  
+• - CUANDO administra usuarios  
+• - ENTONCES el sistema aplica los cambios y registra auditoría.  
+Definición de terminado:  
+• - [ ] Módulo operativo  
+• - [ ] Auditoría de cambios  
+• - [ ] Pruebas  
+Estimación: 5 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: - 
+ 
+HU-017 - Consulta y exportación de auditoría de operaciones  
+Como Auditor, quiero consultar y exportar el registro de operaciones críticas, para cumplir 
+con requisitos normativos y detectar anomalías.  
+Criterios de aceptación:  
+• - DADO QUE el usuario tiene permisos de auditoría  
+• - CUANDO accede al módulo  
+• - ENTONCES puede filtrar, consultar y exportar logs según parámetros.  
+Definición de terminado:  
+• - [ ] Consulta de logs  
+• - [ ] Exportación a formatos estándar  
+• - [ ] Pruebas  
+Estimación: 3 Story Points  
+Prioridad: 1 (Alta)  
+Dependencias: HU -016 
+ 
+  
+
+--- Página 32 ---
+
+Anexo: Diagramas en Lucidchart (entrega separada)  
+Los diagramas solicitados (arquitectura de microservicios, flujo de pagos, integración con 
+sistemas legados, y panel de administración) se entregarán en formato Lucidchart para su 
+edición y colaboración.  
+
+--- Página 33 ---
+

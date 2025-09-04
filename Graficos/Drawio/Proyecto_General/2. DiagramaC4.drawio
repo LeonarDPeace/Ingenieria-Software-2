@@ -1,0 +1,139 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="C4 Context Diagram - ServiCiudad" id="noDIiDl5HCgtdaBMfhhV">
+    <mxGraphModel dx="1778" dy="1354" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-2" value="C4 CONTEXT DIAGRAM - SERVICIUDAD CONECTADA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="7" width="1520" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-3" value="ServiCiudad Conectada&#xa;Digital Platform&#xa;&#xa;Sistema unificado de servicios públicos que permite a los ciudadanos de Cali gestionar energía, acueducto y telecomunicaciones desde una única plataforma digital con experiencia 360°. Integra sistemas legacy (Mainframe IBM Z, Oracle Solaris) mediante arquitectura de microservicios con patrones de resiliencia." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4472C4;strokeColor=#2E5394;fontColor=#FFFFFF;fontSize=16;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="600" y="367" width="400" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-4" value="Ciudadano&#xa;[Person]&#xa;&#xa;Usuarios finales que consumen servicios de energía, acueducto y telecomunicaciones. Acceden vía web y móvil para consultar saldos, pagar servicios y reportar incidencias. Requieren experiencia unificada 360°." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#70AD47;strokeColor=#4F7530;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100.5" width="230" height="191.5" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-5" value="Operador Interno&#xa;[Person]&#xa;&#xa;Personal de ServiCiudad que gestiona solicitudes, incidencias y soporte al cliente" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#70AD47;strokeColor=#4F7530;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="336.5" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-6" value="Técnico de Campo&#xa;[Person]&#xa;&#xa;Personal técnico que resuelve incidencias físicas en terreno para los diferentes servicios" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#70AD47;strokeColor=#4F7530;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="516.5" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-7" value="Administrador&#xa;[Person]&#xa;&#xa;Administradores del sistema que gestionan configuraciones, usuarios y monitorean la plataforma" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#70AD47;strokeColor=#4F7530;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="713.5" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-8" value="Mainframe IBM Z&#xa;[Legacy System]&#xa;&#xa;Sistema principal de energía con lógica COBOL. Ventana de mantenimiento dominical 4h. Latencia alta (&gt;30s). Requiere adaptador con Circuit Breaker y Message Translator para EBCDIC." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="88.5" width="230" height="191.5" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-9" value="Oracle Solaris&#xa;[Legacy System]&#xa;&#xa;Sistema de acueducto con PL/SQL. Latencia promedio de 30 segundos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="300" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-10" value="Sistemas Telecom&#xa;[Modern System]&#xa;&#xa;Sistemas modernos de telecomunicaciones con APIs REST/SOAP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="465" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-11" value="Pasarela PSE&#xa;[External System]&#xa;&#xa;Sistema bancario para procesamiento de pagos electrónicos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="615.5" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-12" value="Proveedores SMS/Email&#xa;[External System]&#xa;&#xa;Servicios externos de notificaciones SMS, Email y Push" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="765.5" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-13" value="Alcaldía de Cali&#xa;[Government Entity]&#xa;&#xa;Entidad gubernamental que define políticas como &#39;Cali Conectada&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8764B8;strokeColor=#6A4C93;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="575" y="140" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-14" value="Entes Reguladores&#xa;[Government Entity]&#xa;&#xa;Organismos de control y regulación de servicios públicos (CRA, CREG, etc.)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8764B8;strokeColor=#6A4C93;fontColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="825" y="140" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-15" value="Consulta saldos, paga servicios,&#xa;reporta incidencias&#xa;[HTTPS/REST, Mobile App]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-4" target="aKf970qjU-9C9qfbJ7dk-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="227" as="sourcePoint" />
+            <mxPoint x="580" y="427" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-16" value="Gestiona tickets, atiende usuarios,&#xa;consulta información&#xa;[HTTPS/REST, Web Portal]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-5" target="aKf970qjU-9C9qfbJ7dk-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="427" as="sourcePoint" />
+            <mxPoint x="580" y="467" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-17" value="Recibe asignaciones,&#xa;actualiza estado de tickets&#xa;[HTTPS/REST, Mobile App]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-6" target="aKf970qjU-9C9qfbJ7dk-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="627" as="sourcePoint" />
+            <mxPoint x="580" y="517" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-18" value="Administra usuarios, monitorea sistema,&#xa;configura roles y permisos&#xa;[HTTPS/REST, Admin Portal]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-7" target="aKf970qjU-9C9qfbJ7dk-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="827" as="sourcePoint" />
+            <mxPoint x="580" y="547" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-19" value="Consulta saldos energía,&#xa;actualiza consumos&#xa;[Terminal 3270, Batch Files]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="317" as="sourcePoint" />
+            <mxPoint x="1280" y="177" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-20" value="Consulta saldos acueducto,&#xa;obtiene facturas&#xa;[PL/SQL, Fixed-width files]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="367" as="sourcePoint" />
+            <mxPoint x="1280" y="327" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-21" value="Gestiona planes telecom,&#xa;consulta consumos&#xa;[REST/SOAP APIs]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="467" as="sourcePoint" />
+            <mxPoint x="1280" y="477" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-22" value="Procesa pagos,&#xa;valida transacciones&#xa;[HTTPS/REST]" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="517" as="sourcePoint" />
+            <mxPoint x="1280" y="627" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-23" value="Envía notificaciones,&#xa;confirmaciones de pago&#xa;[HTTP APIs]" style="endArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="547" as="sourcePoint" />
+            <mxPoint x="1280" y="777" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-24" value="Recibe directrices &#39;Cali Conectada&#39;,&#xa;reporta métricas de servicio" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8764B8;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="347" as="sourcePoint" />
+            <mxPoint x="700" y="207" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-25" value="Cumple normativas,&#xa;reporta indicadores regulatorios" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8764B8;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="aKf970qjU-9C9qfbJ7dk-3" target="aKf970qjU-9C9qfbJ7dk-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="850" y="347" as="sourcePoint" />
+            <mxPoint x="950" y="207" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-26" value="LEYENDA C4 - CONTEXTO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="900" width="1520" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-27" value="Sistema Principal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4472C4;strokeColor=#2E5394;fontColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="960" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-28" value="Personas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#70AD47;strokeColor=#4F7530;fontColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="960" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-29" value="Sistemas Externos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5504B;strokeColor=#A43E39;fontColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="960" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-30" value="Entidades Gubernamentales" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8764B8;strokeColor=#6A4C93;fontColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="500" y="960" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-31" value="→ Azul: Interacciones Usuarios | → Rojo: Integraciones Sistemas | → Púrpura: Relaciones Gubernamentales" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="960" width="600" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-32" value="CONTEXTO DE NEGOCIO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1016" width="1520" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="aKf970qjU-9C9qfbJ7dk-33" value="ServiCiudad Cali es una empresa mixta de servicios públicos con más de 50 años de experiencia. La plataforma ServiCiudad Conectada surge por:&#xa;• Política gubernamental &#39;Cali Conectada&#39; que exige modernización digital en 4 meses&#xa;• CSAT actual de 45%, muy por debajo del promedio del sector&#xa;• 5000+ llamadas diarias al call center (60% automatizables)&#xa;• Competencia de nuevas empresas con mejor experiencia digital&#xa;• Necesidad de unificar 3 sistemas legacy independientes manteniendo operatividad 24/7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;align=left;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1056" width="1520" height="104" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,118 @@
+ 
+Caso Problema: La Transformación Digital de "ServiCiudad Cali"  
+Contexto Empresarial y Social  
+ServiCiudad Cali  es la empresa de servicios públicos que durante más de 50 años ha 
+provisto de energía, acueducto y telecomunicaciones a los ciudadanos de Santiago de Cali. 
+Como entidad mixta, enfrenta una doble presión: debe ser financieramente sostenible y, al 
+mismo tie mpo, cumplir con una misión social de servicio a la comunidad.  
+Históricamente, cada servicio ha operado como un feudo independiente. El departamento de 
+Energía utiliza un sistema mainframe IBM Z  para la gestión de consumo y facturación; 
+Acueducto depende de una antigua base de datos Oracle sobre Solaris ; y 
+Telecomunicaciones utiliza una amalgama de sistemas más modernos pero mal integrados. El 
+resultado para el ciudadano es una experiencia fragmentada y frustrante: tres portales web 
+diferentes, tres facturas separadas y tres números de contacto para sopo rte. 
+La Crisis Tecnológica y de Servicio   
+La junta directiva, presionada por la alcaldía y por una ciudadanía cada vez más digital, ha 
+decidido que el modelo actual es insostenible. La falta de una visión unificada del cliente está 
+causando estragos.  
+Datos Cuantitativos:  
+● Satisfacción del Cliente (CSAT):  La puntuación es de un alarmante 45% , muy por 
+debajo del promedio del sector.  
+● Costos Operativos:  El centro de llamadas unificado recibe más de 5,000 llamadas 
+diarias . Un análisis reveló que el 60% de estas son consultas de saldo  que podrían ser 
+automatizadas. El costo anual del call center para estas consultas básicas supera los 
+$2,500 millones de COP . 
+● Tiempo de Procesamiento:  La conciliación de un pago realizado por un ciudadano 
+puede tardar hasta 72 horas  en reflejarse en los tres sistemas, generando confusión y 
+cobros incorrectos.  
+● Agilidad Inexistente:  El lanzamiento de un nuevo plan de "factura unificada" fue un 
+proyecto que duró 18 meses  y finalmente fue cancelado por su complejidad técnica.  
+El detonante final ha sido la nueva política de la alcaldía "Cali Conectada", que exige a 
+ServiCiudad lanzar en 4 meses  un nuevo portal unificado y una app móvil que ofrezca una 
+visión 360° del cliente, pagos en tiempo real y reportes de fallas interactivos. El equipo de TI 
+actual ha admitido que es técnicamente imposible con la arquitectura existente.  
+ 
+
+--- Página 1 ---
+
+Implicaciones Estratégicas y Técnicas   
+La incapacidad de modernizarse no es solo una falla técnica, es una amenaza estratégica. 
+Nuevas empresas de telecomunicaciones y soluciones de energía solar están entrando al 
+mercado con experiencias de cliente superiores, erosionando la base de usuarios d e 
+ServiCiudad.  
+Técnicamente, la arquitectura sufre de:  
+● Silos de Datos Intocables:  Cada sistema legado es una caja negra. No hay APIs, y la 
+única forma de integración es a través de procesos batch nocturnos  que intercambian 
+archivos planos (TXT, CSV e incluso formatos EBCDIC del mainframe).  
+● Indisponibilidad Programada:  El mainframe de Energía tiene una ventana de 
+mantenimiento de 4 horas todos los domingos en la madrugada, lo que choca 
+directamente con la exigencia de un servicio 24/7.  
+● Tecnología Obsoleta:  La lógica de negocio crítica está encapsulada en programas 
+COBOL y PL/SQL  de hace décadas, cuyo conocimiento se está perdiendo con la 
+jubilación de los ingenieros más antiguos.  
+ 
+El Desafío Final: Proyecto "ServiCiudad Conectada"   
+Como la nueva firma de consultoría en arquitectura de software contratada por ServiCiudad, 
+su equipo tiene la misión de diseñar la espina dorsal de la nueva plataforma digital. Este 
+proyecto no reemplazará los sistemas legados de la noche a la mañana, sino  que los 
+envolverá y orquestará  a través de una arquitectura moderna de microservicios.  
+Su tarea es entregar una propuesta arquitectónica completa que debe incluir:  
+1. Visión y Descomposición de Servicios:  
+○ Definan los microservicios que conformarán la nueva capa de experiencia digital (Ej: 
+Servicio de Clientes, Servicio de Facturación Unificada, Servicio de Pagos, Servicio 
+de Notificaciones, etc.).  
+○ Justifiquen cómo esta descomposición aísla la complejidad de los sistemas legados 
+y permite la agilidad requerida.  
+2. Diagrama de la Arquitectura de Solución:  
+○ Elaboren un diagrama detallado que muestre cómo la nueva aplicación móvil 
+interactuará con los microservicios a través de un API Gateway . 
+○ El diagrama debe ilustrar las interacciones entre los nuevos microservicios y cómo 
+estos se conectan a los sistemas legados (mainframes, bases de datos Oracle, etc.), 
+actuando como una capa "anti -corrupción".  
+3. Manual de Decisión y Aplicación de Patrones:  
+○ Para cada uno de los siguientes retos específicos, detallen el patrón o patrones que 
+
+--- Página 2 ---
+
+aplicarían, justificando su elección con base en la lista confirmada.  
+■ Acceso a Sistemas Legados:  El mainframe de Energía no tiene API. Las 
+consultas de consumo deben hacerse a través de un conector que simula una 
+terminal 3270. ¿Cómo encapsularían esta complejidad para que el resto de los 
+microservicios la consuman como si fuera una API REST moderna?  (Adapter / 
+Facade ). 
+■ Heterogeneidad de Datos:  El sistema de Acueducto genera reportes de 
+facturación en un formato de texto de ancho fijo. Su nuevo Servicio de 
+Facturación Unificada trabaja exclusivamente con JSON. ¿Qué componente es 
+indispensable para esta comunicación? ( Message Translator ). 
+■ Resiliencia ante la Obsolescencia:  Las consultas al sistema Oracle de 
+Acueducto a veces tardan más de 30 segundos en responder, lo que podría 
+congelar una petición del usuario. ¿Cómo evitarían que la lentitud de un sistema 
+legado degrade toda la experiencia del nuevo portal? ( Circuit Breaker ). 
+■ Enrutamiento de Solicitudes:  Las peticiones de soporte que llegan a través de 
+la app deben dirigirse a diferentes sistemas de ticketing internos según el tipo 
+de servicio ("Energía", "Agua", "Telecom"). ¿Qué patrón usarían para 
+automatizar este enrutamiento? ( Content -Based Router ). 
+■ Coordinación de Eventos Críticos:  Cuando el sistema de Energía reporta un 
+apagón masivo, se debe notificar a los clientes afectados por SMS, actualizar un 
+mapa de incidencias en la web y alertar al equipo de operaciones de campo. 
+¿Cómo orquestarían esta difusión de información de forma ef iciente y 
+desacoplada? ( Publish -Subscribe Channel ). 
+■ Autonomía y Persistencia:  Su nuevo "Servicio de Clientes" necesita una vista 
+agregada de la información del usuario que es muy lenta de consultar en tiempo 
+real. ¿Qué estrategia de datos adoptarían para este servicio, y cómo la 
+mantendrían sincronizada? ( Database per Service  y Sagas/Event Sourcing 
+como reto avanzado).  
+■ Construcción de Respuestas Complejas:  La pantalla principal de la app debe 
+mostrar un resumen que incluye el saldo de energía, el consumo de agua en m³, 
+y los gigas restantes del plan de datos. ¿Cómo construirían este objeto de 
+respuesta compuesto (DashboardDTO) de forma legible y mantenible en el 
+backend? ( Builder ). 
+4. Propuesta Tecnológica y Plan de Implementación:  
+○ Sugieran una pila tecnológica específica dentro del ecosistema Java/Spring Boot  
+(Spring Cloud Gateway, Resilience4j, Spring Data, etc.) para implementar la solución.  
+○ Esbocen un plan de implementación incremental. ¿Qué microservicio construirían 
+primero y por qué? ¿Cómo lo pondrían en producción sin afectar los sistemas 
+existentes?  
+
+--- Página 3 ---
+

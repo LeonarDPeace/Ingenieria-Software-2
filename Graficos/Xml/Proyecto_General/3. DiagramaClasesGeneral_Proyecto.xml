@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" version="22.1.16" etag="example" type="device">
+  <diagram name="Diagrama de Clases General - ServiCiudad" id="general_class_diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TITLE -->
+        <mxCell id="title" value="DIAGRAMA DE CLASES GENERAL - SERVICIUDAD CONECTADA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="1520" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- USER MANAGEMENT -->
+        <mxCell id="user_title" value="USER MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="usuario" value="&lt;&lt;Entity&gt;&gt;&#xa;Usuario&#xa;&#xa;- id: String&#xa;- numeroIdentificacion: String&#xa;- nombre: String&#xa;- apellido: String&#xa;- email: String&#xa;- telefono: String&#xa;- fechaRegistro: LocalDateTime&#xa;- estado: EstadoUsuario&#xa;- roles: Set&lt;Rol&gt;&#xa;&#xa;+ autenticar(): boolean&#xa;+ actualizarPerfil(): void&#xa;+ cambiarContrasena(): void&#xa;+ tieneRol(rol): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="160" width="250" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rol" value="&lt;&lt;Entity&gt;&gt;&#xa;Rol&#xa;&#xa;- id: String&#xa;- nombre: RolTipo&#xa;- descripcion: String&#xa;- permisos: Set&lt;Permiso&gt;&#xa;- fechaCreacion: LocalDateTime&#xa;&#xa;+ agregarPermiso(): void&#xa;+ removerPermiso(): void&#xa;+ tienePermiso(permiso): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="360" y="160" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- PAYMENT MANAGEMENT -->
+        <mxCell id="payment_title" value="PAYMENT MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="420" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pago_unificado" value="&lt;&lt;Entity&gt;&gt;&#xa;PagoUnificado&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- servicios: List&lt;ServicioPago&gt;&#xa;- montoTotal: BigDecimal&#xa;- estado: EstadoPago&#xa;- fechaPago: LocalDateTime&#xa;- metodoPago: MetodoPago&#xa;- transactionId: String&#xa;&#xa;+ calcularTotal(): BigDecimal&#xa;+ procesarPago(): boolean&#xa;+ cancelar(): void&#xa;+ confirmar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="460" width="250" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="servicio_pago" value="&lt;&lt;Value Object&gt;&gt;&#xa;ServicioPago&#xa;&#xa;- tipoServicio: TipoServicio&#xa;- numeroServicio: String&#xa;- monto: BigDecimal&#xa;- saldoAnterior: BigDecimal&#xa;- saldoNuevo: BigDecimal&#xa;&#xa;+ calcularDescuento(): BigDecimal&#xa;+ aplicarPago(): void&#xa;+ validar(): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="360" y="460" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- SERVICE MANAGEMENT -->
+        <mxCell id="service_title" value="SERVICE MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="servicio_publico" value="&lt;&lt;Abstract&gt;&gt;&#xa;ServicioPublico&#xa;&#xa;- id: String&#xa;- numeroServicio: String&#xa;- usuarioId: String&#xa;- tipoServicio: TipoServicio&#xa;- estado: EstadoServicio&#xa;- fechaInstalacion: LocalDate&#xa;- saldoActual: BigDecimal&#xa;&#xa;+ abstract consultarSaldo(): BigDecimal&#xa;+ abstract actualizarSaldo(): void&#xa;+ suspender(): void&#xa;+ reactivar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="600" y="160" width="250" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="servicio_energia" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioEnergia&#xa;&#xa;- consumoMensual: Double&#xa;- tarifa: BigDecimal&#xa;- factorPotencia: Double&#xa;- medidor: String&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ calcularConsumo(): Double&#xa;+ generarFactura(): Factura" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="600" y="380" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="servicio_acueducto" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioAcueducto&#xa;&#xa;- consumoM3: Double&#xa;- tarifaBasica: BigDecimal&#xa;- estratoSocial: Integer&#xa;- medidor: String&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ calcularConsumo(): Double&#xa;+ aplicarSubsidio(): BigDecimal" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="820" y="380" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="servicio_telecom" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioTelecomunicaciones&#xa;&#xa;- planDatos: String&#xa;- velocidadMbps: Integer&#xa;- minutosIncluidos: Integer&#xa;- datosRestantes: Double&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ consultarDatosRestantes(): Double&#xa;+ cambiarPlan(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="380" width="220" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- NOTIFICATION MANAGEMENT -->
+        <mxCell id="notification_title" value="NOTIFICATION MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="700" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notificacion" value="&lt;&lt;Entity&gt;&gt;&#xa;Notificacion&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- tipo: TipoNotificacion&#xa;- canal: CanalNotificacion&#xa;- mensaje: String&#xa;- estado: EstadoNotificacion&#xa;- fechaEnvio: LocalDateTime&#xa;- intentos: Integer&#xa;&#xa;+ enviar(): boolean&#xa;+ marcarComoLeida(): void&#xa;+ reintentar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="740" width="250" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- INCIDENT MANAGEMENT -->
+        <mxCell id="incident_title" value="INCIDENT MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="700" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="incidencia" value="&lt;&lt;Entity&gt;&gt;&#xa;Incidencia&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- tipoServicio: TipoServicio&#xa;- descripcion: String&#xa;- prioridad: Prioridad&#xa;- estado: EstadoIncidencia&#xa;- fechaCreacion: LocalDateTime&#xa;- fechaResolucion: LocalDateTime&#xa;- tecnicoAsignado: String&#xa;&#xa;+ asignarTecnico(): void&#xa;+ cambiarEstado(): void&#xa;+ resolver(): void&#xa;+ escalar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="360" y="740" width="200" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- AUDIT AND SECURITY -->
+        <mxCell id="audit_title" value="AUDIT &amp; SECURITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="560" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="auditoria" value="&lt;&lt;Entity&gt;&gt;&#xa;RegistroAuditoria&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- accion: String&#xa;- entidad: String&#xa;- entidadId: String&#xa;- valoresAnteriores: String&#xa;- valoresNuevos: String&#xa;- timestamp: LocalDateTime&#xa;- ipAddress: String&#xa;&#xa;+ registrar(): void&#xa;+ consultar(): List&lt;RegistroAuditoria&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="600" y="600" width="220" height="200" as="geometry" />
+        </mxCell>
+        
+        <!-- LEGACY INTEGRATION -->
+        <mxCell id="legacy_title" value="LEGACY INTEGRATION" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="560" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sistema_legacy" value="&lt;&lt;Abstract&gt;&gt;&#xa;SistemaLegacy&#xa;&#xa;- nombre: String&#xa;- tipo: TipoSistema&#xa;- url: String&#xa;- estado: EstadoSistema&#xa;- ultimaSync: LocalDateTime&#xa;&#xa;+ abstract conectar(): boolean&#xa;+ abstract consultarDatos(): Object&#xa;+ abstract actualizarDatos(): boolean&#xa;+ verificarEstado(): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="880" y="600" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mainframe_ibm" value="&lt;&lt;Entity&gt;&gt;&#xa;MainframeIBM&#xa;&#xa;- terminal3270: String&#xa;- ventanaMantenimiento: String&#xa;- circuitBreaker: boolean&#xa;&#xa;+ conectar(): boolean&#xa;+ consultarDatos(): Object&#xa;+ actualizarDatos(): boolean&#xa;+ traducirEBCDIC(): String" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="880" y="780" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="oracle_solaris" value="&lt;&lt;Entity&gt;&gt;&#xa;OracleSolaris&#xa;&#xa;- conexionDB: String&#xa;- timeoutSQL: Integer&#xa;- formatoAncho: String&#xa;&#xa;+ conectar(): boolean&#xa;+ consultarDatos(): Object&#xa;+ actualizarDatos(): boolean&#xa;+ parsearArchivo(): Object" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="780" width="180" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- MICROSERVICES -->
+        <mxCell id="microservices_title" value="MICROSERVICES LAYER" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_clientes" value="&lt;&lt;Service&gt;&gt;&#xa;ClienteService&#xa;&#xa;+ validarCliente(): boolean&#xa;+ consultarPerfil(): Usuario&#xa;+ actualizarPerfil(): void&#xa;+ gestionarRoles(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="160" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_pagos_ref" value="&lt;&lt;Service&gt;&gt;&#xa;PaymentService&#xa;&#xa;+ procesarPagoUnificado(): PaymentResult&#xa;+ consultarEstado(): Payment&#xa;+ cancelarPago(): void&#xa;+ coordinarSaga(): SagaResult" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="280" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_notificaciones" value="&lt;&lt;Service&gt;&gt;&#xa;NotificationService&#xa;&#xa;+ enviarNotificacion(): boolean&#xa;+ procesarTemplate(): String&#xa;+ gestionarCanales(): void&#xa;+ programarEnvio(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="400" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ms_incidencias" value="&lt;&lt;Service&gt;&gt;&#xa;IncidenciaService&#xa;&#xa;+ crearIncidencia(): Incidencia&#xa;+ asignarTecnico(): void&#xa;+ actualizarEstado(): void&#xa;+ enrutarPorTipo(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="520" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- RELATIONSHIPS -->
+        <!-- Usuario has Roles -->
+        <mxCell id="rel1" value="*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="usuario" target="rol">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="220" as="sourcePoint" />
+            <mxPoint x="360" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Usuario creates PagoUnificado -->
+        <mxCell id="rel2" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="usuario" target="pago_unificado">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="200" y="380" as="sourcePoint" />
+            <mxPoint x="200" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- PagoUnificado contains ServicioPago -->
+        <mxCell id="rel3" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="pago_unificado" target="servicio_pago">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="560" as="sourcePoint" />
+            <mxPoint x="360" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- ServicioPublico inheritance -->
+        <mxCell id="rel4" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="servicio_energia" target="servicio_publico">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="700" y="380" as="sourcePoint" />
+            <mxPoint x="700" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel5" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="servicio_acueducto" target="servicio_publico">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="850" y="380" as="sourcePoint" />
+            <mxPoint x="750" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel6" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="servicio_telecom" target="servicio_publico">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1100" y="380" as="sourcePoint" />
+            <mxPoint x="800" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Usuario has ServicioPublico -->
+        <mxCell id="rel7" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="usuario" target="servicio_publico">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="330" y="200" as="sourcePoint" />
+            <mxPoint x="600" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Usuario creates Incidencia -->
+        <mxCell id="rel8" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="usuario" target="incidencia">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="300" y="380" as="sourcePoint" />
+            <mxPoint x="400" y="740" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Usuario receives Notificacion -->
+        <mxCell id="rel9" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="usuario" target="notificacion">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="200" y="380" as="sourcePoint" />
+            <mxPoint x="200" y="740" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Legacy system inheritance -->
+        <mxCell id="rel10" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="mainframe_ibm" target="sistema_legacy">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="970" y="780" as="sourcePoint" />
+            <mxPoint x="970" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel11" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="oracle_solaris" target="sistema_legacy">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1140" y="780" as="sourcePoint" />
+            <mxPoint x="1000" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Microservices use entities -->
+        <mxCell id="rel12" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="ms_clientes" target="usuario">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1300" y="200" as="sourcePoint" />
+            <mxPoint x="330" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel13" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="ms_pagos_ref" target="pago_unificado">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1300" y="350" as="sourcePoint" />
+            <mxPoint x="330" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel14" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="ms_notificaciones" target="notificacion">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1300" y="450" as="sourcePoint" />
+            <mxPoint x="330" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel15" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="ms_incidencias" target="incidencia">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1300" y="570" as="sourcePoint" />
+            <mxPoint x="560" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

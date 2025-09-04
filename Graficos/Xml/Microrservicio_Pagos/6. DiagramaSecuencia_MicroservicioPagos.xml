@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" version="22.1.16" etag="example" type="device">
+  <diagram name="Diagrama de Secuencia - MS Pagos" id="sequence_diagram_payments">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TITLE -->
+        <mxCell id="title" value="DIAGRAMA DE SECUENCIA - PAGO UNIFICADO SERVICIUDAD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="1520" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- ACTORS -->
+        <mxCell id="ciudadano" value=":Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="30" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="app_movil" value=":App Móvil" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="180" y="120" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api_gateway" value=":API Gateway" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="320" y="120" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payment_controller" value=":PaymentController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="460" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payment_service" value=":PaymentService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="620" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="saga_orchestrator" value=":SagaOrchestrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="780" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pse_gateway" value=":PSEGateway" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="940" y="120" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legacy_energy" value=":LegacyEnergyAdapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="120" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legacy_water" value=":LegacyWaterAdapter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="120" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notification_service" value=":NotificationService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- LIFELINES -->
+        <mxCell id="lifeline1" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="95" y="200" as="sourcePoint" />
+            <mxPoint x="95" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline2" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="200" as="sourcePoint" />
+            <mxPoint x="230" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline3" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="200" as="sourcePoint" />
+            <mxPoint x="370" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline4" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="200" as="sourcePoint" />
+            <mxPoint x="520" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline5" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="200" as="sourcePoint" />
+            <mxPoint x="680" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline6" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="840" y="200" as="sourcePoint" />
+            <mxPoint x="840" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline7" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="990" y="200" as="sourcePoint" />
+            <mxPoint x="990" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline8" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1150" y="200" as="sourcePoint" />
+            <mxPoint x="1150" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline9" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1330" y="200" as="sourcePoint" />
+            <mxPoint x="1330" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="lifeline10" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1500" y="200" as="sourcePoint" />
+            <mxPoint x="1500" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- ACTIVATION BOXES -->
+        <mxCell id="activation1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="225" y="240" width="10" height="800" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="activation2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="365" y="280" width="10" height="760" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="activation3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="515" y="320" width="10" height="720" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="activation4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="675" y="360" width="10" height="680" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="activation5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="835" y="440" width="10" height="600" as="geometry" />
+        </mxCell>
+        
+        <!-- MESSAGE FLOWS -->
+        <!-- 1. User initiates payment -->
+        <mxCell id="msg1" value="1: seleccionarServicios(energia, agua, telecom)" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="95" y="240" as="sourcePoint" />
+            <mxPoint x="225" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 2. App sends payment request -->
+        <mxCell id="msg2" value="2: POST /api/v1/pagos/unificado" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="235" y="280" as="sourcePoint" />
+            <mxPoint x="365" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 3. Gateway routes to payment controller -->
+        <mxCell id="msg3" value="3: routeToPaymentService(pagoRequest)" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="375" y="320" as="sourcePoint" />
+            <mxPoint x="515" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 4. Controller calls service -->
+        <mxCell id="msg4" value="4: procesarPagoUnificado(pagoRequest)" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="525" y="360" as="sourcePoint" />
+            <mxPoint x="675" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 5. Service validates and creates payment -->
+        <mxCell id="msg5" value="5: validarClienteServiCiudad(clienteId)" style="endArrow=classic;html=1;strokeColor=#669900;strokeWidth=2;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="685" y="400" as="sourcePoint" />
+            <mxPoint x="675" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 6. Service initiates saga -->
+        <mxCell id="msg6" value="6: coordinarPagoDistribuido(payment)" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="685" y="440" as="sourcePoint" />
+            <mxPoint x="835" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 7. Saga processes PSE payment -->
+        <mxCell id="msg7" value="7: procesarPago(pagoRequest)" style="endArrow=classic;html=1;strokeColor=#CC6600;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="845" y="480" as="sourcePoint" />
+            <mxPoint x="985" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 8. PSE confirms payment -->
+        <mxCell id="msg8" value="8: pagoConfirmado(transactionId)" style="endArrow=classic;html=1;strokeColor=#CC6600;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="985" y="520" as="sourcePoint" />
+            <mxPoint x="845" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 9. Saga updates energy system -->
+        <mxCell id="msg9" value="9: actualizarSaldoEnergia(pagoEnergia)" style="endArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="845" y="560" as="sourcePoint" />
+            <mxPoint x="1145" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 10. Energy system confirms -->
+        <mxCell id="msg10" value="10: saldoActualizado()" style="endArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1145" y="600" as="sourcePoint" />
+            <mxPoint x="845" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 11. Saga updates water system -->
+        <mxCell id="msg11" value="11: actualizarSaldoAcueducto(pagoAgua)" style="endArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="845" y="640" as="sourcePoint" />
+            <mxPoint x="1325" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 12. Water system confirms -->
+        <mxCell id="msg12" value="12: saldoActualizado()" style="endArrow=classic;html=1;strokeColor=#CC0000;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1325" y="680" as="sourcePoint" />
+            <mxPoint x="845" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 13. Saga notifies completion -->
+        <mxCell id="msg13" value="13: enviarNotificacion(pagoCompletado)" style="endArrow=classic;html=1;strokeColor=#9933CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="845" y="720" as="sourcePoint" />
+            <mxPoint x="1495" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 14. Saga returns success -->
+        <mxCell id="msg14" value="14: SagaResult.SUCCESS" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="835" y="760" as="sourcePoint" />
+            <mxPoint x="685" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 15. Service returns payment response -->
+        <mxCell id="msg15" value="15: PaymentResponse(estado=COMPLETED)" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="675" y="800" as="sourcePoint" />
+            <mxPoint x="525" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 16. Controller returns HTTP 200 -->
+        <mxCell id="msg16" value="16: HTTP 200 OK + PaymentResponse" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="515" y="840" as="sourcePoint" />
+            <mxPoint x="375" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 17. Gateway returns response -->
+        <mxCell id="msg17" value="17: Response + Payment Details" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="365" y="880" as="sourcePoint" />
+            <mxPoint x="235" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 18. App displays confirmation -->
+        <mxCell id="msg18" value="18: mostrarConfirmacionPago()" style="endArrow=classic;html=1;strokeColor=#0066CC;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="225" y="920" as="sourcePoint" />
+            <mxPoint x="105" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- ERROR FLOW ALTERNATIVE -->
+        <mxCell id="error_note" value="ALT: En caso de error en pasos 9-12&#xa;&#xa;- Saga ejecuta compensaciones&#xa;- Revierte pago en PSE&#xa;- Notifica error al usuario&#xa;- Retorna SagaResult.FAILED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="760" width="240" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- NOTES -->
+        <mxCell id="notes_title" value="PATRONES IMPLEMENTADOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="960" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notes_content" value="• SAGA PATTERN: Coordinación de transacciones distribuidas (pasos 6-14)&#xa;• CIRCUIT BREAKER: Protección en llamadas a sistemas legacy (pasos 9,11)&#xa;• ADAPTER PATTERN: Integración con mainframe y Oracle (adaptadores)&#xa;• ASYNCHRONOUS MESSAGING: Notificaciones via Kafka (paso 13)&#xa;• COMPENSATION: Rollback automático en caso de fallos&#xa;• IDEMPOTENCY: Garantía de procesamiento único por transacción" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1000" width="600" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- TIMING CONSTRAINTS -->
+        <mxCell id="timing_title" value="RESTRICCIONES DE TIEMPO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="960" width="200" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="timing_content" value="• Timeout total: 30 segundos&#xa;• PSE Gateway: 15 segundos máximo&#xa;• Legacy Energy: 30 segundos (Circuit Breaker)&#xa;• Legacy Water: 30 segundos (Circuit Breaker)&#xa;• Notificaciones: Asíncrono (no bloquea)&#xa;• Retry: 3 intentos con backoff exponencial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1000" width="320" height="80" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

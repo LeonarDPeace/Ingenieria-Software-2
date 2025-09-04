@@ -1,210 +1,133 @@
-# ServiCiudad Conectada
+# ServiCiudad Conectada - Ingeniería de Software 2
 
-**Transformación Digital de Servicios Públicos para Santiago de Cali**
+## 📋 Descripción del Proyecto
 
-[![Estado del Proyecto](https://img.shields.io/badge/estado-en%20desarrollo-yellow)](https://github.com/LeonarDPeace/Ingenieria-Software-2)
-[![Versión](https://img.shields.io/badge/versión-1.0.0-blue)](https://github.com/LeonarDPeace/Ingenieria-Software-2/releases)
-[![Licencia](https://img.shields.io/badge/licencia-Académica-green)](./LICENSE)
-[![Documentación](https://img.shields.io/badge/docs-completa-brightgreen)](./docs/)
+Proyecto de transformación digital para ServiCiudad Cali, implementando una arquitectura de microservicios para unificar los servicios de energía, acueducto y telecomunicaciones en una plataforma digital moderna.
 
-## Visión General
+## 🎯 Objetivo
 
-ServiCiudad Conectada es un proyecto de transformación digital que moderniza la experiencia de servicios públicos en Santiago de Cali, Colombia. La solución unifica los servicios de energía, acueducto y telecomunicaciones en una plataforma digital moderna, integrando sistemas legacy a través de una arquitectura de microservicios resiliente.
+Diseñar e implementar una solución arquitectónica que permita:
+- Experiencia ciudadana 360° unificada
+- Integración con sistemas legacy (Mainframe IBM Z, Oracle Solaris)
+- Cumplimiento de la política "Cali Conectada"
+- Mejora del CSAT del 45% actual a 80%+
 
-### Problema Empresarial
+## 🏗️ Arquitectura
 
-ServiCiudad Cali enfrenta desafíos críticos:
-- **CSAT actual**: 45% (muy por debajo del sector)
-- **Experiencia fragmentada**: 3 portales, 3 facturas, 3 números de soporte
-- **Costos operativos**: $2,500 millones COP anuales en call center para consultas básicas
-- **Tiempo de conciliación**: Hasta 72 horas para reflejar pagos
+La solución implementa una arquitectura de microservicios con patrones de resiliencia y integración, incluyendo:
 
-### Solución Propuesta
-
-Plataforma digital unificada con:
-- **Portal web y app móvil** para experiencia 360°
-- **Microservicios resilientes** con patrones de integración
-- **Capa anticorrupción** para sistemas legacy
-- **Saga Pattern** para transacciones distribuidas
-- **Circuit Breaker** para resiliencia ante fallos
-
-## Arquitectura Técnica
-
-### Stack Tecnológico
-```
-Frontend:     React, React Native
-Backend:      Java 17, Spring Boot 3.x, Spring Cloud
-Gateway:      Spring Cloud Gateway
-Messaging:    Apache Kafka
-Databases:    PostgreSQL, MongoDB, Redis
-Container:    Docker, Kubernetes
-Monitoring:   Prometheus, Grafana, ELK Stack
-Security:     OAuth2, JWT, TLS 1.3, AES-256
-```
-
-### Microservicios
-- **MS-Clientes**: Autenticación y gestión de usuarios
-- **MS-Pagos**: Procesamiento de pagos distribuidos
+### Microservicios Principales:
+- **MS-Clientes**: Gestión de usuarios y autenticación
+- **MS-Pagos**: Procesamiento de pagos unificados con Saga Pattern
 - **MS-Facturación**: Consolidación de facturas
 - **MS-Notificaciones**: Comunicaciones multicanal
-- **MS-Incidencias**: Gestión de tickets y soporte
-- **MS-Administración**: Auditoría y configuración
+- **MS-Incidencias**: Gestión de reportes y tickets
+- **MS-Administración**: Seguridad y auditoría
 
-### Integración Legacy
-- **Mainframe IBM Z**: Energía (COBOL/EBCDIC → JSON)
-- **Oracle Solaris**: Acueducto (PL/SQL, formato fijo → JSON)
-- **Sistemas Modernos**: Telecomunicaciones (REST/SOAP)
+### Patrones Implementados:
+- **Saga Pattern**: Transacciones distribuidas
+- **Circuit Breaker**: Resiliencia ante fallos
+- **Adapter Pattern**: Integración con sistemas legacy
+- **Message Translator**: Transformación EBCDIC → JSON
+- **API Gateway**: Punto de entrada unificado
 
-## Documentación
+## 📊 Diagramas del Proyecto
 
-### Inicio Rápido
-- **[Resumen del Proyecto](./OVERVIEW.md)** - Visión completa y objetivos
-- **[Guía de Contribución](./CONTRIBUTING.md)** - Cómo participar en el proyecto
+### Para Todo el Proyecto:
+1. **Diagrama C4** (`3. DiagramaC4.xml`) - Vista de contexto del sistema
+2. **Diagrama de Arquitectura** (`1. DiagramaMejorado_ServiCiudadConectada_Arquitectura.drawio.xml`) - Arquitectura general
+3. **Diagrama de Clases General** (`11. DiagramaClasesGeneral_Proyecto.xml`) - Clases principales del sistema
 
-### Documentación Técnica
-- **[Arquitectura](./docs/ARCHITECTURE.md)** - Diseño técnico detallado
-- **[Requerimientos](./docs/REQUIREMENTS.md)** - Especificaciones funcionales
-- **[API Reference](./docs/API.md)** - Documentación de APIs REST
-- **[Deployment](./docs/DEPLOYMENT.md)** - Guías de despliegue
-- **[Security](./docs/SECURITY.md)** - Políticas de seguridad
+### Para Microservicio de Pagos:
+1. **Diagrama Hexagonal** (`2. DiagramaArquitecturaHexagonal_MicroservicioPagos.xml`) - Arquitectura del MS-Pagos
+2. **Diagrama de Secuencia** (`9. DiagramaSecuencia_MicroservicioPagos.xml`) - Flujo de pago unificado
+3. **Diagrama de Clases MS-Pagos** (`8. DiagramaClases_MicroservicioPagos.xml`) - Clases específicas
+4. **Code Diagram** (`10. CodeDiagram_MicroservicioPagos.xml`) - Implementación detallada
 
-### Diagramas Técnicos
+## 🔧 Stack Tecnológico
 
-#### Proyecto General
-- [Diagrama C4](./Graficos/3.%20DiagramaC4.xml) - Contexto del sistema
-- [Arquitectura General](./Graficos/1.%20DiagramaMejorado_ServiCiudadConectada_Arquitectura.drawio.xml) - Vista arquitectónica
-- [Clases Generales](./Graficos/11.%20DiagramaClasesGeneral_Proyecto.xml) - Modelo de dominio
+- **Backend**: Java 17, Spring Boot, Spring Cloud
+- **Gateway**: Spring Cloud Gateway
+- **Resiliencia**: Resilience4j (Circuit Breaker, Retry, TimeLimiter)
+- **Mensajería**: Apache Kafka
+- **Bases de Datos**: PostgreSQL, MongoDB, Redis
+- **Orquestación**: Kubernetes
+- **Monitoreo**: Prometheus, Grafana
+- **Seguridad**: OAuth2, JWT, ISO 27001
 
-#### Microservicio de Pagos
-- [Arquitectura Hexagonal](./Graficos/2.%20DiagramaArquitecturaHexagonal_MicroservicioPagos.xml)
-- [Diagrama de Clases](./Graficos/8.%20DiagramaClases_MicroservicioPagos.xml)
-- [Diagrama de Secuencia](./Graficos/9.%20DiagramaSecuencia_MicroservicioPagos.xml)
-- [Code Diagram](./Graficos/10.%20CodeDiagram_MicroservicioPagos.xml)
-
-## Funcionalidades Principales
-
-### Ciudadanos
-- Consulta de saldos unificada (< 10 segundos)
-- Pago en línea multi-servicio
-- Factura unificada digital
-- Reporte de incidencias con seguimiento
-- Notificaciones personalizadas
-
-### Operadores
-- Panel administrativo centralizado
-- Gestión de tickets de soporte
-- Consultas avanzadas de clientes
-- Reportes operacionales
-
-### Administradores
-- Configuración del sistema
-- Monitoreo y métricas
-- Auditoría y cumplimiento
-- Gestión de usuarios y roles
-
-## Métricas de Éxito
-
-### Objetivos de Negocio
-- **CSAT**: 45% → 80%+ 
-- **Reducción llamadas**: 60% consultas automatizadas
-- **Ahorro operativo**: $1,500 millones COP anuales
-- **Tiempo conciliación**: 72h → 15 minutos
-
-### Objetivos Técnicos
-- **Disponibilidad**: 99.9% uptime
-- **Performance**: < 2s consultas, < 5s pagos
-- **Escalabilidad**: 10,000 usuarios concurrentes
-- **Seguridad**: 0 brechas críticas
-
-## Seguridad y Cumplimiento
-
-- **ISO 27001**: Gestión de seguridad de la información
-- **PCI DSS**: Seguridad en procesamiento de pagos
-- **Ley 1581/2012**: Protección de datos personales (Colombia)
-- **RBAC**: Control de acceso basado en roles
-- **Cifrado**: AES-256 en reposo, TLS 1.3 en tránsito
-
-## Estructura del Repositorio
+## 📁 Estructura del Proyecto
 
 ```
 Ingenieria-Software-2/
-├── docs/                    # Documentación técnica
-│   ├── ARCHITECTURE.md     # Arquitectura del sistema
-│   ├── REQUIREMENTS.md     # Requerimientos funcionales
-│   ├── API.md              # Documentación de APIs
-│   ├── DEPLOYMENT.md       # Guías de despliegue
-│   └── SECURITY.md         # Políticas de seguridad
-├── Documentos/             # Documentos de análisis
-├── Graficos/               # Diagramas técnicos
-│   ├── Drawio/            # Archivos fuente Draw.io
-│   ├── Pdf/               # Versiones PDF
-│   └── Xml/               # Diagramas en XML
-├── OVERVIEW.md             # Resumen ejecutivo
-├── CONTRIBUTING.md         # Guía de contribución
-├── CHANGELOG.md            # Historial de cambios
-└── README.md               # Este archivo
+├── Documentos/           # Documentación técnica
+│   ├── 1. Caso Problema Proyecto Final.txt
+│   ├── 1. ServiCiudadConectada_RequerimientosFuncionales_y_Arquitectura.txt
+│   ├── 2. Escenarios_ServiCiudad.txt
+│   └── 3. Politicas_Seguridad.txt
+├── Graficos/            # Diagramas del proyecto
+│   ├── 1. DiagramaMejorado_ServiCiudadConectada_Arquitectura.drawio.xml
+│   ├── 2. DiagramaArquitecturaHexagonal_MicroservicioPagos.xml
+│   ├── 3. DiagramaC4.xml
+│   ├── 8. DiagramaClases_MicroservicioPagos.xml
+│   ├── 9. DiagramaSecuencia_MicroservicioPagos.xml
+│   ├── 10. CodeDiagram_MicroservicioPagos.xml
+│   └── 11. DiagramaClasesGeneral_Proyecto.xml
+└── README.md
 ```
 
-## Roadmap de Desarrollo
+## 🚀 Características Principales
 
-### Fase 1 (Meses 1-4): Fundación
-- [ ] Implementación del API Gateway
-- [ ] MS-Clientes y autenticación
-- [ ] MS-Pagos con integración PSE
-- [ ] Adaptadores para sistemas legacy
+### Funcionalidades Core:
+- ✅ Consulta de saldos unificada
+- ✅ Pago en línea multi-servicio
+- ✅ Gestión de incidencias
+- ✅ Notificaciones personalizadas
+- ✅ Factura unificada
+- ✅ Panel de administración
+- ✅ Auditoría completa
 
-### Fase 2 (Meses 5-8): Expansión
-- [ ] MS-Facturación unificada
-- [ ] MS-Notificaciones multicanal
-- [ ] MS-Incidencias y tickets
-- [ ] Portal web y app móvil
+### Calidad del Software:
+- **Performance**: < 2s consultas, < 5s pagos
+- **Disponibilidad**: 99.9% uptime
+- **Seguridad**: Cifrado end-to-end, MFA
+- **Usabilidad**: Interfaz responsive, accesible
 
-### Fase 3 (Meses 9-12): Optimización
-- [ ] MS-Administración y auditoría
-- [ ] Analytics y reportes
-- [ ] Optimizaciones de performance
-- [ ] Capacitación y adopción
+## 📋 Requerimientos Funcionales
 
-## Equipo del Proyecto
+El sistema cumple con 15 requerimientos funcionales principales, organizados en épicas:
 
-### Core Team
-- **Eduard Criollo Yule** - Project Manager (ID: 2220335)
-- **Arquitecto de Software** - Diseño de microservicios
-- **Tech Lead** - Liderazgo técnico
-- **Full Stack Developer** - Implementación
-- **DevOps Engineer** - Infraestructura
-- **QA Engineer** - Calidad y testing
+1. **Consulta y Gestión de Saldos y Pagos** (Must Have)
+2. **Experiencia Digital Integral** (Should Have)
+3. **Soporte y Trámites en Línea** (Should Have)
+4. **Integración con Sistemas Legacy** (Must Have)
+5. **Administración y Seguridad** (Must Have)
 
-### Stakeholders
-- **ServiCiudad Cali** - Cliente y sponsor
-- **Universidad Autónoma de Occidente** - Institución académica
-- **Ciudadanos de Cali** - Usuarios finales
+## 🔒 Seguridad
 
-## Contribuir al Proyecto
+Implementación completa de políticas de seguridad ISO 27001:
+- Clasificación de información por niveles
+- Controles de acceso basados en roles (RBAC)
+- Cifrado AES-256 y TLS 1.3
+- Auditoría y trazabilidad completa
+- Gestión de incidentes estructurada
 
-Agradecemos contribuciones que mejoren la plataforma. Por favor:
+## 👥 Equipo
 
-1. Lee nuestra [Guía de Contribución](./CONTRIBUTING.md)
-2. Revisa los [Issues abiertos](https://github.com/LeonarDPeace/Ingenieria-Software-2/issues)
-3. Sigue nuestras convenciones de código y documentación
-4. Crea Pull Requests descriptivos
+- **Project Manager**: Eduard Criollo Yule (ID: 2220335)
+- **Arquitecto de Software**: Responsable de diseño de microservicios
+- **Desarrollador Full Stack**: Implementación de frontend y backend
+- **DevOps Engineer**: Infraestructura y despliegue
+- **QA Engineer**: Pruebas y validación
 
-## Licencia
+## 📞 Contacto
 
-Este proyecto está desarrollado con fines académicos para el curso de Ingeniería de Software 2 en la Universidad Autónoma de Occidente.
-
-## Contacto
-
-- **Repositorio**: https://github.com/LeonarDPeace/Ingenieria-Software-2
-- **Issues**: https://github.com/LeonarDPeace/Ingenieria-Software-2/issues
-- **Universidad**: Universidad Autónoma de Occidente
-- **Curso**: Ingeniería de Software 2
-- **Año**: 2024
+Para consultas sobre el proyecto:
+- **Repositorio**: [GitHub - ServiCiudad Conectada]
+- **Documentación**: Ver carpeta `/Documentos/`
+- **Diagramas**: Ver carpeta `/Graficos/`
 
 ---
 
-**Universidad Autónoma de Occidente**  
-**Facultad de Ingeniería**  
-**Programa de Ingeniería de Sistemas**  
-**Santiago de Cali, Colombia**
+*Proyecto desarrollado para el curso de Ingeniería de Software 2*
+*Universidad Autónoma de Occidente - 2024*
 

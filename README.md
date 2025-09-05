@@ -184,6 +184,21 @@ Implementación completa de políticas de seguridad ISO 27001:
   - React.js + Next.js, React Native
   - Integrar con API Gateway
 
+### **Desarrollador Frontend**
+- **Juan Sebastian Castillo** (ID: 2231921)
+  - *Frontend Developer*
+  - Implementar interfaz app/portal unificado
+  - Garantizar experiencia de usuario intuitiva
+  - Consumir APIs de microservicios eficientemente
+  - Optimizar rendimiento frontend para dispositivos móviles
+  - Responsabilidades Técnicas:
+  - Desarrollo con React.js/Angular
+  - Construcción de componentes modulares
+  - Implementación de patrones de diseño frontend
+  - Integración con API Gateway
+  - Validación de usabilidad y accesibilidad
+  - Coordinación con equipo UX/Backend
+
 ### **Niveles de Acceso y Responsabilidades:**
 
 #### **Accesos Productivos:**
@@ -191,6 +206,7 @@ Implementación completa de políticas de seguridad ISO 27001:
 - **Felipe Charria** (Legacy): Solo lectura sistemas legacy
 - **Jhonathan Chicaiza** (Backend): Admin entornos desarrollo/QA, solo lectura producción
 - **Emmanuel Mena** (Frontend): Acceso APIs desarrollo/QA
+- **Juan Sebastian Castillo** (Frontend): Acceso APIs desarrollo/QA
 
 #### **Especialización Técnica:**
 - **Integración Legacy**: Experto en COBOL/PL-SQL, Message Translator patterns
@@ -210,7 +226,7 @@ Para consultas sobre el proyecto:
 
 *Proyecto desarrollado para el curso de Ingeniería de Software 2*  
 *Universidad Autónoma de Occidente - 2025*  
-*Equipo: Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena*
+*Equipo: Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena, Juan Sebastian Castillo*
 
 ## 📋 Índice de Diagramas
 

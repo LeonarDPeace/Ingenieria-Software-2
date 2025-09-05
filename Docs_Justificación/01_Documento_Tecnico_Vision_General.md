@@ -6,7 +6,7 @@
 
 **Versión:** 1.0  
 **Fecha:** Septiembre 2025  
-**Equipo:** Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena  
+**Equipo:** Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena, Juan Sebastian Castillo
 **Estado:** Documento de Diseño Técnico Final  
 
 ---
@@ -451,25 +451,54 @@ Accesos Sistemas:
 
 ##### **Emmanuel Mena - Full Stack Developer (ID: 2230574)**
 ```
-Especialización Frontend:
-├── React.js + Next.js
-├── React Native (móvil)
-├── Material-UI design system
-├── Progressive Web Apps (PWA)
-└── API integration y testing
+Especialización Full Stack:
+├── React.js + Next.js (Frontend)
+├── Node.js + Express (Backend)
+├── Database integration (PostgreSQL/MongoDB)
+├── API development y testing
+└── DevOps y deployment
 
 Responsabilidades Técnicas:
-├── Diseñar experiencia unificada 360°
-├── Desarrollar portal web responsive
-├── Crear app móvil ciudadanos
-├── Integrar con API Gateway
-└── UX/UI testing y optimización
+├── Desarrollar componentes full-stack
+├── Integración frontend-backend
+├── Testing end-to-end
+├── Optimización performance general
+└── Coordinación entre equipos frontend/backend
+
+Accesos Sistemas:
+├── Acceso APIs desarrollo/QA
+├── Testing environments full-stack
+├── Database access desarrollo
+└── Deployment tools y CI/CD
+```
+
+##### **Juan Sebastian Castillo - Frontend Developer (ID: 2231921)**
+```
+Especialización Frontend:
+├── React.js/Angular development
+├── Componentes modulares reutilizables
+├── Patrones de diseño frontend
+├── API Gateway integration
+└── Mobile optimization
+
+Responsabilidades Técnicas:
+├── Implementar interfaz app/portal unificado
+├── Garantizar experiencia de usuario intuitiva
+├── Consumir APIs de microservicios eficientemente
+├── Optimizar rendimiento frontend para dispositivos móviles
+├── Desarrollo con React.js/Angular
+├── Construcción de componentes modulares
+├── Implementación de patrones de diseño frontend
+├── Integración con API Gateway
+├── Validación de usabilidad y accesibilidad
+└── Coordinación con equipo UX/Backend
 
 Accesos Sistemas:
 ├── Acceso APIs desarrollo/QA
 ├── Testing environments frontend
 ├── Analytics y métricas UX
-└── CDN y assets management
+├── CDN y assets management
+└── Design system y UI libraries
 ```
 
 ### 5.2 Matriz de Comunicación

@@ -39,6 +39,7 @@ Este organigrama existe para **documentar formalmente la estructura organizacion
    - **Felipe Charria (Integration Specialist):** Expertise en sistemas legacy COBOL/PL-SQL
    - **Jhonathan Chicaiza (Backend Developer):** Especialista en microservicios Spring Boot
    - **Emmanuel Mena (Full Stack Developer):** Arquitecto de experiencia usuario
+   - **Juan Sebastian Castillo (Frontend Developer):** Desarrollador Frontend 
 
 2. **Niveles de Acceso Diferenciados:**
    ```

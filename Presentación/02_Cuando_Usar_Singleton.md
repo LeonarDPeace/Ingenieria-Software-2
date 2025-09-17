@@ -1,10 +1,10 @@
-# Diapositiva 2: Cuándo Usar Singleton
+# Cuándo Usar Singleton
 
-## 🤔 Casos de Uso y Framework de Decisión
+## Casos de Uso y Framework de Decisión
 
 ---
 
-### ✅ Casos de Uso Válidos
+### Casos de Uso Válidos
 
 | **Configuración Global** | **Pool de Conexiones** |
 |:------------------------:|:----------------------:|
@@ -20,13 +20,13 @@
 
 ---
 
-### 🧭 Framework de Decisión
+### Framework de Decisión
 
 ```
-❓ ¿Necesitas exactamente UNA instancia?
-❓ ¿Es un recurso compartido costoso?
-❓ ¿El acceso global está justificado?
-❓ ¿No puedes usar Dependency Injection?
+¿Necesitas exactamente UNA instancia?
+¿Es un recurso compartido costoso?
+¿El acceso global está justificado?
+¿No puedes usar Dependency Injection?
 
 ✅ 4 SÍ = Considera Singleton
 ❌ Algún NO = Busca alternativas
@@ -34,7 +34,7 @@
 
 ---
 
-### 💼 Ejemplos Específicos
+###  Ejemplos Específicos
 
 #### ✅ Configuración del Sistema
 ```java
@@ -83,7 +83,7 @@ if (user == null) {
 
 ---
 
-### 🎯 Regla de Oro
+### Regla de Oro
 
 > **"Usa Singleton solo para RECURSOS, no para LÓGICA"**
 

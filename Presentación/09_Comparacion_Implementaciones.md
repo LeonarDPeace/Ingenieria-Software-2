@@ -1,21 +1,21 @@
-# Diapositiva 9: Comparación de Implementaciones
+# Comparación de Implementaciones
 
-## 📊 Análisis Detallado de Todas las Implementaciones
+## Análisis Detallado de Todas las Implementaciones
 
 ---
 
-### 📊 Comparación de Implementaciones
+### Comparación de Implementaciones
 
 | **Características** |
 |:-------------------:|
-| 📊 Análisis detallado de ventajas/desventajas |
-| 🏆 Eager vs Lazy vs Synchronized |
-| 🏆 Double-Check vs Bill Pugh vs Enum |
-| 📈 Performance, Seguridad, Simplicidad |
+| Análisis detallado de ventajas/desventajas |
+| Eager vs Lazy vs Synchronized |
+| Double-Check vs Bill Pugh vs Enum |
+| Performance, Seguridad, Simplicidad |
 
 ---
 
-### 📋 Tabla Comparativa Completa
+### Tabla Comparativa Completa
 
 | **Método** | **Lazy Load** | **Thread Safe** | **Performance** | **Simplicidad** |
 |:----------:|:-------------:|:---------------:|:---------------:|:---------------:|
@@ -28,7 +28,7 @@
 
 ---
 
-### 🎯 Análisis por Escenarios
+### Análisis por Escenarios
 
 #### **Aplicación Simple (Single-thread)**
 - ✅ Lazy Initialization
@@ -50,7 +50,7 @@
 
 ---
 
-### 🧭 Criterios de Decisión
+### Criterios de Decisión
 
 #### ❓ **¿Necesitas Thread-Safety?**
 - **SÍ** → Synchronized/Double-Check/Bill Pugh/Enum
@@ -72,7 +72,7 @@
 
 ---
 
-### 🏆 Recomendaciones Finales
+### Recomendaciones Finales
 
 | **Ranking** | **Opción** | **Uso** |
 |:-----------:|:----------:|:-------:|
@@ -80,13 +80,13 @@
 | 🥈 | **Bill Pugh Pattern** | Segunda opción |
 | 🥉 | **Eager** | Si siempre se usa |
 
-### ⚠️ **Evitar**
+### **Evitar**
 - ❌ Lazy simple en multi-thread
 - ⚠️ Double-Check (solo expertos)
 
 ---
 
-### 🎯 Guía Rápida de Decisión
+### Guía Rápida de Decisión
 
 ```
 ¿Necesitas máxima robustez? → Enum

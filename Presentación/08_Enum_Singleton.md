@@ -1,10 +1,10 @@
-# Diapositiva 8: Enum Singleton
+# Enum Singleton
 
-## 💎 Patrón Ultra Robusto - Joshua Bloch's Choice
+## Patrón Ultra Robusto - Joshua Bloch's Choice
 
 ---
 
-### 💎 Enum Singleton
+### Enum Singleton
 
 | **Características** |
 |:-------------------:|
@@ -16,7 +16,7 @@
 
 ---
 
-### 💻 Código Ejemplo
+### Ejemplo
 
 ```java
 public enum SecurityManager {
@@ -41,7 +41,7 @@ public enum SecurityManager {
 
 ---
 
-### 🎯 Uso del Enum Singleton
+### Uso del Enum Singleton
 
 ```java
 // Uso simple y directo
@@ -54,17 +54,17 @@ String key = manager.getSecretKey();
 
 ---
 
-### 🛡️ Ventajas Únicas
+### Ventajas Únicas
 
-- **🎯 ULTRA SIMPLE**: Una sola línea define el patrón
-- **🔒 REFLECTION-PROOF**: Imposible crear múltiples instancias
-- **💾 SERIALIZATION-SAFE**: Mantiene unicidad tras deserialización
-- **🔐 THREAD-SAFE**: JVM garantiza seguridad
-- **⏱️ LAZY**: Se carga cuando se necesita
+- **ULTRA SIMPLE**: Una sola línea define el patrón
+- **REFLECTION-PROOF**: Imposible crear múltiples instancias
+- **SERIALIZATION-SAFE**: Mantiene unicidad tras deserialización
+- **THREAD-SAFE**: JVM garantiza seguridad
+- **LAZY**: Se carga cuando se necesita
 
 ---
 
-### 🛡️ Protecciones Automáticas
+### Protecciones Automáticas
 
 ```java
 Reflexión:      
@@ -79,7 +79,7 @@ No implementa Cloneable → ✅ SEGURO
 
 ---
 
-### 📊 Comparación de Robustez
+### Comparación de Robustez
 
 | Método | Reflexión | Serialización | Thread-Safe | Simplicidad |
 |:------:|:---------:|:-------------:|:-----------:|:-----------:|
@@ -92,7 +92,7 @@ No implementa Cloneable → ✅ SEGURO
 
 ---
 
-### 🎯 Cuándo Usar
+### Cuándo Usar
 
 - ✅ **MÁXIMA SEGURIDAD** requerida
 - ✅ Aplicaciones con **SERIALIZACIÓN**
@@ -101,7 +101,7 @@ No implementa Cloneable → ✅ SEGURO
 
 ---
 
-### 💡 Joshua Bloch Quote
+### Joshua Bloch Quote
 
 > **"A single-element enum type is often the best way to implement a singleton"**
 > 

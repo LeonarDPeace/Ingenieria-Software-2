@@ -1,22 +1,22 @@
-# Diapositiva 6: Double Checked Locking
+# Double Checked Locking
 
-## ⚡ Optimización Avanzada de Rendimiento
+## Optimización Avanzada de Rendimiento
 
 ---
 
-### 🔧 Double Checked Locking
+### Double Checked Locking
 
 | **Características** |
 |:-------------------:|
-| ⚡ Optimización de rendimiento |
-| ✅ Thread-safe y eficiente |
-| ✅ Reduce overhead de sincronización |
-| ❌ Implementación compleja |
-| ⚠️ **Requiere keyword volatile** |
+| Optimización de rendimiento |
+| Thread-safe y eficiente |
+| Reduce overhead de sincronización |
+| Implementación compleja |
+| **Requiere keyword volatile** |
 
 ---
 
-### 💻 Código Ejemplo
+### Ejemplo
 
 ```java
 public class CacheManager {
@@ -42,7 +42,7 @@ public class CacheManager {
 
 ---
 
-### 🔄 Flujo de Ejecución
+### Flujo de Ejecución
 
 ```
 [getInstance()] → [instance == null?]
@@ -60,7 +60,7 @@ public class CacheManager {
 
 ---
 
-### 🤔 ¿Por Qué Volatile?
+### ¿Por Qué Volatile?
 
 ```java
 Sin volatile: Cambios en memoria no visibles a otros hilos
@@ -71,29 +71,29 @@ Con volatile: Garantiza visibilidad entre hilos
 
 ---
 
-### 🔑 Optimización Clave
+### Optimización Clave
 
-- **🔍 PRIMERA VERIFICACIÓN**: Evita sincronización innecesaria
-- **🔒 SINCRONIZACIÓN**: Solo cuando instance es null
-- **🔍 SEGUNDA VERIFICACIÓN**: Evita múltiples creaciones
+- **PRIMERA VERIFICACIÓN**: Evita sincronización innecesaria
+- **SINCRONIZACIÓN**: Solo cuando instance es null
+- **SEGUNDA VERIFICACIÓN**: Evita múltiples creaciones
 
 ---
 
 ### ✅ Ventajas
 
-- **⚡ EFICIENCIA**: Mínimo overhead después de creación
-- **🔒 THREAD-SAFE**: Garantiza una sola instancia
-- **⏱️ LAZY**: Crea solo cuando necesita
+- **EFICIENCIA**: Mínimo overhead después de creación
+- **THREAD-SAFE**: Garantiza una sola instancia
+- **LAZY**: Crea solo cuando necesita
 
 ### ❌ Desventajas
 
-- **🤯 COMPLEJIDAD**: Difícil de implementar correctamente
-- **⚠️ VOLATILE**: Keyword requerido para funcionar
-- **🐛 ERRORES**: Fácil de implementar mal
+- **COMPLEJIDAD**: Difícil de implementar correctamente
+- **VOLATILE**: Keyword requerido para funcionar
+- **ERRORES**: Fácil de implementar mal
 
 ---
 
-### 🎯 Cuándo Usar
+### Cuándo Usar
 
 - ✅ Alto **RENDIMIENTO** requerido
 - ✅ Acceso **FRECUENTE** a la instancia

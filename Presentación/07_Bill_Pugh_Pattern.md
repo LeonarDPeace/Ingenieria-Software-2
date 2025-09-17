@@ -1,10 +1,10 @@
-# Diapositiva 7: Bill Pugh Pattern
+# Bill Pugh Pattern
 
-## 🏆 Initialization-on-Demand - Mejor Práctica
+## Initialization-on-Demand - Mejor Práctica
 
 ---
 
-### 🏆 Bill Pugh Pattern
+### Bill Pugh Pattern
 
 | **Características** |
 |:-------------------:|
@@ -16,7 +16,7 @@
 
 ---
 
-### 💻 Código Ejemplo
+### Ejemplo
 
 ```java
 public class SettingsManager {
@@ -39,7 +39,7 @@ public class SettingsManager {
 
 ---
 
-### 🔄 Cómo Funciona
+### Cómo Funciona
 
 ```
 1. Clase externa SettingsManager se carga
@@ -53,15 +53,15 @@ public class SettingsManager {
 
 ### ✅ Ventajas del Patrón
 
-- **🔒 THREAD-SAFE**: JVM maneja la sincronización
-- **⏱️ LAZY LOADING**: Carga solo cuando se necesita
-- **⚡ SIN OVERHEAD**: No hay sincronización explícita
-- **🎨 ELEGANTE**: Código limpio y legible
-- **🚀 PERFORMANCE**: Máximo rendimiento
+- **THREAD-SAFE**: JVM maneja la sincronización
+- **LAZY LOADING**: Carga solo cuando se necesita
+- **SIN OVERHEAD**: No hay sincronización explícita
+- **ELEGANTE**: Código limpio y legible
+- **PERFORMANCE**: Máximo rendimiento
 
 ---
 
-### 📊 Comparación con Otros
+### Comparación con Otros
 
 | Método | Thread-Safe | Lazy | Performance |
 |:------:|:-----------:|:----:|:-----------:|
@@ -73,17 +73,17 @@ public class SettingsManager {
 
 ---
 
-### 🔧 Magia de JVM
+### Magia de JVM
 
-- **🏗️ CLASS LOADING**: Thread-safe por diseño
-- **🎯 INITIALIZATION**: Ocurre una sola vez
-- **💾 MEMORY MODEL**: Garantías de visibilidad
+- **CLASS LOADING**: Thread-safe por diseño
+- **INITIALIZATION**: Ocurre una sola vez
+- **MEMORY MODEL**: Garantías de visibilidad
 
 **La JVM hace todo el trabajo pesado por nosotros**
 
 ---
 
-### 🎯 Cuándo Usar
+### Cuándo Usar
 
 - ✅ **SIEMPRE** que necesites Singleton
 - ✅ Aplicaciones **MULTI-THREAD**
@@ -92,7 +92,7 @@ public class SettingsManager {
 
 ---
 
-### 🏆 ¿Por Qué es el Mejor?
+### ¿Por Qué es el Mejor?
 
 ```
 ✅ Combina TODAS las ventajas:

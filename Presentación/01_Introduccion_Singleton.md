@@ -1,4 +1,4 @@
-# Diapositiva 1: Introducción al Patrón Singleton
+# Introducción al Patrón Singleton
 
 ## Patrón Singleton - Conceptos Fundamentales
 

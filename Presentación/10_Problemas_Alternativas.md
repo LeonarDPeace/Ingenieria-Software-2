@@ -1,18 +1,18 @@
-# Diapositiva 10: Problemas y Alternativas
+# Problemas y Alternativas
 
-## ⚠️ Críticas al Singleton y Soluciones Modernas
+## Críticas al Singleton y Soluciones Modernas
 
 ---
 
-### ⚠️ Problemas y Alternativas
+### Problemas y Alternativas
 
 | **Problemas Identificados** |
 |:---------------------------:|
-| ⚠️ **ANTIPATTERN** en algunos contextos |
-| ❌ Problemas de testing y acoplamiento |
-| ❌ Violación de principios SOLID |
-| ✅ Alternativas modernas disponibles |
-| ✅ Dependency Injection como solución |
+| **ANTIPATTERN** en algunos contextos |
+| Problemas de testing y acoplamiento |
+| Violación de principios SOLID |
+| Alternativas modernas disponibles |
+| Dependency Injection como solución |
 
 ---
 
@@ -54,7 +54,7 @@ ConfigManager.getInstance().setValue("timeout", 30);
 
 ---
 
-### 🚫 Violación Principios SOLID
+### Violación Principios SOLID
 
 - **Single Responsibility**: Maneja creación + lógica de negocio
 - **Open/Closed**: Difícil extender sin modificar
@@ -138,7 +138,7 @@ public class EmailService {
 
 ---
 
-### 🎯 Estrategia Moderna
+### Estrategia Moderna
 
 ```
 Legacy Systems → Singleton para recursos específicos

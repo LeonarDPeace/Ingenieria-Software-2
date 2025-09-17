@@ -1,10 +1,10 @@
-# Diapositiva 4: Lazy Initialization
+# Lazy Initialization
 
-## ⏱️ Creación Solo Cuando Se Necesita
+##  Creación Solo Cuando Se Necesita
 
 ---
 
-### 🔄 Lazy Initialization
+### Lazy Initialization
 
 | **Características** |
 |:-------------------:|
@@ -16,7 +16,7 @@
 
 ---
 
-### 💻 Código Ejemplo
+### Ejemplo
 
 ```java
 public class DatabaseConnectionPool {
@@ -38,7 +38,7 @@ public class DatabaseConnectionPool {
 
 ---
 
-### 🔄 Flujo de Ejecución
+### Flujo de Ejecución
 
 ```
 [getInstance()] → [instance == null?] → [Crear instancia] → [Retornar]
@@ -61,15 +61,15 @@ Thread 2: instance == null? → true → crea instancia B  ❌ PROBLEMA
 
 ### ✅ Características Positivas
 
-- **⚡ LAZY LOADING**: Crea solo cuando necesita
-- **💾 EFICIENCIA**: No desperdicia recursos
-- **🎯 SIMPLE**: Código fácil de entender
+- **LAZY LOADING**: Crea solo cuando necesita
+- **EFICIENCIA**: No desperdicia recursos
+- **SIMPLE**: Código fácil de entender
 
 ### ❌ Problemas Críticos
 
-- **⚠️ RACE CONDITION**: Múltiples instancias posibles
-- **🔄 IMPREDECIBLE**: Comportamiento depende del timing
-- **🐛 BUGS SILENCIOSOS**: Puede funcionar en desarrollo, fallar en producción
+- **RACE CONDITION**: Múltiples instancias posibles
+- **IMPREDECIBLE**: Comportamiento depende del timing
+- **BUGS SILENCIOSOS**: Puede funcionar en desarrollo, fallar en producción
 
 ---
 
@@ -82,7 +82,7 @@ Thread 2: instance == null? → true → crea instancia B  ❌ PROBLEMA
 
 ---
 
-### 📊 Timeline del Problema
+### Timeline del Problema
 
 ```
 Tiempo 1: Thread A evalúa (instance == null) → TRUE

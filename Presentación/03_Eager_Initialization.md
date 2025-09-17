@@ -1,21 +1,21 @@
-# Diapositiva 3: Eager Initialization
+# Eager Initialization
 
-## ⚡ Creación Inmediata al Cargar la Clase
+## Creación Inmediata al Cargar la Clase
 
 ---
 
-### 🏗️ Eager Initialization
+### Eager Initialization
 
 | **Características** |
 |:-------------------:|
-| ⚡ Creación al cargar la clase |
-| ✅ Thread-safe automático |
-| ✅ Implementación simple |
-| ❌ No es lazy (siempre se crea) |
+| Creación al cargar la clase |
+| Thread-safe automático |
+| Implementación simple |
+| No es lazy (siempre se crea) |
 
 ---
 
-### 💻 Código Ejemplo
+### Ejemplo
 
 ```java
 public class SystemConfigManager {
@@ -44,7 +44,7 @@ public class SystemConfigManager {
 
 ---
 
-### 🔄 Flujo de Ejecución
+### Flujo de Ejecución
 
 ```
 [JVM carga clase] → [Crea INSTANCE] → [getInstance()] → [Retorna INSTANCE]
@@ -55,35 +55,24 @@ public class SystemConfigManager {
 
 ### ✅ Ventajas
 
-- **🔒 THREAD-SAFE**: JVM garantiza inicialización segura
-- **⚡ PERFORMANCE**: getInstance() es instantáneo
-- **🎯 SIMPLE**: Código muy fácil de entender
-- **🛡️ ROBUSTO**: Sin race conditions posibles
+- ** THREAD-SAFE**: JVM garantiza inicialización segura
+- ** PERFORMANCE**: getInstance() es instantáneo
+- ** SIMPLE**: Código muy fácil de entender
+- ** ROBUSTO**: Sin race conditions posibles
 
 ---
 
 ### ❌ Desventajas
 
-- **💾 MEMORIA**: Se crea aunque no se use
-- **⏱️ STARTUP**: Puede impactar tiempo de inicio
-- **❌ EXCEPCIONES**: Difícil manejo si constructor falla
+- **MEMORIA**: Se crea aunque no se use
+- **STARTUP**: Puede impactar tiempo de inicio
+- **EXCEPCIONES**: Difícil manejo si constructor falla
 
 ---
 
-### 🎯 Cuándo Usar
+### Cuándo Usar
 
 - ✅ Constructor **simple y rápido**
 - ✅ **SIEMPRE** vas a usar la instancia
 - ✅ Recursos **abundantes** disponibles
 - ✅ Startup time **no crítico**
-
----
-
-### 📊 Comparación Thread-Safety
-
-| Método | Thread-Safe | Complejidad | Performance |
-|:------:|:-----------:|:-----------:|:-----------:|
-| **Eager** | ✅ Automático | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Lazy Simple | ❌ No | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-
----

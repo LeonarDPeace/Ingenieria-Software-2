@@ -66,9 +66,6 @@ Por qué es útil:
 Consistencia: Todas las partes de la aplicación leen la misma configuración
 Centralización: Un solo lugar para cambiar configuraciones
 Eficiencia: Se cargan las propiedades una sola vez desde archivo
-Ejemplo práctico:
-
-Sin Singleton, cada módulo podría cargar su propia copia del archivo de configuración, causando problemas si el archivo cambia durante la ejecución.
 
 🔗 Pool de Conexiones
 Las conexiones a base de datos son recursos costosos de crear y mantener. Un ConnectionPool como Singleton centraliza y reutiliza estas conexiones caras.
@@ -80,8 +77,6 @@ Límites: Las bases de datos tienen límite de conexiones concurrentes
 Reutilización: Una conexión puede atender múltiples requests secuenciales
 Ejemplo práctico:
 
-Sin Singleton, cada módulo podría crear su propio pool, agotando rápidamente las conexiones disponibles en la base de datos.
-
 📝 Logging Centralizado
 Un Logger como Singleton garantiza que todos los logs vayan al mismo archivo con formato consistente y escritura thread-safe.
 
@@ -90,9 +85,6 @@ Por qué es necesario:
 Archivo único: Todos los logs en un lugar para análisis
 Formato consistente: Timestamp, level, mensaje uniformes
 Thread-safety: Múltiples hilos escribiendo sin corromper el archivo
-Ejemplo práctico:
-
-Sin Singleton, diferentes módulos podrían crear loggers separados, resultando en logs fragmentados en múltiples archivos.
 
 💾 Cache Manager
 Un CacheManager como Singleton proporciona una memoria compartida que evita duplicación de datos y optimiza el rendimiento de toda la aplicación.
@@ -102,9 +94,6 @@ Por qué mejora performance:
 Memoria compartida: Un objeto en cache sirve a toda la aplicación
 Evita duplicación: No se cargan los mismos datos múltiples veces
 Acceso rápido: Memoria es miles de veces más rápida que disco/red
-Ejemplo práctico:
-
-Sin Singleton, cada módulo tendría su propio cache, duplicando datos en memoria y perdiendo eficiencia al no compartir datos ya cargados.
 
 ### 🧭 **[FRAMEWORK DE DECISIÓN]**
 Usa este framework antes de implementar Singleton:

@@ -28,17 +28,7 @@
 
 ---
 
-###  Casos de Uso Típicos
-
-| Configuración Global | Pool de Conexiones |
-|:---:|:---:|
-|  Settings del sistema |  Base de datos |
-| **Logging Centralizado** | **Cache Manager** |
-|  Un solo archivo log |  Memoria compartida |
-
----
-
-###  Ejemplo Básico
+###  Ejemplo
 
 ```java
 // ❌ Sin Singleton - Múltiples configuraciones

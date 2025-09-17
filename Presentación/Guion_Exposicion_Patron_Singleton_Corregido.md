@@ -58,40 +58,53 @@ El Singleton es apropiado cuando:
 ### 💼 **[CASOS DE USO DETALLADOS]**
 Permítanme explicar cada caso con ejemplos concretos:
 
-#### **🔧 Configuración Global:**
-Properties del sistema, URLs de APIs, credenciales - una sola fuente de configuración:
-```java
-// Una sola configuración para toda la app
-String dbUrl = ConfigManager.getInstance().getProperty("database.url");
-int timeout = ConfigManager.getInstance().getIntProperty("timeout", 30);
-```
+🔧 Configuración Global
+El ConfigManager como Singleton asegura que toda la aplicación use una sola fuente de configuración. Esto evita inconsistencias donde diferentes partes del sistema tengan valores diferentes para la misma propiedad.
 
-#### **🔗 Pool de Conexiones:**
-Las conexiones a base de datos son costosas - un pool centralizado las reutiliza:
-```java
-// Reutilizar conexiones caras
-Connection conn = ConnectionPool.getInstance().getConnection();
-// ... usar conexión ...
-ConnectionPool.getInstance().releaseConnection(conn);
-```
+Por qué es útil:
 
-#### **📝 Logging Centralizado:**
-Un solo archivo log, formato consistente, thread-safe writing:
-```java
-Logger.getInstance().info("User " + userId + " login successful");
-Logger.getInstance().error("Payment failed for transaction " + txId);
-```
+Consistencia: Todas las partes de la aplicación leen la misma configuración
+Centralización: Un solo lugar para cambiar configuraciones
+Eficiencia: Se cargan las propiedades una sola vez desde archivo
+Ejemplo práctico:
 
-#### **💾 Cache Manager:**
-Memoria compartida, evita duplicación, optimiza performance:
-```java
-// Cache compartido para performance
-User user = CacheManager.getInstance().get("user:" + userId);
-if (user == null) {
-    user = database.loadUser(userId);
-    CacheManager.getInstance().put("user:" + userId, user);
-}
-```
+Sin Singleton, cada módulo podría cargar su propia copia del archivo de configuración, causando problemas si el archivo cambia durante la ejecución.
+
+🔗 Pool de Conexiones
+Las conexiones a base de datos son recursos costosos de crear y mantener. Un ConnectionPool como Singleton centraliza y reutiliza estas conexiones caras.
+
+Por qué es crítico:
+
+Costo alto: Crear una conexión DB puede tomar 100-500ms
+Límites: Las bases de datos tienen límite de conexiones concurrentes
+Reutilización: Una conexión puede atender múltiples requests secuenciales
+Ejemplo práctico:
+
+Sin Singleton, cada módulo podría crear su propio pool, agotando rápidamente las conexiones disponibles en la base de datos.
+
+📝 Logging Centralizado
+Un Logger como Singleton garantiza que todos los logs vayan al mismo archivo con formato consistente y escritura thread-safe.
+
+Por qué es necesario:
+
+Archivo único: Todos los logs en un lugar para análisis
+Formato consistente: Timestamp, level, mensaje uniformes
+Thread-safety: Múltiples hilos escribiendo sin corromper el archivo
+Ejemplo práctico:
+
+Sin Singleton, diferentes módulos podrían crear loggers separados, resultando en logs fragmentados en múltiples archivos.
+
+💾 Cache Manager
+Un CacheManager como Singleton proporciona una memoria compartida que evita duplicación de datos y optimiza el rendimiento de toda la aplicación.
+
+Por qué mejora performance:
+
+Memoria compartida: Un objeto en cache sirve a toda la aplicación
+Evita duplicación: No se cargan los mismos datos múltiples veces
+Acceso rápido: Memoria es miles de veces más rápida que disco/red
+Ejemplo práctico:
+
+Sin Singleton, cada módulo tendría su propio cache, duplicando datos en memoria y perdiendo eficiencia al no compartir datos ya cargados.
 
 ### 🧭 **[FRAMEWORK DE DECISIÓN]**
 Usa este framework antes de implementar Singleton:

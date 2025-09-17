@@ -22,9 +22,9 @@
 
 ### Características Clave
 
-- ** INSTANCIA ÚNICA** - Solo un objeto de la clase
-- ** ACCESO GLOBAL** - Disponible desde cualquier parte del código  
-- ** LAZY INITIALIZATION** - Creación bajo demanda
+- INSTANCIA ÚNICA - Solo un objeto de la clase
+- ACCESO GLOBAL - Disponible desde cualquier parte del código  
+   LAZY INITIALIZATION - Creación bajo demanda
 
 ---
 

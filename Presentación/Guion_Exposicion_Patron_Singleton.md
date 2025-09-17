@@ -7,14 +7,7 @@
 
 ## 📋 Introducción [2 minutos]
 
-Buenos días. Hoy exploraremos el patrón Singleton, uno de los patrones más conocidos pero también más debatidos en la ingeniería de software. Veremos **6 implementaciones diferentes**, desde la más simple hasta la más robusta, con ejemplos prácticos de sistemas empresariales.
-
-### 🎯 Agenda de los próximos 45 minutos:
-- Conceptos fundamentales del patrón
-- 6 implementaciones con sus trade-offs
-- Casos reales en sistemas enterprise
-- Alternativas modernas y mejores prácticas
-
+Buenos días. Hoy exploraremos el patrón Singleton, . Veremos **6 implementaciones diferentes**, desde la más simple hasta la más robusta.
 ---
 
 ## 🎯 Diapositiva 1: Introducción al Patrón Singleton [4 minutos]

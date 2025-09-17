@@ -1,10 +1,10 @@
 # Diapositiva 2: Cuándo Usar Singleton
 
-## 🤔 Casos de Uso y Framework de Decisión
+##  Casos de Uso y Framework de Decisión
 
 ---
 
-### ✅ Casos de Uso Válidos
+###  Casos de Uso Válidos
 
 | **Configuración Global** | **Pool de Conexiones** |
 |:------------------------:|:----------------------:|
@@ -20,23 +20,23 @@
 
 ---
 
-### 🧭 Framework de Decisión
+###  Framework de Decisión
 
 ```
-❓ ¿Necesitas exactamente UNA instancia?
-❓ ¿Es un recurso compartido costoso?
-❓ ¿El acceso global está justificado?
-❓ ¿No puedes usar Dependency Injection?
+ ¿Necesitas exactamente UNA instancia?
+ ¿Es un recurso compartido costoso?
+ ¿El acceso global está justificado?
+ ¿No puedes usar Dependency Injection?
 
-✅ 4 SÍ = Considera Singleton
-❌ Algún NO = Busca alternativas
+ 4 SÍ = Considera Singleton
+ Algún NO = Busca alternativas
 ```
 
 ---
 
-### 💼 Ejemplos Específicos
+###  Ejemplos Específicos
 
-#### ✅ Configuración del Sistema
+####  Configuración del Sistema
 ```java
 // Una sola configuración para toda la app
 String dbUrl = ConfigManager.getInstance()
@@ -47,7 +47,7 @@ int timeout = ConfigManager.getInstance()
 
 ---
 
-#### ✅ Pool de Conexiones
+####  Pool de Conexiones
 ```java
 // Reutilizar conexiones caras
 Connection conn = ConnectionPool.getInstance()
@@ -59,7 +59,7 @@ ConnectionPool.getInstance()
 
 ---
 
-#### ✅ Cache Centralizado
+####  Cache Centralizado
 ```java
 // Cache compartido para performance
 User user = CacheManager.getInstance()
@@ -73,13 +73,13 @@ if (user == null) {
 
 ---
 
-### ❌ Cuándo NO Usar
+###  Cuándo NO Usar
 
-- **❌ LÓGICA DE NEGOCIO**: Servicios de dominio
-- **❌ OBJETOS CON ESTADO**: Datos de usuario específicos  
-- **❌ TESTING CRÍTICO**: Cuando necesitas mocks frecuentes
-- **❌ MICROSERVICIOS**: Estado debe ser distribuido
-- **❌ FRAMEWORKS DI**: Spring, CDI disponibles
+- ** LÓGICA DE NEGOCIO**: Servicios de dominio
+- ** OBJETOS CON ESTADO**: Datos de usuario específicos  
+- ** TESTING CRÍTICO**: Cuando necesitas mocks frecuentes
+- ** MICROSERVICIOS**: Estado debe ser distribuido
+- ** FRAMEWORKS DI**: Spring, CDI disponibles
 
 ---
 

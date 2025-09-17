@@ -1,13 +1,14 @@
 # Guión Completo para Exposición: Patrón Singleton
 
 **Universidad Autónoma de Occidente - Ingeniería de Software 2**  
-**Duración:** 45 minutos | **Fecha:** Septiembre 2025
+**Duración:** 35 minutos | **Fecha:** Septiembre 2025
 
 ---
 
 ## 📋 Introducción [2 minutos]
 
-Buenos días. Hoy exploraremos el patrón Singleton, . Veremos **6 implementaciones diferentes**, desde la más simple hasta la más robusta.
+Buenos días. Hoy exploraremos el patrón Singleton, uno de los patrones más conocidos pero también más debatidos en la ingeniería de software. Veremos **6 implementaciones diferentes**, desde la más simple hasta la más robusta, con ejemplos prácticos de sistemas empresariales.
+
 ---
 
 ## 🎯 Diapositiva 1: Introducción al Patrón Singleton [4 minutos]
@@ -15,41 +16,38 @@ Buenos días. Hoy exploraremos el patrón Singleton, . Veremos **6 implementacio
 **[MOSTRAR DIAPOSITIVA 1 - Conceptos fundamentales]**
 
 ### 📚 **[EXPLICAR DEFINICIÓN]**
-El patrón Singleton es un **patrón creacional** que resuelve un problema específico: garantizar que una clase tenga exactamente **UNA instancia** y proporcionar **acceso global controlado** a ella.
+El patrón Singleton es un **patrón creacional** que garantiza **UNA SOLA INSTANCIA** de una clase y proporciona **ACCESO GLOBAL** controlado a esa instancia.
 
-### 🔍 **[DETALLE DE GARANTÍAS]**
-¿Qué significa "una sola instancia"? Significa que sin importar cuántas veces llamemos al constructor o método de acceso, siempre obtendremos **LA MISMA instancia** en memoria. Es como tener un único gerente general en una empresa - solo puede haber uno.
+### 🔑 **[CARACTERÍSTICAS CLAVE]**
+Las tres características fundamentales son:
+- **Garantiza**: Una sola instancia para controlar la creación de objetos
+- **Acceso global**: Proveer acceso global controlado  
+- **Lazy initialization**: Creación bajo demanda cuando se necesita
 
-### 🌐 **[EXPLICAR ACCESO GLOBAL]**
-El acceso global controlado significa que cualquier parte de nuestro código puede acceder a esta instancia, pero de manera controlada - no a través de una variable global caótica, sino mediante un método bien definido.
+### 💻 **[EJEMPLO PRÁCTICO BÁSICO]**
+Veamos el ejemplo básico de ConfigurationManager:
 
-### ⏱️ **[LAZY INITIALIZATION]**
-La inicialización perezosa o "lazy initialization" es crear el objeto solo cuando realmente se necesita. Es como no contratar un empleado hasta que realmente tengamos trabajo para él.
-
-### 💻 **[EJEMPLO PRÁCTICO DETALLADO]**
-Veamos el ejemplo de ConfigurationManager:
-
-**Sin Singleton:**
+**Sin Singleton - Múltiples configuraciones:**
 ```java
-// ❌ Problemático - múltiples configuraciones
-ConfigurationManager config1 = new ConfigurationManager(); // Lee archivo config.properties
-ConfigurationManager config2 = new ConfigurationManager(); // Lee archivo OTRA VEZ
+// ❌ Sin Singleton - Múltiples configuraciones
+ConfigurationManager config1 = new ConfigurationManager();
+ConfigurationManager config2 = new ConfigurationManager();
 ```
-Cada instancia leería el archivo de configuración, desperdiciaría memoria y podría tener valores inconsistentes si el archivo cambia.
 
-**Con Singleton:**
+**Con Singleton - Una sola configuración:**
 ```java
-// ✅ Eficiente - una sola configuración
+// ✅ Con Singleton - Una sola configuración  
 ConfigurationManager config1 = ConfigurationManager.getInstance();
 ConfigurationManager config2 = ConfigurationManager.getInstance();
-// config1 == config2 (misma referencia en memoria)
+// config1 == config2 (misma instancia)
 ```
 
 ### 🎯 **[CUÁNDO USAR - CRITERIOS ESPECÍFICOS]**
 El Singleton es apropiado cuando:
-1. Necesitas exactamente **UNA** instancia - no cero, no dos, UNA
-2. Esta instancia debe ser **accesible globalmente**
-3. La instancia **controla acceso** a un recurso compartido
+- Necesitas exactamente **UNA** instancia
+- Acceso global **justificado**
+- Control **centralizado** de recursos
+- La instancia **controla acceso** a un recurso compartido
 
 ---
 
@@ -58,46 +56,64 @@ El Singleton es apropiado cuando:
 **[MOSTRAR DIAPOSITIVA 2 - Casos de uso y framework de decisión]**
 
 ### 💼 **[CASOS DE USO DETALLADOS]**
-Permítanme explicar cada caso con ejemplos concretos de sistemas empresariales:
+Permítanme explicar cada caso con ejemplos concretos:
 
 #### **🔧 Configuración Global:**
-En un sistema bancario, necesitamos configurar URLs de APIs, timeouts, credenciales. Una sola instancia garantiza consistencia:
+Properties del sistema, URLs de APIs, credenciales - una sola fuente de configuración:
 ```java
-String apiUrl = ConfigManager.getInstance().getProperty("api.payments.url");
-int timeout = ConfigManager.getInstance().getIntProperty("api.timeout", 30000);
+// Una sola configuración para toda la app
+String dbUrl = ConfigManager.getInstance().getProperty("database.url");
+int timeout = ConfigManager.getInstance().getIntProperty("timeout", 30);
 ```
 
 #### **🔗 Pool de Conexiones:**
-Las conexiones a base de datos son costosas de crear. Un pool centralizado las reutiliza eficientemente:
+Las conexiones a base de datos son costosas - un pool centralizado las reutiliza:
 ```java
+// Reutilizar conexiones caras
 Connection conn = ConnectionPool.getInstance().getConnection();
-// Usa la conexión
+// ... usar conexión ...
 ConnectionPool.getInstance().releaseConnection(conn);
 ```
 
 #### **📝 Logging Centralizado:**
-Un solo logger evita conflictos de escritura y garantiza formato consistente:
+Un solo archivo log, formato consistente, thread-safe writing:
 ```java
 Logger.getInstance().info("User " + userId + " login successful");
 Logger.getInstance().error("Payment failed for transaction " + txId);
 ```
 
 #### **💾 Cache Manager:**
-Una cache centralizada evita duplicación de datos y optimiza memoria:
+Memoria compartida, evita duplicación, optimiza performance:
 ```java
-UserData user = CacheManager.getInstance().get("user:" + userId);
+// Cache compartido para performance
+User user = CacheManager.getInstance().get("user:" + userId);
 if (user == null) {
-    user = database.getUser(userId);
+    user = database.loadUser(userId);
     CacheManager.getInstance().put("user:" + userId, user);
 }
 ```
 
 ### 🧭 **[FRAMEWORK DE DECISIÓN]**
-Antes de implementar Singleton, pregúntate:
-- ¿Realmente necesito exactamente **UNA** instancia?
-- ¿Es esta instancia un **recurso compartido**?
-- ¿El **acceso global** está justificado?
-- ¿Podría usar **dependency injection** en su lugar?
+Usa este framework antes de implementar Singleton:
+```
+¿Necesitas exactamente UNA instancia?
+¿Es un recurso compartido costoso?
+¿El acceso global está justificado?
+¿No puedes usar Dependency Injection?
+
+✅ 4 SÍ = Considera Singleton
+❌ Algún NO = Busca alternativas
+```
+
+### 🚫 **[CUÁNDO NO USAR]**
+- **LÓGICA DE NEGOCIO**: Servicios de dominio
+- **OBJETOS CON ESTADO**: Datos de usuario específicos  
+- **TESTING CRÍTICO**: Cuando necesitas mocks frecuentes
+- **MICROSERVICIOS**: Estado debe ser distribuido
+- **FRAMEWORKS DI**: Spring, CDI disponibles
+
+### 💡 **[REGLA DE ORO]**
+> **"Usa Singleton solo para RECURSOS, no para LÓGICA"**
 
 ---
 
@@ -106,56 +122,52 @@ Antes de implementar Singleton, pregúntate:
 **[MOSTRAR DIAPOSITIVA 3 - Eager Initialization]**
 
 ### 🏗️ **[EXPLICAR EL CONCEPTO]**
-Eager Initialization significa que la instancia se crea **INMEDIATAMENTE** cuando la JVM carga la clase, no cuando se llama getInstance() por primera vez.
+Eager Initialization significa creación al cargar la clase, thread-safe automático, implementación simple, pero no es lazy (siempre se crea).
 
-### 🔍 **[ANÁLISIS LÍNEA POR LÍNEA DEL CÓDIGO]**
-Veamos cada parte del código:
-
-```java
-private static final DatabaseManager INSTANCE = new DatabaseManager();
-```
-- **`static`**: Pertenece a la clase, no a una instancia específica
-- **`final`**: Una vez asignada, no puede cambiar la referencia
-- **`= new DatabaseManager()`**: Se ejecuta cuando la JVM carga la clase
+### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
+Veamos el ejemplo de SystemConfigManager:
 
 ```java
-private DatabaseManager() {
-    // Constructor privado - CRÍTICO
+public class SystemConfigManager {
+    // Instancia creada al cargar la clase
+    private static final SystemConfigManager INSTANCE = 
+        new SystemConfigManager();
+    
+    private Properties config;
+    
+    private SystemConfigManager() {
+        // Constructor privado - CRÍTICO
+        loadSystemConfiguration();
+    }
+    
+    public static SystemConfigManager getInstance() {
+        return INSTANCE; // Solo retorna referencia
+    }
 }
 ```
-El constructor privado es **FUNDAMENTAL**. Impide que código externo haga `new DatabaseManager()`, garantizando que solo existe la instancia controlada.
 
-```java
-public static DatabaseManager getInstance() {
-    return INSTANCE;  // Solo retorna la referencia
-}
+### 🔄 **[FLUJO DE EJECUCIÓN]**
 ```
-Este método es extremadamente rápido - simplemente retorna una referencia existente, sin verificaciones ni creación.
+[JVM carga clase] → [Crea INSTANCE] → [getInstance()] → [Retorna INSTANCE]
+     ⚡ Inmediato        💾 Una vez         ⚡ Rápido        ✅ Mismo objeto
+```
 
-### 🔄 **[FLUJO DE EJECUCIÓN DETALLADO]**
-1. **Carga de clase**: Cuando la JVM encuentra la primera referencia a DatabaseManager
-2. **Instancia creada**: Se ejecuta `new DatabaseManager()` automáticamente
-3. **getInstance()**: Simplemente retorna la referencia ya existente
-4. **Accesos posteriores**: Todos retornan la misma referencia, instantáneamente
+### ✅ **[VENTAJAS]**
+- **THREAD-SAFE**: JVM garantiza inicialización segura
+- **PERFORMANCE**: getInstance() es instantáneo  
+- **SIMPLE**: Código muy fácil de entender
+- **ROBUSTO**: Sin race conditions posibles
 
-### 🔒 **[THREAD-SAFETY AUTOMÁTICO]**
-¿Por qué es thread-safe? Porque la JVM garantiza que la inicialización de campos `static final` ocurre de manera atómica. Es imposible que dos threads vean estados inconsistentes.
+### ❌ **[DESVENTAJAS]**
+- **MEMORIA**: Se crea aunque no se use
+- **STARTUP**: Puede impactar tiempo de inicio
+- **EXCEPCIONES**: Difícil manejo si constructor falla
 
-### ✅ **[VENTAJAS ESPECÍFICAS]**
-- **🎯 Simplicidad extrema**: El código es muy fácil de entender
-- **⚡ Performance de acceso**: getInstance() es prácticamente instantáneo
-- **🔒 Thread-safety garantizado**: Sin necesidad de sincronización
-
-### ❌ **[DESVENTAJAS ESPECÍFICAS]**
-- **💾 Desperdicio de memoria**: Si nunca usas la instancia, ya está creada
-- **⏱️ Impacto en startup**: Si el constructor es costoso, afecta el tiempo de inicio
-- **❌ Manejo de excepciones**: Si falla el constructor, la clase no se puede cargar
-
-### 🎯 **[CUÁNDO ES IDEAL]**
-- Constructor **simple y rápido**
-- Sabes que **SIEMPRE** necesitarás la instancia
-- La aplicación tiene **recursos abundantes**
-- El tiempo de **startup no es crítico**
+### 🎯 **[CUÁNDO USAR]**
+- ✅ Constructor **simple y rápido**
+- ✅ **SIEMPRE** vas a usar la instancia
+- ✅ Recursos **abundantes** disponibles
+- ✅ Startup time **no crítico**
 
 ---
 
@@ -164,123 +176,137 @@ Este método es extremadamente rápido - simplemente retorna una referencia exis
 **[MOSTRAR DIAPOSITIVA 4 - Lazy Initialization]**
 
 ### 🔄 **[CONCEPTO FUNDAMENTAL]**
-Lazy Initialization es lo opuesto a Eager - la instancia se crea **solo cuando se llama getInstance()** por primera vez. Es la implementación más intuitiva del patrón.
+Lazy Initialization significa ⏱️ creación bajo demanda, ✅ ahorra memoria y recursos, ✅ implementación simple, pero ❌ **NO THREAD-SAFE** y ⚠️ solo para aplicaciones single-thread.
 
-### 🔍 **[ANÁLISIS DEL CÓDIGO]**
+### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
 ```java
-private static DatabaseConnectionPool instance;  // Inicialmente null
-```
-La variable instance inicia como **null** - no hay objeto creado aún.
-
-```java
-if (instance == null) {  // Primera verificación
-    instance = new DatabaseConnectionPool();  // Creación costosa
+public class DatabaseConnectionPool {
+    private static DatabaseConnectionPool instance;
+    
+    private DatabaseConnectionPool() {
+        // Constructor costoso
+        initializeConnections();
+    }
+    
+    public static DatabaseConnectionPool getInstance() {
+        if (instance == null) {  // ⚠️ Race condition aquí
+            instance = new DatabaseConnectionPool();
+        }
+        return instance;
+    }
 }
-return instance;
 ```
 
-### 📊 **[FLUJO DE EJECUCIÓN PASO A PASO]**
-1. **Primera llamada**: instance es null → se crea el objeto → se retorna
-2. **Llamadas posteriores**: instance no es null → se retorna directamente
-
-### ⚠️ **[EL PROBLEMA DE CONCURRENCIA]**
-Aquí está el gran problema. Imaginen este escenario:
-
+### 📊 **[FLUJO DE EJECUCIÓN]**
 ```
-Tiempo 1: Thread A llama getInstance()
-Tiempo 2: Thread A evalúa (instance == null) → TRUE
-Tiempo 3: Thread B llama getInstance()  
-Tiempo 4: Thread B evalúa (instance == null) → TRUE (¡aún!)
-Tiempo 5: Thread A ejecuta new DatabaseConnectionPool() → Instancia A
-Tiempo 6: Thread B ejecuta new DatabaseConnectionPool() → Instancia B ❌
+[getInstance()] → [instance == null?] → [Crear instancia] → [Retornar]
+     ⚡ Primera vez      ✅ true            💾 new Object      ✅ Única
+     ⚡ Siguientes      ❌ false              -               ✅ Existente
 ```
 
-¡Tenemos **DOS instancias**! El patrón Singleton está roto.
+### ⚠️ **[PROBLEMA EN MULTI-THREAD]**
+```java
+Thread 1: instance == null? → true → crea instancia A
+Thread 2: instance == null? → true → crea instancia B  ❌ PROBLEMA
+```
 
-### 🏃‍♂️ **[RACE CONDITION EXPLICADA]**
-Una race condition ocurre cuando múltiples threads acceden y modifican datos compartidos, y el resultado depende del timing. En este caso, ambos threads "ganan la carrera" de crear la instancia.
+**Race Condition**: Ambos threads pueden crear instancias separadas!
 
-### 🎯 **[CUÁNDO ES APROPIADO]**
-Lazy initialization sin sincronización solo es seguro en aplicaciones **single-thread**:
-- Scripts simples
-- Aplicaciones de escritorio con un solo thread
-- Prototipos y demos
+### 📅 **[TIMELINE DEL PROBLEMA]**
+```
+Tiempo 1: Thread A evalúa (instance == null) → TRUE
+Tiempo 2: Thread B evalúa (instance == null) → TRUE  
+Tiempo 3: Thread A crea instancia A
+Tiempo 4: Thread B crea instancia B ❌
+Resultado: DOS INSTANCIAS = Patrón roto
+```
 
-### ✅ **[VENTAJAS]**
-- **💾 Eficiencia de memoria**: Solo usa memoria cuando necesita el objeto
-- **⚡ Startup rápido**: No impacta el tiempo de inicio de la aplicación
-- **🎯 Simplicidad**: Código fácil de entender
+### ✅ **[CARACTERÍSTICAS POSITIVAS]**
+- **LAZY LOADING**: Crea solo cuando necesita
+- **EFICIENCIA**: No desperdicia recursos
+- **SIMPLE**: Código fácil de entender
 
-### ❌ **[DESVENTAJAS CRÍTICAS]**
-- **⚠️ NO thread-safe**: Puede crear múltiples instancias
-- **🔄 Impredecible**: El comportamiento cambia según el timing
-- **🐛 Bugs silenciosos**: Puede funcionar en desarrollo pero fallar en producción
+### ❌ **[PROBLEMAS CRÍTICOS]**
+- **RACE CONDITION**: Múltiples instancias posibles
+- **IMPREDECIBLE**: Comportamiento depende del timing
+- **BUGS SILENCIOSOS**: Puede funcionar en desarrollo, fallar en producción
+
+### 🎯 **[CUÁNDO USAR]**
+- ✅ Aplicaciones **SINGLE-THREAD** únicamente
+- ✅ Recursos **COSTOSOS** de crear
+- ✅ Posibilidad de **NO** usar la instancia
+- ❌ **NUNCA** en aplicaciones multi-thread
 
 ---
 
-## 🔒 Diapositiva 5: Synchronized Method [4 minutos]
+## 🔒 Diapositiva 5: Synchronized Method [3 minutos]
 
 **[MOSTRAR DIAPOSITIVA 5 - Synchronized Method]**
 
-### 🔧 **[LA SOLUCIÓN OBVIA AL PROBLEMA]**
-Si Lazy Initialization tiene problemas de concurrencia, la solución más directa es sincronizar todo el método getInstance().
+### 🔧 **[LA SOLUCIÓN AL PROBLEMA DE CONCURRENCIA]**
+Synchronized Method ofrece thread-safe garantizado, seguro para múltiples hilos, implementación simple, pero con **IMPACTO EN RENDIMIENTO** debido a la sincronización en CADA llamada.
 
-### 🔍 **[ANÁLISIS DEL CÓDIGO]**
+### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
 ```java
-public static synchronized SecurityManager getInstance() {
-    if (instance == null) {
-        instance = new SecurityManager();
+public class LogManager {
+    private static LogManager instance;
+    
+    private LogManager() {
+        // Constructor privado
+        initializeLogger();
     }
-    return instance;
+    
+    public static synchronized LogManager getInstance() {
+        if (instance == null) {
+            instance = new LogManager();
+        }
+        return instance;
+    }
 }
 ```
-La palabra clave **`synchronized`** garantiza que solo **UN thread** puede ejecutar este método a la vez.
 
-### ⚙️ **[CÓMO FUNCIONA LA SINCRONIZACIÓN]**
-Cuando un thread llama a getInstance():
-1. **Obtiene el lock**: Solo este thread puede continuar
-2. **Ejecuta el código**: Verifica, crea si necesario, retorna
-3. **Libera el lock**: Otros threads pueden proceder
-
-### 🔄 **[FLUJO CON MÚLTIPLES THREADS]**
+### 🔄 **[FLUJO CON SINCRONIZACIÓN]**
 ```
-Thread A: Obtiene lock → verifica null → crea instancia → libera lock
-Thread B: Espera lock → obtiene lock → verifica NOT null → retorna → libera lock
-Thread C: Espera lock → obtiene lock → verifica NOT null → retorna → libera lock
+Thread 1: [LOCK] → getInstance() → crear/retornar → [UNLOCK]
+Thread 2:  [WAIT] ..................... [LOCK] → getInstance() → [UNLOCK]
+Thread 3:         [WAIT] .................................. [LOCK] → [UNLOCK]
 ```
 
-### ⚠️ **[EL PROBLEMA DE PERFORMANCE]**
-Aquí está el gran problema: la sincronización es necesaria solo **DURANTE LA CREACIÓN**. Una vez creada la instancia, cada acceso posterior aún requiere obtener y liberar el lock innecesariamente.
+**Solo UN thread a la vez puede ejecutar getInstance()**
 
-### 📈 **[EJEMPLO DE DESPERDICIO]**
+### ✅ **[VENTAJAS]**
+- **THREAD-SAFE**: Garantiza una sola instancia
+- **SIMPLE**: Solo agregar `synchronized`
+- **CONFIABLE**: Sin race conditions
+- **LAZY**: Crea solo cuando necesita
+
+### ❌ **[DESVENTAJAS]**
+- **OVERHEAD**: Sincronización costosa
+- **BLOQUEO**: Un hilo a la vez
+- **ESCALABILIDAD**: Problema con muchos hilos
+- **INNECESARIO**: Solo primera llamada necesita sync
+
+### 📊 **[IMPACTO EN RENDIMIENTO]**
+```
+Primera llamada:    SINCRONIZACIÓN + CREACIÓN     (necesaria)
+Siguientes llamadas: SINCRONIZACIÓN sin CREACIÓN  (innecesaria)
+```
+
+**Problema**: El 99% de las llamadas tienen overhead innecesario
+
+### 📈 **[EJEMPLO DE OVERHEAD]**
 ```java
-// PRIMERA llamada: Lock necesario ✅
-SecurityManager sm1 = SecurityManager.getInstance(); // 100 microsegundos
-
-// SIGUIENTES 10,000 llamadas: Lock innecesario ❌
-for (int i = 0; i < 10000; i++) {
-    SecurityManager sm = SecurityManager.getInstance(); // 50 microsegundos c/u
-}
+// Sistema con 1000 requests/segundo
+// Sin sync: getInstance() = 1 microsegundo
+// Con sync: getInstance() = 50 microsegundos
+// Overhead: 49,000 microsegundos/segundo = 5% CPU desperdiciada
 ```
-El overhead se acumula significativamente en aplicaciones de alto tráfico.
 
-### 📊 **[IMPACTO EN ESCALABILIDAD]**
-En un sistema web con 1000 requests/segundo:
-- **Sin sincronización**: getInstance() toma ~1 microsegundo
-- **Con sincronización**: getInstance() toma ~50 microsegundos
-- **Impacto total**: 49,000 microsegundos extra por segundo = **5% de CPU desperdiciada**
-
-### 🎯 **[CUÁNDO ES ACEPTABLE]**
-- Aplicaciones con **pocas llamadas** a getInstance()
-- Sistemas donde la **simplicidad** es más importante que performance
-- **Prototipos** donde el rendimiento no es crítico
-
-### 📋 **[CARACTERÍSTICAS CLAVE]**
-- ✅ **Thread-safe**: Sin race conditions
-- ✅ **Simple**: Fácil de implementar y entender
-- ✅ **Lazy**: Creación bajo demanda
-- ❌ **Performance**: Overhead en cada acceso
-- ❌ **Escalabilidad**: Cuello de botella en alta concurrencia
+### 🎯 **[CUÁNDO USAR]**
+- ✅ Aplicaciones **MULTI-THREAD** simples
+- ✅ Frecuencia de acceso **BAJA**
+- ✅ Rendimiento **NO** crítico
+- ⚠️ **EVITAR** en sistemas de alto tráfico
 
 ---
 
@@ -288,88 +314,83 @@ En un sistema web con 1000 requests/segundo:
 
 **[MOSTRAR DIAPOSITIVA 6 - Double-Checked Locking]**
 
-### 🎯 **[LA OPTIMIZACIÓN INTELIGENTE]**
-Double-Checked Locking optimiza el Synchronized Method eliminando la sincronización innecesaria después de la creación. Es una técnica elegante pero compleja.
+### 🎯 **[OPTIMIZACIÓN AVANZADA DE RENDIMIENTO]**
+Double Checked Locking ofrece optimización de rendimiento, thread-safe y eficiente, reduce overhead de sincronización, implementación compleja, y **requiere keyword volatile**.
 
-### 🔍 **[ANÁLISIS DETALLADO DEL CÓDIGO]**
+### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
 ```java
-private static volatile CacheManager instance;  // ⚠️ VOLATILE es crítico
-```
-**`volatile`** garantiza que todos los threads vean el mismo valor de instance. Sin volatile, el patrón está **ROTO**.
-
-```java
-public static CacheManager getInstance() {
-    if (instance == null) {  // 🔍 PRIMERA verificación (sin lock)
-        synchronized (CacheManager.class) {  // 🔐 Obtener lock
-            if (instance == null) {  // 🔍 SEGUNDA verificación (con lock)
-                instance = new CacheManager();
+public class CacheManager {
+    private static volatile CacheManager instance;
+    
+    private CacheManager() {
+        // Constructor privado
+        initializeCache();
+    }
+    
+    public static CacheManager getInstance() {
+        if (instance == null) {                    // Primera verificación
+            synchronized (CacheManager.class) {    // Bloqueo
+                if (instance == null) {            // Segunda verificación
+                    instance = new CacheManager();
+                }
             }
         }
-    }
-    return instance;
-}
-```
-
-### 🤔 **[¿POR QUÉ DOS VERIFICACIONES?]**
-Imaginemos qué pasaría con una sola verificación:
-
-```java
-// ❌ INCORRECTO - una sola verificación
-if (instance == null) {
-    synchronized (CacheManager.class) {
-        instance = new CacheManager();  // ¡Sobrescribe instancia existente!
+        return instance;
     }
 }
 ```
 
-**Con una verificación:**
-1. Thread A pasa la verificación (instance == null)
-2. Thread B pasa la verificación (instance == null)  
-3. Thread A obtiene lock, crea instancia
-4. Thread B obtiene lock, ¡**SOBRESCRIBE** la instancia!
-
-### 🔄 **[FLUJO CON DOS VERIFICACIONES]**
-**Escenario exitoso:**
+### 🔄 **[FLUJO DE EJECUCIÓN]**
 ```
-Thread A: (instance == null) → true → obtiene lock → (instance == null) → true → crea
-Thread B: (instance == null) → true → espera lock → obtiene lock → (instance == null) → FALSE → sale
-```
-
-**Escenario de acceso normal:**
-```
-Thread C: (instance == null) → FALSE → retorna inmediatamente (¡sin lock!)
+[getInstance()] → [instance == null?]
+       ↓                ↓
+    ✅ false         ✅ true
+       ↓                ↓
+   [Retornar]       [synchronized]
+                         ↓
+                   [instance == null?]
+                      ↓        ↓
+                  ✅ true   ❌ false
+                      ↓        ↓
+                   [Crear]  [Retornar]
 ```
 
-### ⚠️ **[LA IMPORTANCIA CRÍTICA DE VOLATILE]**
-Sin **`volatile`**, pueden ocurrir reordenamientos de instrucciones:
-
+### ⚠️ **[¿POR QUÉ VOLATILE?]**
 ```java
-// El compilador podría reordenar:
-instance = new CacheManager();
-// Como:
-1. instance = allocate_memory();  // instance no es null pero objeto no está construido
-2. construct_CacheManager();     // construir objeto
-3. // Otro thread ve instance != null pero objeto no está listo ❌
+Sin volatile: Cambios en memoria no visibles a otros hilos
+Con volatile: Garantiza visibilidad entre hilos
 ```
 
-**`volatile`** previene este reordenamiento y garantiza visibilidad entre threads.
+**volatile previene reordenamiento de instrucciones del compilador**
 
-### 📊 **[VENTAJAS Y TRADE-OFFS]**
-#### ✅ **Ventajas:**
-- **⚡ Performance optimizada**: Lock solo durante creación
-- **🔒 Thread-safe**: Con volatile, es completamente seguro
-- **⏱️ Lazy loading**: Creación bajo demanda
+### 🔧 **[OPTIMIZACIÓN CLAVE]**
+- **PRIMERA VERIFICACIÓN**: Evita sincronización innecesaria
+- **SINCRONIZACIÓN**: Solo cuando instance es null
+- **SEGUNDA VERIFICACIÓN**: Evita múltiples creaciones
 
-#### ❌ **Desventajas:**
-- **🤯 Complejidad**: Fácil de implementar incorrectamente
-- **⚠️ Dependencia de volatile**: Requiere comprensión profunda del memory model
-- **🐛 Debugging**: Más difícil de debuggear problemas
+### ✅ **[VENTAJAS]**
+- **EFICIENCIA**: Mínimo overhead después de creación
+- **THREAD-SAFE**: Garantiza una sola instancia
+- **LAZY**: Crea solo cuando necesita
 
-### 🎯 **[CUÁNDO USARLO]**
-- **Performance crítico** con acceso frecuente
-- **Sistemas de alto tráfico**
-- Cuando realmente entiendes **volatile y memory models**
-- **Equipos de desarrollo experimentados**
+### ❌ **[DESVENTAJAS]**
+- **COMPLEJIDAD**: Difícil de implementar correctamente
+- **VOLATILE**: Keyword requerido para funcionar
+- **ERRORES**: Fácil de implementar mal
+
+### 🎯 **[CUÁNDO USAR]**
+- ✅ Alto **RENDIMIENTO** requerido
+- ✅ Acceso **FRECUENTE** a la instancia
+- ✅ Equipos con experiencia **AVANZADA**
+- ⚠️ **Solo expertos** en concurrencia
+
+### ⚠️ **[SIN VOLATILE = ROTO]**
+```java
+// Peligro sin volatile:
+1. instance = allocate_memory();    // instance != null
+2. construct_object();              // objeto aún no construido
+3. // Otro thread ve instance != null pero objeto no listo ❌
+```
 
 ---
 
@@ -380,84 +401,75 @@ instance = new CacheManager();
 ### 🎨 **[LA SOLUCIÓN ELEGANTE]**
 El Bill Pugh Pattern, también conocido como "Initialization-on-demand holder idiom", es considerado la **MEJOR implementación** de Singleton para la mayoría de casos. Combina lazy loading, thread-safety y performance sin complejidad.
 
-### 🏗️ **[ANÁLISIS ARQUITECTURAL DEL CÓDIGO]**
+### 🏗️ **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
 ```java
-public class LogManager {
-    private LogManager() {
-        // Constructor privado como siempre
+public class SettingsManager {
+    
+    private SettingsManager() {
+        // Constructor privado
+        loadConfiguration();
     }
     
-    // 🏗️ La clase interna estática es la CLAVE
-    private static class LogManagerHolder {
-        private static final LogManager INSTANCE = new LogManager();
+    private static class SettingsHolder {
+        private static final SettingsManager INSTANCE = 
+            new SettingsManager();
     }
     
-    public static LogManager getInstance() {
-        return LogManagerHolder.INSTANCE;  // Acceso a la clase interna
+    public static SettingsManager getInstance() {
+        return SettingsHolder.INSTANCE;
     }
 }
 ```
 
-### 💡 **[LA GENIALIDAD DEL DISEÑO]**
-La brillantez está en la clase interna estática **`LogManagerHolder`**. Esta clase:
-1. **No se carga hasta que se accede**: La JVM no carga clases internas estáticas hasta que se referencian
-2. **Garantiza thread-safety**: La JVM maneja la inicialización de campos static final de manera thread-safe
-3. **Proporciona lazy loading**: INSTANCE se crea solo cuando se llama getInstance()
+### ⚙️ **[CÓMO FUNCIONA]**
+```
+1. Clase externa SettingsManager se carga
+2. Clase interna SettingsHolder NO se carga automáticamente
+3. Al llamar getInstance() → Se carga SettingsHolder
+4. Al cargar SettingsHolder → Se crea INSTANCE
+5. JVM garantiza thread-safety en carga de clases
+```
 
-### 🔄 **[FLUJO DE EJECUCIÓN DETALLADO]**
-#### **Primera llamada a getInstance():**
-- JVM necesita acceder a LogManagerHolder.INSTANCE
-- JVM carga la clase LogManagerHolder
-- JVM inicializa INSTANCE = new LogManager()
-- Se retorna la instancia
+### ⚙️ **[MAGIA DE JVM]**
+- **CLASS LOADING**: Thread-safe por diseño
+- **INITIALIZATION**: Ocurre una sola vez
+- **MEMORY MODEL**: Garantías de visibilidad
 
-#### **Llamadas posteriores:**
-- LogManagerHolder ya está cargada
-- INSTANCE ya existe
-- Se retorna inmediatamente
+**La JVM hace todo el trabajo pesado por nosotros**
 
-### 🔒 **[¿POR QUÉ ES THREAD-SAFE?]**
-La JVM garantiza que la **inicialización de clases es thread-safe**. Según la especificación de Java:
-- Solo un thread puede inicializar una clase
-- Otros threads esperan hasta que la inicialización termine
-- Una vez inicializada, todos los threads ven el estado final
+### ✅ **[VENTAJAS DEL PATRÓN]**
+- **THREAD-SAFE**: JVM maneja la sincronización
+- **LAZY LOADING**: Carga solo cuando se necesita
+- **SIN OVERHEAD**: No hay sincronización explícita
+- **ELEGANTE**: Código limpio y legible
+- **PERFORMANCE**: Máximo rendimiento
 
-Es como tener un **lock automático** manejado por la JVM, pero sin el overhead de sincronización en accesos posteriores.
+### 📊 **[COMPARACIÓN CON OTROS]**
 
-### 📊 **[COMPARACIÓN CON OTRAS IMPLEMENTACIONES]**
+| Método | Thread-Safe | Lazy | Performance |
+|:------:|:-----------:|:----:|:-----------:|
+| Eager | ✅ | ❌ | ✅ |
+| Lazy | ❌ | ✅ | ✅ |
+| Synchronized | ✅ | ✅ | ❌ |
+| Double-Check | ✅ | ✅ | ⚡ |
+| **Bill Pugh** | ✅ | ✅ | ⚡⚡ |
 
-**Vs. Eager Initialization:**
-- ✅ Lazy loading real
-- ✅ Mismo performance después de creación
-- ✅ Misma simplicidad
+### 🎯 **[CUÁNDO USAR]**
+- ✅ **SIEMPRE** que necesites Singleton
+- ✅ Aplicaciones **MULTI-THREAD**
+- ✅ Cuando **RENDIMIENTO** es importante
+- ✅ **MEJOR PRÁCTICA** en Java
 
-**Vs. Synchronized Method:**
-- ✅ Sin overhead de sincronización
-- ✅ Mejor performance en alta concurrencia
-- ✅ Thread-safe garantizado
+### 🏆 **[¿POR QUÉ ES EL MEJOR?]**
+```
+✅ Combina TODAS las ventajas:
+   • Thread-safe (como Synchronized)
+   • Lazy loading (como Lazy)
+   • Performance (como Eager)
+   • Sin complejidad (como Enum)
 
-**Vs. Double-Checked Locking:**
-- ✅ Sin necesidad de volatile
-- ✅ Código más simple y menos propenso a errores
-- ✅ Mismo performance
-
-### ✅ **[VENTAJAS COMPLETAS]**
-- **🔒 Thread-safe perfecto**: Garantizado por la JVM
-- **⏱️ Lazy loading verdadero**: Carga solo cuando se necesita
-- **⚡ Performance óptimo**: Sin overhead después de creación
-- **🎯 Simplicidad**: Código limpio y fácil de entender
-- **🛡️ Robustez**: Difícil de implementar incorrectamente
-
-### ❌ **[MÍNIMAS DESVENTAJAS]**
-- **🤔 Complejidad conceptual**: Requiere entender class loading
-- **🐛 Debugging**: La clase interna puede confundir en stack traces
-- **🔧 Incompatibilidad**: Muy raros casos con class loaders exóticos
-
-### 🎯 **[CUÁNDO ES LA MEJOR OPCIÓN]**
-- La **mayoría de aplicaciones enterprise**
-- Cuando necesitas el **mejor balance** de características
-- Equipos que valoran **código limpio y mantenible**
-- Sistemas de producción donde la **robustez es crítica**
+❌ Sin NINGUNA de las desventajas
+```
 
 ---
 
@@ -465,110 +477,83 @@ Es como tener un **lock automático** manejado por la JVM, pero sin el overhead 
 
 **[MOSTRAR DIAPOSITIVA 8 - Enum Singleton]**
 
-### 👨‍💻 **[LA RECOMENDACIÓN DE JOSHUA BLOCH]**
-Joshua Bloch, creador de muchas APIs de Java y autor de "Effective Java", recomienda usar Enum como la implementación más robusta de Singleton. Dice textualmente: 
+### 🛡️ **[PATRÓN ULTRA ROBUSTO - JOSHUA BLOCH'S CHOICE]**
+Enum Singleton es el **MÁS ROBUSTO** de todos con ✅ thread-safe automático, ✅ protección contra reflexión, ✅ serializable por defecto, ✅ **una línea de código**.
 
-> **"A single-element enum type is often the best way to implement a singleton."**
-
-### 🔍 **[ANÁLISIS DEL CÓDIGO]**
+### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
 ```java
-public enum SessionManager {
-    INSTANCE;  // ⭐ Este es nuestro Singleton
+public enum SecurityManager {
+    INSTANCE;
     
-    private UserSession currentSession;
+    private String secretKey;
     
-    public void startSession(User user) {
-        currentSession = new UserSession(user);
+    private SecurityManager() {
+        // Constructor privado automático
+        secretKey = generateSecretKey();
     }
     
-    public UserSession getCurrentSession() {
-        return currentSession;
+    public void validateAccess(String token) {
+        // Lógica de validación
+    }
+    
+    public String getSecretKey() {
+        return secretKey;
     }
 }
 ```
 
-### ⚙️ **[¿CÓMO FUNCIONA UN ENUM COMO SINGLETON?]**
-Los enums en Java tienen propiedades especiales:
-1. **Instancia única garantizada**: La JVM garantiza que solo existe UNA instancia de cada valor del enum
-2. **Thread-safety automático**: La inicialización de enums es thread-safe por defecto
-3. **Serialización segura**: Los enums se serializan de manera especial, preservando la unicidad
-
-### 🎯 **[USO SÚPER SIMPLE]**
+### 🎯 **[USO DEL ENUM SINGLETON]**
 ```java
-// Acceso directo al singleton
-SessionManager.INSTANCE.startSession(user);
-UserSession session = SessionManager.INSTANCE.getCurrentSession();
-SessionManager.INSTANCE.endSession();
-
-// También se puede asignar a variable si se prefiere
-SessionManager manager = SessionManager.INSTANCE;
-manager.startSession(user);
+// Uso simple y directo
+SecurityManager manager = SecurityManager.INSTANCE;
+manager.validateAccess(userToken);
+String key = manager.getSecretKey();
 ```
 
-### 🛡️ **[PROTECCIONES AUTOMÁTICAS EXTRAORDINARIAS]**
+**¡No necesitas getInstance()!**
 
-#### **1. Protección contra Reflection:**
+### ✅ **[VENTAJAS ÚNICAS]**
+- **ULTRA SIMPLE**: Una sola línea define el patrón
+- **REFLECTION-PROOF**: Imposible crear múltiples instancias
+- **SERIALIZATION-SAFE**: Mantiene unicidad tras deserialización
+- **THREAD-SAFE**: JVM garantiza seguridad
+- **LAZY**: Se carga cuando se necesita
+
+### 🛡️ **[PROTECCIONES AUTOMÁTICAS]**
 ```java
-// ❌ Esto fallará con IllegalArgumentException
-Constructor<SessionManager> constructor = SessionManager.class.getDeclaredConstructor();
-constructor.setAccessible(true);
-SessionManager fake = constructor.newInstance(); // ¡EXCEPTION!
-```
+Reflexión:      
+INSTANCE = SecurityManager.class.newInstance() → ❌ ERROR
 
-#### **2. Protección contra Serialización:**
-```java
-// Serialización y deserialización mantienen la misma instancia
-SessionManager original = SessionManager.INSTANCE;
-// ... serializar y deserializar ...
-SessionManager deserialized = // ... de archivo ...
-assert original == deserialized; // ✅ TRUE
-```
+Serialización:  
+Deserializar mantiene misma instancia → ✅ OK
 
-#### **3. Protección contra Clonación:**
-Los enums no pueden ser clonados. **`clone()`** automáticamente lanza `CloneNotSupportedException`.
+Clonación:      
+No implementa Cloneable → ✅ SEGURO
+```
 
 ### 📊 **[COMPARACIÓN DE ROBUSTEZ]**
 
-**Implementación tradicional vulnerable:**
-```java
-public class TraditionalSingleton {
-    private static TraditionalSingleton instance;
-    
-    // ❌ Vulnerable a reflection
-    private TraditionalSingleton() {}
-    
-    // ❌ Serialización puede crear nueva instancia
-    // ❌ Clonación puede crear nueva instancia
-}
-```
+| Método | Reflexión | Serialización | Thread-Safe | Simplicidad |
+|:------:|:---------:|:-------------:|:-----------:|:-----------:|
+| Eager | ❌ | ❌ | ✅ | ⭐⭐⭐ |
+| Lazy | ❌ | ❌ | ❌ | ⭐⭐⭐ |
+| Synchronized | ❌ | ❌ | ✅ | ⭐⭐ |
+| Double-Check | ❌ | ❌ | ✅ | ⭐ |
+| Bill Pugh | ❌ | ❌ | ✅ | ⭐⭐ |
+| **Enum** | ✅ | ✅ | ✅ | ⭐⭐⭐⭐⭐ |
 
-**Enum Singleton invulnerable:**
-```java
-public enum BulletproofSingleton {
-    INSTANCE;
-    // ✅ Inmune a reflection
-    // ✅ Serialización segura automática
-    // ✅ Clonación imposible
-}
-```
+### 🎯 **[CUÁNDO USAR]**
+- ✅ **MÁXIMA SEGURIDAD** requerida
+- ✅ Aplicaciones con **SERIALIZACIÓN**
+- ✅ Protección contra **ATAQUES DE REFLEXIÓN**
+- ✅ **SIMPLICIDAD** extrema deseada
 
-### ✅ **[VENTAJAS ÚNICAS]**
-- **🛡️ Máxima robustez**: Resistente a múltiples vectores de ataque
-- **🎯 Concisión extrema**: Mínimo código necesario
-- **⚡ Performance**: Tan rápido como implementaciones tradicionales
-- **🔒 Thread-safety**: Automático sin configuración
+### 📜 **[JOSHUA BLOCH QUOTE]**
+> **"A single-element enum type is often the best way to implement a singleton"**
+> 
+> *— Effective Java, 3rd Edition*
 
-### ❌ **[LIMITACIONES]**
-- **🚫 Herencia imposible**: Los enums no pueden extender clases
-- **🤔 Confusión inicial**: Puede ser confuso para desarrolladores nuevos
-- **🔧 Inflexibilidad**: No permite lazy loading controlado
-- **📦 Deserialización**: Comportamiento especial puede sorprender
-
-### 🎯 **[CUÁNDO USAR ENUM SINGLETON]**
-- Sistemas críticos donde la **seguridad es paramount**
-- Aplicaciones que manejan **serialización frecuente**
-- Cuando quieres **máxima robustez** con mínimo código
-- Sistemas que pueden ser objetivo de **ataques de reflection**
+**El creador de las Collections de Java lo recomienda**
 
 ---
 
@@ -576,52 +561,37 @@ public enum BulletproofSingleton {
 
 **[MOSTRAR DIAPOSITIVA 9 - Tabla comparativa]**
 
-### 🔍 **[ANÁLISIS SISTEMÁTICO]**
-Ahora que hemos visto todas las implementaciones, analicemos sistemáticamente cuándo usar cada una.
+### 🔍 **[ANÁLISIS DETALLADO DE TODAS LAS IMPLEMENTACIONES]**
+Ahora presentamos el análisis detallado de ventajas/desventajas, comparamos Eager vs Lazy vs Synchronized, Double-Check vs Bill Pugh vs Enum, evaluamos Performance, Seguridad y Simplicidad.
 
-### 📋 **[ANÁLISIS POR IMPLEMENTACIÓN]**
+### 📊 **[TABLA COMPARATIVA COMPLETA]**
 
-#### **⚡ EAGER INITIALIZATION**
-- ✅ **Thread-Safe**: ⭐⭐⭐ Garantizado por JVM
-- ✅ **Performance**: ⭐⭐⭐ Acceso instantáneo
-- ❌ **Lazy Load**: ❌ Se crea aunque no se use
-- ✅ **Complejidad**: ⭐ Muy simple
-- **🎯 Recomendación**: Objetos livianos que siempre se usan
+| **Método** | **Lazy Load** | **Thread Safe** | **Performance** | **Simplicidad** |
+|:----------:|:-------------:|:---------------:|:---------------:|:---------------:|
+| Eager | ❌ | ✅ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Lazy | ✅ | ❌ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Synchronized | ✅ | ✅ | ⭐⭐ | ⭐⭐⭐⭐ |
+| Double-Check | ✅ | ✅ | ⭐⭐⭐⭐ | ⭐⭐ |
+| **Bill Pugh** | ✅ | ✅ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Enum** | ✅ | ✅ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 
-#### **⏱️ LAZY SIMPLE**
-- ❌ **Thread-Safe**: ❌ Race conditions posibles
-- ✅ **Performance**: ⭐⭐⭐ Rápido cuando funciona
-- ✅ **Lazy Load**: ✅ Verdadero lazy loading
-- ✅ **Complejidad**: ⭐ Muy simple
-- **🎯 Recomendación**: Solo aplicaciones single-thread
+### 🎯 **[ANÁLISIS POR ESCENARIOS]**
 
-#### **🔒 SYNCHRONIZED METHOD**
-- ✅ **Thread-Safe**: ⭐⭐⭐ Completamente seguro
-- ❌ **Performance**: ⭐ Overhead en cada acceso
-- ✅ **Lazy Load**: ✅ Creación bajo demanda
-- ✅ **Complejidad**: ⭐⭐ Relativamente simple
-- **🎯 Recomendación**: Evitar - performance pobre
+#### **Aplicación Simple (Single-thread)**
+- ✅ Lazy Initialization
+- ✅ Eager si siempre se usa
 
-#### **⚡ DOUBLE-CHECKED LOCKING**
-- ✅ **Thread-Safe**: ⭐⭐⭐ Con volatile correcto
-- ✅ **Performance**: ⭐⭐ Bueno después de creación
-- ✅ **Lazy Load**: ✅ Lazy loading eficiente
-- ❌ **Complejidad**: ⭐⭐⭐ Fácil de implementar mal
-- **🎯 Recomendación**: Solo para expertos
+#### **Aplicación Multi-thread Básica**
+- ✅ Synchronized Method
+- ⭐ Bill Pugh (mejor opción)
 
-#### **🏆 BILL PUGH PATTERN**
-- ✅ **Thread-Safe**: ⭐⭐⭐ Garantizado por JVM
-- ✅ **Performance**: ⭐⭐⭐ Óptimo en todos los aspectos
-- ✅ **Lazy Load**: ✅ Lazy loading elegante
-- ✅ **Complejidad**: ⭐⭐ Moderado pero robusto
-- **🎯 Recomendación**: ⭐ **PRIMERA OPCIÓN** para la mayoría
+#### **Aplicación High-Performance**
+- ⭐⭐⭐ Bill Pugh Pattern
+- ⭐⭐ Double-Check Locking
 
-#### **💎 ENUM SINGLETON**
-- ✅ **Thread-Safe**: ⭐⭐⭐ Automático
-- ✅ **Performance**: ⭐⭐⭐ Excelente
-- ❌ **Lazy Load**: ❌ Eager por naturaleza
-- ✅ **Complejidad**: ⭐ Muy simple
-- **🎯 Recomendación**: Máxima seguridad requerida
+#### **Aplicación Ultra-Segura**
+- ⭐⭐⭐⭐⭐ Enum Singleton
+- ⭐⭐⭐ Bill Pugh
 
 ### 🎯 **[GUÍA DE DECISIÓN PRÁCTICA]**
 
@@ -630,17 +600,44 @@ Ahora que hemos visto todas las implementaciones, analicemos sistemáticamente c
 2. **🛡️ Si necesitas máxima seguridad**: Enum Singleton
 3. **⚡ Si el objeto es liviano**: Eager Initialization
 
-#### **Para sistemas legacy:**
-1. **Si ya tienes Synchronized**: Migra a Bill Pugh
-2. **Si tienes Double-Checked**: Revisa implementación o migra
-3. **Si tienes Lazy Simple**: **Urgente** migrar a thread-safe
+### 🔧 **[CRITERIOS DE DECISIÓN]**
 
-#### **Para casos específicos:**
-- **🔧 Configuración del sistema**: Bill Pugh
-- **🔐 Gestión de sesiones críticas**: Enum
-- **📝 Logger simple**: Eager
-- **💾 Cache manager**: Bill Pugh
-- **🔗 Pool de conexiones**: Bill Pugh
+#### ❓ **¿Necesitas Thread-Safety?**
+- **SÍ** → Synchronized/Double-Check/Bill Pugh/Enum
+- **NO** → Eager/Lazy
+
+#### ❓ **¿Performance es crítico?**
+- **SÍ** → Bill Pugh/Enum
+- **NO** → Synchronized
+
+#### ❓ **¿Simplicidad es importante?**
+- **SÍ** → Enum/Eager/Lazy
+- **NO** → Double-Check
+
+#### ❓ **¿Máxima seguridad?**
+- **SÍ** → Enum
+- **NO** → Cualquier otro
+
+### 🏆 **[RECOMENDACIONES FINALES]**
+
+| **Ranking** | **Opción** | **Uso** |
+|:-----------:|:----------:|:-------:|
+| 🥇 | **Enum Singleton** | Primera opción |
+| 🥈 | **Bill Pugh Pattern** | Segunda opción |
+| 🥉 | **Eager** | Si siempre se usa |
+
+### ❌ **[EVITAR]**
+- ❌ Lazy simple en multi-thread
+- ⚠️ Double-Check (solo expertos)
+
+### 🧭 **[GUÍA RÁPIDA DE DECISIÓN]**
+```
+¿Necesitas máxima robustez? → Enum
+¿Necesitas mejor performance? → Bill Pugh  
+¿Necesitas simplicidad extrema? → Eager
+¿Aplicación single-thread? → Lazy
+¿Equipo junior? → Evita Double-Check
+```
 
 ---
 
@@ -648,79 +645,45 @@ Ahora que hemos visto todas las implementaciones, analicemos sistemáticamente c
 
 **[MOSTRAR DIAPOSITIVA 10 - Críticas y alternativas modernas]**
 
-### 🤔 **[LA CONTROVERSIA DEL SINGLETON]**
-El patrón Singleton es uno de los más **criticados** en el desarrollo moderno. Entendamos por qué y qué alternativas tenemos.
+### 🤔 **[CRÍTICAS AL SINGLETON Y SOLUCIONES MODERNAS]**
+El patrón identificado como **ANTIPATTERN** en algunos contextos tiene problemas de testing y acoplamiento, violación de principios SOLID, alternativas modernas disponibles, Dependency Injection como solución.
 
-### ❌ **[PROBLEMAS FUNDAMENTALES]**
+### ❌ **[PRINCIPALES PROBLEMAS]**
 
-#### **1. Dificultad en Testing:**
+#### **1. TESTABILIDAD**
 ```java
-// ❌ Difícil de testear
+// Difícil de testear
 public class OrderService {
-    public void processOrder(Order order) {
-        Logger.getInstance().log("Processing: " + order.getId());
-        // ¿Cómo mockear Logger para testing?
+    public void processOrder() {
+        // ❌ Hard-coded dependency
+        DatabaseConnection db = DatabaseConnection.getInstance(); 
+        // Imposible usar mock en tests
     }
 }
-
-// Problema: No puedes inyectar un mock
-// La dependencia está hardcodeada
 ```
 
-#### **2. Violación de Principios SOLID:**
-
-**Single Responsibility Principle (SRP):**
+#### **2. ACOPLAMIENTO FUERTE**
 ```java
-// ❌ Múltiples responsabilidades
-public class DatabaseManager {
-    // Responsabilidad 1: Ser singleton
-    private static DatabaseManager instance;
-    public static DatabaseManager getInstance() { ... }
-    
-    // Responsabilidad 2: Gestionar base de datos
-    public void executeQuery(String sql) { ... }
-    public Connection getConnection() { ... }
-}
-```
-
-**Dependency Inversion Principle (DIP):**
-```java
-// ❌ Depende de concreciones, no abstracciones
+// Clases fuertemente acopladas al Singleton
 public class UserService {
-    public void saveUser(User user) {
-        DatabaseManager.getInstance().save(user); // Dependencia concreta
+    public void saveUser() {
+        // ❌ Dependencia oculta
+        Logger.getInstance().log("Saving user"); 
     }
 }
 ```
 
-#### **3. Estado Global Problemático:**
+#### **3. ESTADO GLOBAL**
 ```java
-// ❌ Estado compartido y mutable
-public enum SessionManager {
-    INSTANCE;
-    
-    private UserSession currentSession; // ¡Estado global!
-    
-    public void setCurrentSession(UserSession session) {
-        this.currentSession = session; // Modifica estado global
-    }
-}
-
-// Problema: Múltiples threads pueden corromper el estado
+// Estado global compartido = problemas de concurrencia
+ConfigManager.getInstance().setValue("timeout", 30);
+// Cambios afectan toda la aplicación
 ```
 
-#### **4. Acoplamiento Fuerte:**
-```java
-// ❌ Fuertemente acoplado
-public class PaymentService {
-    public void processPayment() {
-        Logger.getInstance().log("Payment started");
-        DatabaseManager.getInstance().save(...);
-        NotificationService.getInstance().send(...);
-        // Acoplado a 3 singletons - difícil de cambiar
-    }
-}
-```
+### ⚖️ **[VIOLACIÓN PRINCIPIOS SOLID]**
+- **Single Responsibility**: Maneja creación + lógica de negocio
+- **Open/Closed**: Difícil extender sin modificar
+- **Dependency Inversion**: Clases dependen de implementación concreta
 
 ### ✅ **[ALTERNATIVAS MODERNAS]**
 
@@ -811,360 +774,67 @@ public class ServiceFactory {
 
 ---
 
-## 🏢 Diapositiva 11: Casos Reales Empresariales [4 minutos]
+## 🎯 Conclusión [3 minutos]
 
-**[MOSTRAR DIAPOSITIVA 11 - Implementaciones enterprise]**
+### 📝 **[RESUMEN EJECUTIVO]**
 
-### 💼 **[CASOS REALES EN SISTEMAS EMPRESARIALES]**
-Veamos implementaciones reales donde Singleton aporta valor en sistemas enterprise.
+Hemos explorado **6 implementaciones** del patrón Singleton, desde básicas hasta avanzadas:
 
-### 🔧 **[CASO 1: LEGACY SYSTEM ADAPTER]**
-```java
-public class MainframeAdapter {
-    private static volatile MainframeAdapter instance;
-    
-    private MainframeConnection connection;
-    private ProtocolConverter converter;
-    
-    private MainframeAdapter() {
-        // Conexión costosa al mainframe - puede tomar 5-10 segundos
-        this.connection = new MainframeConnection("tcp://mainframe.company.com:3270");
-        this.converter = new ProtocolConverter();
-        
-        // Autenticación con sistema legacy
-        connection.authenticate("ENTERPRISE_USER", "SYSTEM_PASSWORD");
-        
-        // Configuración de pooling de conexiones internas
-        connection.configurePool(minConnections: 5, maxConnections: 20);
-    }
-    
-    public CustomerData queryCustomer(String customerId) {
-        // Convierte request moderno a protocolo mainframe
-        MainframeRequest request = converter.toMainframeFormat(customerId);
-        
-        // Ejecuta query en sistema legacy
-        MainframeResponse response = connection.execute(request);
-        
-        // Convierte respuesta legacy a formato moderno
-        return converter.toModernFormat(response);
-    }
-}
-```
+1. **Eager**: Simple y rápido, pero no lazy
+2. **Lazy**: Eficiente pero inseguro en multi-thread
+3. **Synchronized**: Seguro pero con overhead
+4. **Double-Check**: Optimizado pero complejo
+5. **Bill Pugh**: Balance perfecto ✅
+6. **Enum**: Máxima robustez ✅
 
-**🎯 ¿Por qué Singleton aquí?**
-- La conexión al mainframe es **EXTREMADAMENTE costosa**
-- Necesitamos una **sola pool** de conexiones
-- El adapter es **stateless** - solo convierte protocolos
-- Se usa desde **múltiples microservicios**
+### 🏆 **[RECOMENDACIONES FINALES]**
 
-### 🛡️ **[CASO 2: CIRCUIT BREAKER PATTERN]**
-```java
-public enum CircuitBreakerManager {
-    INSTANCE;
-    
-    private final Map<String, CircuitBreaker> breakers = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService healthChecker = Executors.newScheduledThreadPool(5);
-    
-    CircuitBreakerManager() {
-        // Inicia health checking automático cada 30 segundos
-        healthChecker.scheduleAtFixedRate(this::checkBreakerHealth, 30, 30, TimeUnit.SECONDS);
-    }
-    
-    public <T> T executeWithBreaker(String serviceName, Supplier<T> operation) {
-        CircuitBreaker breaker = getBreaker(serviceName);
-        return breaker.execute(operation);
-    }
-    
-    // Uso en servicios:
-    PaymentResult result = CircuitBreakerManager.INSTANCE.executeWithBreaker(
-        "payment-gateway",
-        () -> paymentGateway.processPayment(request)
-    );
-}
-```
+- **🥇 Para la mayoría de casos**: Bill Pugh Pattern
+- **🛡️ Para máxima seguridad**: Enum Singleton
+- **⚡ Para casos simples**: Eager Initialization
+- **🚫 Evitar siempre**: Lazy en multi-thread
 
-**🎯 ¿Por qué Singleton aquí?**
-- Necesitamos **vista global** del estado de todos los servicios
-- Los circuit breakers deben ser **compartidos** entre requests
-- El health checking debe ser **centralizado**
-- Estado debe **persistir** durante toda la vida de la aplicación
+### 💡 **[LECCIONES CLAVE]**
 
-### 📨 **[CASO 3: NOTIFICATION TEMPLATE MANAGER]**
-```java
-public class NotificationTemplateManager {
-    private static final NotificationTemplateManager INSTANCE = new NotificationTemplateManager();
-    
-    private final Map<String, MessageTemplate> templates;
-    private final List<NotificationChannel> channels;
-    
-    public void sendNotification(String templateId, Map<String, Object> data, NotificationType... types) {
-        for (NotificationType type : types) {
-            NotificationChannel channel = getChannelForType(type);
-            
-            // Renderizar template con datos
-            String message = template.render(data);
-            
-            // Enviar de manera asíncrona
-            CompletableFuture.runAsync(() -> {
-                channel.send(message, data);
-                logNotificationSent(templateId, type, data);
-            });
-        }
-    }
-}
-```
+1. **Thread-safety es crucial** en aplicaciones modernas
+2. **Performance vs Simplicidad** - encuentra el balance
+3. **Considera alternativas** como Dependency Injection
+4. **Usa Singleton para RECURSOS, no LÓGICA**
 
-### ✅ **[BENEFICIOS EN ENTERPRISE]**
-- **🔧 Configuración única**: Una sola fuente de configuración
-- **♻️ Resource pooling**: Conexiones caras reutilizadas eficientemente
-- **💾 Caching central**: Cache compartido entre componentes
-- **📊 Monitoring unificado**: Métricas y logs centralizados
-- **🎛️ State management**: Estado compartido cuando es apropiado
+### 🎓 **[PARA LLEVAR A CASA]**
+
+El Singleton es una herramienta poderosa cuando se usa correctamente. **Conoce todas las implementaciones**, **elige la apropiada para tu contexto**, y **considera si realmente necesitas Singleton** antes de implementarlo.
 
 ---
 
-## 📋 Diapositiva 12: Best Practices [4 minutos]
+## ❓ Preguntas y Respuestas [5 minutos]
 
-**[MOSTRAR DIAPOSITIVA 12 - Mejores prácticas]**
+**¿Alguna pregunta sobre las implementaciones de Singleton?**
 
-### 🎯 **[GUÍA COMPLETA DE IMPLEMENTACIÓN]**
-Después de analizar todas las variantes, aquí están las mejores prácticas definitivas.
+### 📚 **[PREGUNTAS FRECUENTES ESPERADAS]**
 
-### 🏆 **[PATRÓN RECOMENDADO: BILL PUGH]**
-Para el **90% de casos**, usa Bill Pugh Pattern:
+1. **¿Cuándo usar enum vs Bill Pugh?**
+   - Enum: Máxima seguridad, serialización
+   - Bill Pugh: Balance general, mejor práctica
 
-```java
-public class ConfigurationManager {
-    // Constructor privado - FUNDAMENTAL
-    private ConfigurationManager() {
-        // Cargar configuración, inicializar recursos
-        loadConfiguration();
-    }
-    
-    // Clase interna estática - CLAVE del patrón
-    private static class ConfigurationHolder {
-        private static final ConfigurationManager INSTANCE = new ConfigurationManager();
-    }
-    
-    // Método de acceso público
-    public static ConfigurationManager getInstance() {
-        return ConfigurationHolder.INSTANCE;
-    }
-    
-    // Métodos de negocio...
-    public String getProperty(String key) { ... }
-}
-```
+2. **¿Por qué volatile en Double-Check?**
+   - Previene reordenamiento de instrucciones
+   - Garantiza visibilidad entre threads
 
-### ❓ **[VALIDACIONES ANTES DE IMPLEMENTAR]**
-Antes de crear cualquier Singleton, hazte estas preguntas críticas:
-
-#### **1. ¿Realmente necesitas UNA SOLA instancia?**
-```java
-// ❌ Mal uso - no necesita ser único
-public class MathUtils {
-    public static MathUtils getInstance() { ... }
-    public int add(int a, int b) { return a + b; }
-}
-
-// ✅ Mejor opción - métodos estáticos
-public class MathUtils {
-    private MathUtils() {} // Evitar instanciación
-    public static int add(int a, int b) { return a + b; }
-}
-```
-
-#### **2. ¿Puede ser reemplazado por Dependency Injection?**
-```java
-// ❌ Singleton problemático
-public class UserService {
-    public void saveUser(User user) {
-        DatabaseService.getInstance().save(user); // Acoplamiento fuerte
-    }
-}
-
-// ✅ Con DI - más testeable y flexible
-public class UserService {
-    private final DatabaseService databaseService;
-    
-    public UserService(DatabaseService databaseService) {
-        this.databaseService = databaseService;
-    }
-    
-    public void saveUser(User user) {
-        databaseService.save(user); // Inyectado, mockeable
-    }
-}
-```
-
-### ✅ **[CHECKLIST DE CALIDAD COMPLETO]**
-
-#### **🔧 Implementación correcta:**
-- ☑️ Constructor privado
-- ☑️ Thread-safe (Bill Pugh, Enum, o Eager)
-- ☑️ Lazy loading cuando es apropiado
-- ☑️ Manejo de excepciones en constructor
-- ☑️ Serialization-safe si es necesario
-
-#### **🎨 Diseño sólido:**
-- ☑️ Una sola responsabilidad
-- ☑️ Stateless o estado inmutable preferiblemente
-- ☑️ No depende de otros Singletons
-- ☑️ Interfaz limpia y mínima
-
-#### **🧪 Testing y mantenimiento:**
-- ☑️ Unit tests posibles
-- ☑️ Métodos para testing si es necesario
-- ☑️ Documentación clara del por qué es Singleton
-- ☑️ Plan de migración a DI si es apropiado
-
-### ❌ **[ANTIPATRONES A EVITAR ABSOLUTAMENTE]**
-
-#### **🚫 God Object Singleton:**
-```java
-// ❌ Hace demasiadas cosas
-public class SystemManager {
-    public void configureDatabase() { ... }
-    public void sendEmail() { ... }
-    public void processPayment() { ... }
-    public void generateReport() { ... }
-    // Violación masiva de SRP
-}
-```
-
-#### **🔗 Singleton Dependency Chain:**
-```java
-// ❌ Singletons que dependen de otros Singletons
-public class ServiceA {
-    public void doSomething() {
-        ServiceB.getInstance().callMethod();
-        ServiceC.getInstance().anotherMethod();
-    }
-}
-```
-
-### 🎯 **[RECOMENDACIÓN FINAL]**
-El Singleton es una herramienta poderosa cuando se usa correctamente. La regla de oro:
-
-> **"Usa Singleton solo cuando NECESITES exactamente una instancia Y cuando las alternativas (como DI) no sean apropiadas para tu contexto específico."**
-
-Para desarrollo moderno, considera **Spring Framework** o **CDI** que proporcionan lifecycle management sin los problemas del Singleton tradicional.
+3. **¿Singleton vs Dependency Injection?**
+   - DI: Mejor para testing y flexibilidad
+   - Singleton: Válido para recursos y utils
 
 ---
 
-## 🎯 Diapositiva 13: Conclusiones [3 minutos]
-
-**[MOSTRAR DIAPOSITIVA 13 - Conclusiones finales]**
-
-### 📋 **[RESUMEN EJECUTIVO]**
-Hemos recorrido un viaje completo por el patrón Singleton, desde sus fundamentos hasta implementaciones avanzadas y alternativas modernas.
-
-### 🎓 **[LO QUE HEMOS APRENDIDO]**
-- ✅ **6 implementaciones diferentes**: Cada una con sus trade-offs específicos
-- ✅ **Thread-safety crítico**: En aplicaciones modernas, esto no es opcional
-- ✅ **Trade-offs claros**: Performance vs Simplicidad, Seguridad vs Flexibilidad
-- ✅ **Casos reales**: Aplicaciones concretas en sistemas enterprise
-
-### 🏆 **[DECISIONES DE IMPLEMENTACIÓN]**
-Para recapitular nuestras recomendaciones:
-
-#### **🥇 Bill Pugh Pattern**: Tu primera opción para la mayoría de casos
-- Lazy loading + Thread-safe + Performance óptimo
-
-#### **🥈 Enum Singleton**: Cuando necesitas máxima seguridad
-- Protección automática contra múltiples vectores de ataque
-
-#### **🥉 Eager Initialization**: Para objetos simples y livianos
-- Cuando lazy loading no aporta valor
-
-### 🔮 **[EVOLUCIÓN DEL PATRÓN]**
-El Singleton no existe en el vacío. En el contexto actual:
-
-- **🏗️ Microservicios**: El estado global es más complejo
-- **☁️ Cloud-native**: Los containers manejan el lifecycle
-- **🌱 Frameworks modernos**: DI frameworks proporcionan alternativas
-- **📊 Observabilidad**: Monitoreo distribuido cambia los requirements
-
-### 💡 **[MENSAJES CLAVE PARA LLEVAR]**
-
-#### **1. Singleton es una herramienta, no una solución universal**
-- Úsalo solo cuando realmente necesites **UNA** instancia
-- **Considera las alternativas** antes de implementar
-
-#### **2. El balance es crucial en software**
-- Thread-safety vs Performance
-- Simplicidad vs Flexibilidad
-- Control vs Acoplamiento
-
-#### **3. Las alternativas modernas son poderosas**
-- Dependency Injection frameworks
-- Container-managed beans
-- Service registries
-
-#### **4. El contexto determina la decisión**
-- Aplicaciones legacy vs modernas
-- Performance crítico vs flexibilidad
-- Recursos limitados vs escalabilidad
-
-### 🤔 **[REFLEXIONES FINALES]**
-El Singleton seguirá siendo relevante, pero su uso debe ser más **thoughtful y contextual**. En el desarrollo moderno, pregúntate siempre: 
-
-> **"¿Hay una manera más flexible de lograr esto?"**
-
-### ❓ **[PREGUNTAS PARA CONTINUAR APRENDIENDO]**
-- ¿Cómo se comporta Singleton en **arquitecturas distribuidas**?
-- ¿Qué patrones **complementan o reemplazan** a Singleton?
-- ¿Cómo afectan los **contenedores Docker** al lifecycle de Singletons?
-- ¿Qué consideraciones adicionales tiene Singleton en **aplicaciones reactivas**?
+**¡Gracias por su atención!**
 
 ---
 
-## ❓ Sesión de Preguntas y Respuestas [8-10 minutos]
+### 📊 Notas para el Presentador
 
-### 🎯 **[PREPARACIÓN PARA PREGUNTAS COMUNES]**
-
-#### **P: "¿Cuándo NO debería usar Singleton?"**
-**R:** Evita Singleton cuando el testing es crítico, cuando necesitas flexibilidad para cambiar implementaciones, cuando usas frameworks DI, o cuando el "objeto único" es realmente un concepto de dominio que podría cambiar.
-
-#### **P: "¿Cómo manejo las excepciones en el constructor?"**
-**R:** Depende de la implementación. En Eager, la excepción previene que la clase se cargue. En lazy implementations, puedes catch y relanzar, o permitir que la excepción bubble up y reintentar en la siguiente llamada.
-
-#### **P: "¿Singleton es compatible con microservicios?"**
-**R:** Singleton dentro de un microservicio puede ser apropiado, pero evita estado compartido entre servicios. Considera service registries o configuration services para datos compartidos.
-
-#### **P: "¿Cómo testeo código que usa Singleton?"**
-**R:** Opciones: 1) Proporcionar métodos reset para testing, 2) Usar DI en lugar de Singleton, 3) Mockear a nivel de sistema, 4) Aislar la funcionalidad del Singleton detrás de interfaces.
-
----
-
-## 🎉 ¡Gracias por su atención! ¿Preguntas?
-
----
-
-## 📝 Notas Adicionales para el Expositor
-
-### ⏰ **Timing sugerido:**
-- **Introducción**: 2 min
-- **Diapositivas 1-3**: 9 min (3 min c/u)
-- **Diapositivas 4-6**: 13 min (4-5 min c/u)
-- **Diapositivas 7-8**: 9 min (4-5 min c/u)
-- **Diapositivas 9-11**: 12 min (4 min c/u)
-- **Diapositivas 12-13**: 7 min (3-4 min c/u)
-- **Q&A**: 8-10 min
-
-### 🎨 **Consejos de presentación:**
-- Usa **ejemplos de código en vivo** si es posible
-- Enfatiza los **problemas de concurrencia** con diagramas
-- Relaciona cada implementación con **casos reales**
-- Mantén la **energía alta** durante las partes técnicas
-- **Invita preguntas** durante la presentación, no solo al final
-
-### 📚 **Material de apoyo sugerido:**
-- Diagramas de threads en whiteboard
-- Código de ejemplo funcionando
-- Métricas de performance si están disponibles
-- Referencias a documentación oficial de Java
-
----
-
-*¡Listo para una presentación exitosa del Patrón Singleton!* 🚀
+- **Timing total**: 35 minutos
+- **Slides interactivas**: Mostrar código y preguntar por problemas
+- **Enfoque en ejemplos**: Cada implementación con caso real
+- **Participación**: Preguntar por experiencias con Singleton
+- **Material de apoyo**: Diapositivas con comparaciones visuales

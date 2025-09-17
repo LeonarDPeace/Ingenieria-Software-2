@@ -34,46 +34,6 @@
 
 ---
 
-###  Ejemplos Específicos
-###  Ejemplos Específicos
-
-####  Configuración del Sistema
-```java
-// Una sola configuración para toda la app
-String dbUrl = ConfigManager.getInstance()
-    .getProperty("database.url");
-int timeout = ConfigManager.getInstance()
-    .getIntProperty("timeout", 30);
-```
-
----
-
-####  Pool de Conexiones
-```java
-// Reutilizar conexiones caras
-Connection conn = ConnectionPool.getInstance()
-    .getConnection();
-// ... usar conexión ...
-ConnectionPool.getInstance()
-    .releaseConnection(conn);
-```
-
----
-
-####  Cache Centralizado
-```java
-// Cache compartido para performance
-User user = CacheManager.getInstance()
-    .get("user:" + userId);
-if (user == null) {
-    user = database.loadUser(userId);
-    CacheManager.getInstance()
-        .put("user:" + userId, user);
-}
-```
-
----
-
 ###  Cuándo NO Usar
 
 - ** LÓGICA DE NEGOCIO**: Servicios de dominio

@@ -106,11 +106,21 @@ Usa este framework antes de implementar Singleton:
 ```
 
 ### 🚫 **[CUÁNDO NO USAR]**
-- **LÓGICA DE NEGOCIO**: Servicios de dominio
-- **OBJETOS CON ESTADO**: Datos de usuario específicos  
-- **TESTING CRÍTICO**: Cuando necesitas mocks frecuentes
-- **MICROSERVICIOS**: Estado debe ser distribuido
-- **FRAMEWORKS DI**: Spring, CDI disponibles
+
+LÓGICA DE NEGOCIO: Servicios de dominio
+No uses Singleton para servicios que manejan reglas de negocio o lógica del dominio. Los servicios de negocio deben ser flexibles, testables y poder tener múltiples instancias si es necesario. El Singleton crea acoplamiento fuerte y hace difícil cambiar la implementación de la lógica de negocio en el futuro.
+
+OBJETOS CON ESTADO: Datos de usuario específicos
+No uses Singleton para objetos que mantienen estado específico de usuarios o sesiones. Cada usuario necesita su propia instancia con su propio estado. Un Singleton compartiría el estado entre todos los usuarios, causando problemas de concurrencia y datos incorrectos.
+
+TESTING CRÍTICO: Cuando necesitas mocks frecuentes
+Evita Singleton cuando necesitas hacer testing unitario frecuente con mocks. Los Singletons son difíciles de mockear porque las dependencias están hard-coded. Esto hace que los tests sean lentos, frágiles y difíciles de aislar.
+
+MICROSERVICIOS: Estado debe ser distribuido
+No uses Singleton en arquitecturas de microservicios donde el estado debe estar distribuido entre múltiples instancias de servicio. Los microservicios deben ser stateless y escalables horizontalmente. Un Singleton mantendría estado local que no se comparte entre instancias.
+
+FRAMEWORKS DI: Spring, CDI disponibles
+Evita Singleton cuando tienes frameworks de Dependency Injection disponibles como Spring o CDI. Estos frameworks ya manejan el ciclo de vida de los objetos de manera más flexible y testeable. Te permiten configurar scope singleton cuando lo necesites sin los problemas del patrón tradicional.
 
 ### 💡 **[REGLA DE ORO]**
 > **"Usa Singleton solo para RECURSOS, no para LÓGICA"**

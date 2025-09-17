@@ -41,13 +41,20 @@ Este organigrama existe para **documentar formalmente la estructura organizacion
    - **Emmanuel Mena (Full Stack Developer):** Arquitecto de experiencia usuario
    - **Juan Sebastian Castillo (Frontend Developer):** Desarrollador Frontend 
 
-2. **Niveles de Acceso Diferenciados:**
+2. **Niveles de Acceso Diferenciados con Patrones de Autorización:**
    ```
    Producción Full Access: NINGUNO (principio de segregación)
    Producción Read-Only: Project Manager únicamente
    QA/Development Admin: Especialistas técnicos por dominio
    Legacy Systems: Solo Integration Specialist
+   Pattern Implementation: Chain of Responsibility para autorización
    ```
+
+3. **Aplicación de Patrones Organizacionales:**
+   - **Command Pattern:** Cada rol ejecuta comandos específicos según responsabilidad
+   - **Chain of Responsibility:** Escalamiento de decisiones técnicas
+   - **Observer Pattern:** Notificación automática de cambios críticos
+   - **Strategy Pattern:** Diferentes enfoques según especialidad técnica
 
 3. **Distribución de Responsabilidades por Dominio:**
    - **Legacy Integration:** Felipe (único con acceso a Mainframe/Oracle)
@@ -269,20 +276,22 @@ Metodología Elegida: C4 Model (Context, Container, Component, Code)
 - **Justificación:** Stakeholders necesitan entender qué está dentro/fuera
 - **Ventaja:** Identifica integraciones críticas y riesgos externos
 
-### 2.3 **Archivo:** `3. DiagramaClasesGeneral_Proyecto.xml`
+### 2.3 **Archivo:** `3. DiagramaClasesGeneral_Proyecto.xml` (Con Patrones de Diseño)
 
 #### **(a) Propósito y Justificación de Existencia**
 
-Este diagrama de clases representa el **modelo de dominio general** del proyecto, mostrando las entidades principales, sus relaciones y atributos clave. Es fundamental para:
+Este diagrama de clases representa el **modelo de dominio general** del proyecto **implementando patrones de diseño Gang of Four**, mostrando las entidades principales, sus relaciones, atributos clave y la aplicación de patrones como Strategy, Command, Observer, Builder, Adapter, Template Method y Decorator. Es fundamental para:
 
 - **Modelado Domain-Driven Design:** Entidades core del dominio
 - **Integración entre Microservicios:** Entidades compartidas y boundarias
 - **Comprensión del Negocio:** Modelo mental común del equipo
 - **Base para Implementación:** Guía para clases de dominio
+- **Patrones de Diseño:** Implementación visual de Gang of Four patterns
+- **Principios SOLID:** Aplicación de Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation y Dependency Inversion
 
 #### **(b) Decisiones que Apoya**
 
-1. **Bounded Contexts y Entidades:**
+1. **Bounded Contexts y Entidades con Patrones:**
    ```
    Dominio Ciudadanos:
    ├── Usuario (identity, authentication)
@@ -290,48 +299,75 @@ Este diagrama de clases representa el **modelo de dominio general** del proyecto
    └── Sesion (session management)
 
    Dominio Servicios:
-   ├── Servicio (energy, water, telecom)
-   ├── Factura (billing consolidation)
-   └── Pago (payment processing)
+   ├── Servicio (energy, water, telecom) + Strategy Pattern
+   ├── Factura (billing consolidation) + Builder Pattern
+   └── Pago (payment processing) + Command + Saga Pattern
 
    Dominio Operaciones:
-   ├── Incidencia (ticket management)
-   ├── Notificacion (multi-channel communication)
-   └── Auditoria (compliance logging)
+   ├── Incidencia (ticket management) + Observer Pattern
+   ├── Notificacion (multi-channel communication) + Template Method
+   └── Auditoria (compliance logging) + Decorator Pattern
+
+   Patrones Legacy Integration:
+   ├── SistemaLegacy (abstract) + Template Method Pattern
+   ├── MainframeIBM + Adapter + Circuit Breaker Pattern
+   └── OracleSolaris + Adapter + Observer + Builder Pattern
    ```
 
-2. **Relaciones y Cardinalidades:**
+2. **Patrones de Diseño Aplicados:**
+   - **Strategy Pattern:** PaymentStrategy para diferentes métodos de pago
+   - **Command Pattern:** PagoCommand para operaciones auditables con rollback
+   - **Observer Pattern:** TransaccionObserver para notificaciones automáticas
+   - **Builder Pattern:** ResponseBuilder para construcción de objetos complejos
+   - **Adapter Pattern:** SistemaLegacy para integración legacy
+   - **Template Method Pattern:** BaseServiceProcessor para flujos comunes
+   - **Decorator Pattern:** Cross-cutting concerns (logging, metrics)
+
+3. **Relaciones y Cardinalidades:**
    - Usuario 1:N Servicios (un ciudadano múltiples servicios)
    - Factura 1:N Items (consolidación servicios)
    - Pago N:N Servicios (pago múltiple simultáneo)
+   - Strategy 1:N Implementations (diferentes algoritmos)
+   - Observer 1:N Notifications (múltiples observadores)
 
 #### **(c) Cómo Leerlo en una Entrevista**
 
-1. **Entidades Centrales:**
+1. **Entidades Centrales con Patrones:**
    - "Usuario es el agregado raíz del dominio ciudadanos"
-   - "Servicio representa energía, acueducto o telecomunicaciones"
+   - "PaymentService implementa Strategy Pattern para diferentes métodos de pago"
+   - "SistemaLegacy usa Template Method Pattern para flujos comunes de integración"
 
-2. **Relaciones de Negocio:**
+2. **Relaciones de Negocio y Patrones:**
    - "Un usuario puede tener múltiples servicios contratados"
-   - "Una factura consolida todos los servicios del periodo"
+   - "PagoCommand implementa Command Pattern para auditoría y rollback"
+   - "TransaccionObserver permite notificaciones automáticas de eventos"
 
-3. **Atributos Clave:**
+3. **Atributos Clave y Patrones:**
    - "Timestamps para auditoría en todas las entidades"
    - "Estados para tracking de lifecycle (pagos, incidencias)"
+   - "Strategy interfaces para algoritmos intercambiables"
+   - "Command objects para operaciones reversibles"
 
-#### **(d) Decisiones Técnicas y Justificación**
+#### **(d) Decisiones Técnicas y Justificación con Patrones de Diseño**
 
-**Decisión Técnica: Domain-Driven Design (DDD) con Bounded Contexts**
+**Decisión Técnica: Domain-Driven Design (DDD) con Bounded Contexts + Gang of Four Patterns**
 ```
-Metodología Elegida: Domain-Driven Design
+Metodología Elegida: Domain-Driven Design + Design Patterns
 ├── Bounded Contexts: 3 dominios principales
 ├── Aggregate Roots: Entidades principales por contexto  
 ├── Value Objects: Objetos inmutables sin identidad
 ├── Domain Services: Lógica de negocio cross-entity
-└── Repositories: Abstracción de persistencia
+├── Repositories: Abstracción de persistencia
+├── Strategy Pattern: Algoritmos intercambiables
+├── Command Pattern: Operaciones auditables
+├── Observer Pattern: Notificaciones automáticas
+├── Builder Pattern: Construcción objetos complejos
+├── Adapter Pattern: Integración sistemas legacy
+├── Template Method: Flujos comunes
+└── Decorator Pattern: Cross-cutting concerns
 ```
 
-**Bounded Contexts Definidos:**
+**Bounded Contexts Definidos con Patrones:**
 ```java
 // Contexto 1: Gestión Ciudadanos
 @Aggregate
@@ -341,11 +377,36 @@ public class Usuario {
     private List<Servicio> serviciosContratados;
 }
 
-// Contexto 2: Servicios Públicos  
+// Contexto 2: Servicios Públicos con Strategy Pattern
 @Aggregate
 public class Servicio {
     private ServicioId id;
     private TipoServicio tipo; // ENERGIA, ACUEDUCTO, TELECOM
+    private SaldoConsultaStrategy consultaStrategy; // Strategy Pattern
+}
+
+// Contexto 3: Pagos con Command Pattern
+@Aggregate  
+public class Pago {
+    private PagoId id;
+    private List<PagoCommand> commands; // Command Pattern for audit
+    private PagoSagaOrchestrator sagaOrchestrator; // Saga Pattern
+}
+
+// Design Patterns Implementation
+public interface PaymentStrategy {
+    PaymentResult processPayment(PaymentRequest request);
+}
+
+public interface PagoCommand {
+    CommandResult execute();
+    CompletableFuture<Void> undo();
+}
+
+public interface TransaccionObserver {
+    void onTransaccionProcessed(TransaccionEvent event);
+}
+```
     private Saldo saldoActual;
 }
 

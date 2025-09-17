@@ -24,7 +24,7 @@
 
 ### 1.1 Épica: Consulta y Gestión de Saldos y Pagos (MUST HAVE)
 
-#### **RF-001: Consulta de Saldos Unificada**
+#### **RF-001: Consulta de Saldos Unificada (Patrón Adapter + Strategy)**
 
 **Descripción:** El sistema debe permitir a los ciudadanos consultar, desde el portal web y la app móvil, el saldo actualizado de sus servicios (energía, acueducto, telecomunicaciones) de manera centralizada y unificada, mostrando información obtenida en tiempo real desde los sistemas legados.
 
@@ -33,26 +33,98 @@
 - ✅ La consulta de saldo es posible desde web y móvil
 - ✅ El saldo corresponde a la información actual del sistema legado (Mainframe IBM Z, Oracle)
 - ✅ El tiempo de respuesta es menor a 10 segundos bajo condiciones normales
+- ✅ Implementa Adapter Pattern para cada sistema legado
+- ✅ Aplica Strategy Pattern para selección dinámica de fuente de datos
 
 **Prioridad:** Alta  
 **Dependencias:** RF-002, Integración con sistemas legados  
 **Complejidad:** Media (integration patterns required)
 
+**Patrones de Diseño Aplicados:**
+
+```java
+// Strategy Pattern para selección de fuente de datos
+public interface SaldoConsultaStrategy {
+    CompletableFuture<SaldoResponse> consultarSaldo(String numeroServicio, TipoServicio tipo);
+    boolean isAvailable();
+    int getPriority();
+}
+
+@Component
+public class MainframeSaldoStrategy implements SaldoConsultaStrategy {
+    @Override
+    public CompletableFuture<SaldoResponse> consultarSaldo(String numeroServicio, TipoServicio tipo) {
+        // Implementación Mainframe Z para energía
+    }
+    
+    @Override
+    public boolean isAvailable() {
+        return circuitBreaker.getState() == CircuitBreaker.State.CLOSED;
+    }
+    
+    @Override
+    public int getPriority() {
+        return 1; // Prioridad más alta para fuente primaria
+    }
+}
+
+@Component
+public class CacheSaldoStrategy implements SaldoConsultaStrategy {
+    @Override
+    public int getPriority() {
+        return 10; // Fallback con prioridad baja
+    }
+}
+
+// Adapter Pattern para unificación de interfaces
+@Service
+public class SaldoConsultaService {
+    
+    @Autowired
+    private List<SaldoConsultaStrategy> strategies;
+    
+    public CompletableFuture<SaldoUnificadoResponse> consultarSaldosUnificados(String numeroCliente) {
+        
+        // Strategy Pattern - seleccionar mejor estrategia disponible
+        List<SaldoConsultaStrategy> availableStrategies = strategies.stream()
+            .filter(SaldoConsultaStrategy::isAvailable)
+            .sorted(Comparator.comparing(SaldoConsultaStrategy::getPriority))
+            .collect(Collectors.toList());
+            
+        // Composite Pattern para agregar respuestas
+        return CompletableFuture.allOf(
+            consultarEnergia(numeroCliente, availableStrategies),
+            consultarAcueducto(numeroCliente, availableStrategies),
+            consultarTelecom(numeroCliente, availableStrategies)
+        ).thenApply(v -> SaldoUnificadoResponse.builder()
+            .numeroCliente(numeroCliente)
+            .saldoEnergia(energiaResult.join())
+            .saldoAcueducto(acueductoResult.join())
+            .saldoTelecom(telecomResult.join())
+            .fechaConsulta(LocalDateTime.now())
+            .build());
+    }
+}
+```
+
+**Arquitectura de Integración:**
 ```
 Fuente de Datos: Mainframe IBM Z, Oracle Solaris, Sistemas Telecom
-├── Mainframe IBM Z (Energía): COBOL/EBCDIC
-├── Oracle Solaris (Acueducto): PL/SQL
-└── APIs REST (Telecomunicaciones): JSON
+├── Mainframe IBM Z (Energía): COBOL/EBCDIC → MainframeAdapter
+├── Oracle Solaris (Acueducto): PL/SQL → OracleAdapter  
+└── APIs REST (Telecomunicaciones): JSON → TelecomAdapter
 
-Transformación de Datos:
-├── EBCDIC → JSON (Message Translator Pattern)
-├── Agregación multi-source
-└── Cache Redis (performance optimization)
+Patrones Aplicados:
+├── Adapter Pattern: Unificación de interfaces legacy
+├── Strategy Pattern: Selección dinámica de fuente de datos
+├── Circuit Breaker: Resilencia ante fallos
+├── Cache-Aside: Redis para optimización performance
+└── Composite Pattern: Agregación de respuestas multi-source
 ```
 
 ---
 
-#### **RF-002: Pago en Línea de Servicios**
+#### **RF-002: Pago en Línea de Servicios (Saga Pattern + Command Pattern)**
 
 **Descripción:** El sistema debe permitir a los ciudadanos realizar el pago en línea de sus servicios públicos (energía, acueducto, telecomunicaciones) a través del portal web y la app móvil, permitiendo seleccionar uno o varios servicios en una sola transacción.
 
@@ -61,23 +133,193 @@ Transformación de Datos:
 - ✅ El sistema muestra confirmación inmediata de pago exitoso o fallido
 - ✅ El pago se refleja en el saldo de los servicios en menos de 15 minutos
 - ✅ Integración segura con la pasarela de pagos y los sistemas legados
+- ✅ Implementa Saga Pattern para transacciones distribuidas
+- ✅ Aplica Command Pattern para auditoría y rollback
 
 **Prioridad:** Alta  
 **Dependencias:** RF-001, Integración con sistemas de pago y legados  
 **Complejidad:** Alta (Saga Pattern implementation)
 
-```
-Patrón Implementado: Saga Pattern (Orchestration)
-├── Paso 1: Procesar pago PSE
-├── Paso 2: Actualizar saldo energía (Mainframe)
-├── Paso 3: Actualizar saldo acueducto (Oracle)
-├── Paso 4: Actualizar saldo telecom (APIs)
-└── Compensaciones: Rollback automático en caso de fallo
+**Patrones de Diseño Aplicados:**
 
-Metrics:
+```java
+// Saga Pattern para transacciones distribuidas
+@Component
+public class PagoSagaOrchestrator {
+    
+    @Autowired
+    private List<SagaStep> sagaSteps;
+    
+    @Autowired
+    private SagaRepository sagaRepository;
+    
+    public CompletableFuture<PagoResult> procesarPago(PagoRequest request) {
+        
+        // Crear instancia de Saga
+        PagoSaga saga = PagoSaga.builder()
+            .sagaId(UUID.randomUUID().toString())
+            .pagoRequest(request)
+            .estado(SagaEstado.INICIADA)
+            .timestampInicio(LocalDateTime.now())
+            .build();
+        
+        sagaRepository.save(saga);
+        
+        // Ejecutar pasos secuencialmente con compensación automática
+        return executeSagaSteps(saga);
+    }
+    
+    private CompletableFuture<PagoResult> executeSagaSteps(PagoSaga saga) {
+        
+        return CompletableFuture
+            .supplyAsync(() -> procesarPagoPSE(saga))
+            .thenCompose(result -> {
+                if (result.isExitoso()) {
+                    return actualizarSaldosServicos(saga);
+                } else {
+                    return compensatePagoPSE(saga);
+                }
+            })
+            .thenCompose(result -> {
+                if (result.isExitoso()) {
+                    return enviarNotificaciones(saga);
+                } else {
+                    return compensateAll(saga);
+                }
+            })
+            .handle((result, throwable) -> {
+                if (throwable != null) {
+                    log.error("Error en Saga de pago: {}", throwable.getMessage());
+                    compensateAll(saga);
+                    return PagoResult.fallido(saga.getSagaId(), throwable.getMessage());
+                }
+                
+                saga.setEstado(SagaEstado.COMPLETADA);
+                sagaRepository.save(saga);
+                return result;
+            });
+    }
+}
+
+// Command Pattern para operaciones auditable con rollback
+public interface PagoCommand {
+    CommandResult execute();
+    CompletableFuture<Void> undo();
+    String getCommandId();
+    LocalDateTime getExecutedAt();
+}
+
+@Component
+public class ActualizarSaldoCommand implements PagoCommand {
+    
+    private final String commandId;
+    private final ActualizarSaldoRequest request;
+    private final LegacySystemAdapter adapter;
+    private final LocalDateTime executedAt;
+    private SaldoAnterior saldoAnterior; // Para rollback
+    
+    public ActualizarSaldoCommand(ActualizarSaldoRequest request, LegacySystemAdapter adapter) {
+        this.commandId = UUID.randomUUID().toString();
+        this.request = request;
+        this.adapter = adapter;
+        this.executedAt = LocalDateTime.now();
+    }
+    
+    @Override
+    public CommandResult execute() {
+        try {
+            // Guardar estado anterior para rollback
+            saldoAnterior = adapter.consultarSaldo(request.getNumeroServicio()).join();
+            
+            // Ejecutar actualización
+            ActualizarSaldoResponse response = adapter.actualizarSaldo(request).join();
+            
+            // Auditar comando ejecutado
+            auditService.registrarComando(this);
+            
+            return CommandResult.exitoso(commandId, response);
+            
+        } catch (Exception e) {
+            log.error("Error ejecutando comando actualizar saldo: {}", e.getMessage());
+            return CommandResult.fallido(commandId, e.getMessage());
+        }
+    }
+    
+    @Override
+    public CompletableFuture<Void> undo() {
+        if (saldoAnterior == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        return CompletableFuture.runAsync(() -> {
+            try {
+                // Revertir al saldo anterior
+                ActualizarSaldoRequest rollbackRequest = ActualizarSaldoRequest.builder()
+                    .numeroServicio(request.getNumeroServicio())
+                    .nuevoSaldo(saldoAnterior.getSaldo())
+                    .motivo("ROLLBACK_SAGA")
+                    .comandoOriginal(commandId)
+                    .build();
+                
+                adapter.actualizarSaldo(rollbackRequest).join();
+                
+                // Auditar rollback
+                auditService.registrarRollback(this);
+                
+            } catch (Exception e) {
+                log.error("Error en rollback del comando {}: {}", commandId, e.getMessage());
+                // Escalate to manual intervention
+                alertService.notificarRollbackFallido(this, e);
+            }
+        });
+    }
+}
+
+// Invoker para manejo de comandos
+@Component
+public class PagoCommandInvoker {
+    
+    private final List<PagoCommand> executedCommands = new ArrayList<>();
+    
+    public CommandResult executeCommand(PagoCommand command) {
+        CommandResult result = command.execute();
+        
+        if (result.isExitoso()) {
+            executedCommands.add(command);
+        }
+        
+        return result;
+    }
+    
+    public CompletableFuture<Void> undoAllCommands() {
+        // Undo en orden inverso (LIFO)
+        Collections.reverse(executedCommands);
+        
+        List<CompletableFuture<Void>> undoFutures = executedCommands.stream()
+            .map(PagoCommand::undo)
+            .collect(Collectors.toList());
+        
+        return CompletableFuture.allOf(undoFutures.toArray(new CompletableFuture[0]));
+    }
+}
+```
+
+**Arquitectura de Saga Pattern:**
+```
+Patrón Implementado: Saga Pattern (Orchestration) + Command Pattern
+├── Paso 1: ProcesarPagoPSECommand → PSE Gateway
+├── Paso 2: ActualizarSaldoCommand → Mainframe IBM Z (Energía)
+├── Paso 3: ActualizarSaldoCommand → Oracle Solaris (Acueducto)
+├── Paso 4: ActualizarSaldoCommand → API REST (Telecomunicaciones)
+├── Paso 5: EnviarNotificacionCommand → MS-Notificaciones
+└── Compensaciones: Rollback automático con Command.undo()
+
+Métricas y Calidad:
 ├── Tiempo respuesta objetivo: <5 segundos
 ├── Throughput objetivo: 100 TPS
-└── Disponibilidad: 99.9%
+├── Disponibilidad: 99.9%
+├── Rollback automático: <30 segundos
+└── Auditoría completa: 100% comandos registrados
 ```
 
 ### 1.2 Épica: Experiencia Digital Integral (SHOULD HAVE)

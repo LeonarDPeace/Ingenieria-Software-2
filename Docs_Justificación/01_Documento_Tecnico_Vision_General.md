@@ -27,7 +27,7 @@
 
 **ServiCiudad Conectada** es un proyecto de transformación digital integral para la ciudad de Cali, que busca unificar los servicios públicos de energía, acueducto y telecomunicaciones en una plataforma digital moderna y resiliente.
 
-El proyecto implementa una **arquitectura de microservicios** con patrones de resiliencia avanzados, específicamente diseñada para integrar sistemas legacy complejos (Mainframe IBM Z, Oracle Solaris) mientras proporciona una experiencia ciudadana 360° unificada.
+El proyecto implementa una **arquitectura de microservicios** con **patrones de diseño avanzados** (Saga, Adapter, Circuit Breaker, Strategy, Command, Template Method, Decorator, Observer), específicamente diseñada para integrar sistemas legacy complejos (Mainframe IBM Z, Oracle Solaris) mientras proporciona una experiencia ciudadana 360° unificada aplicando principios SOLID y Clean Architecture.
 
 ### 1.2 Problema a Resolver
 
@@ -238,7 +238,7 @@ Pagos Digitales/Total     | >60%       | Business Intelligence
 
 ## 4. ARQUITECTURA DE SOLUCIÓN
 
-### 4.1 Principios Arquitectónicos
+### 4.1 Principios Arquitectónicos y Patrones de Diseño
 
 #### **Principios Fundamentales:**
 1. **Microservicios Desacoplados:** Cada servicio es independiente y desplegable
@@ -246,17 +246,32 @@ Pagos Digitales/Total     | >60%       | Business Intelligence
 3. **API-First:** Todas las funcionalidades expuestas vía APIs REST
 4. **Event-Driven:** Comunicación asíncrona entre servicios
 5. **Cloud-Native:** Diseño para contenedores y orquestación K8s
+6. **SOLID Principles:** Aplicación rigurosa en todos los microservicios
+7. **Clean Architecture:** Separación clara de capas y responsabilidades
 
-#### **Patrones de Resiliencia:**
+#### **Patrones de Diseño Implementados:**
 ```
-Patrón                     | Propósito                 | Implementación
----------------------------|---------------------------|---------------------------
-Circuit Breaker           | Fallos sistemas legacy    | Resilience4j
-Saga Pattern              | Transacciones distribuidas| Axon Framework
-Retry + Backoff          | Reconexión inteligente    | Spring Retry
-Bulkhead                  | Aislamiento de fallos     | Thread pools separados
-Cache-Aside              | Performance consultas     | Redis + Spring Cache
+Categoría                  | Patrón                    | Propósito                 | Implementación
+---------------------------|---------------------------|---------------------------|---------------------------
+Creacional                 | Builder Pattern           | Construcción objetos      | Response builders complejos
+                          | Factory Method            | Adaptadores legacy        | LegacyAdapterFactory
+Estructural                | Adapter Pattern           | Integración legacy        | MainframeAdapter, OracleAdapter
+                          | Decorator Pattern         | Cross-cutting concerns    | Logging, Metrics decorators
+Comportamiento             | Strategy Pattern          | Algoritmos dinámicos      | PaymentStrategy, SaldoStrategy
+                          | Command Pattern           | Operaciones auditables    | PagoCommand con rollback
+                          | Template Method           | Flujos procesamiento      | BaseServiceProcessor
+                          | Observer Pattern          | Notificaciones eventos   | Event publishing/subscribing
+                          | Chain of Responsibility   | Procesamiento eventos    | EventProcessorChain
+Arquitectura               | Saga Pattern              | Transacciones distribuidas| PagoSagaOrchestrator
+                          | Circuit Breaker           | Fallos sistemas legacy    | Resilience4j
 ```
+
+#### **Principios SOLID Aplicados:**
+- **SRP:** Cada microservicio tiene una responsabilidad única
+- **OCP:** Extensible via Strategy Pattern y plugins
+- **LSP:** Interfaces legacy intercambiables
+- **ISP:** Interfaces segregadas por responsabilidad funcional
+- **DIP:** Inversión de dependencias con Spring IoC
 
 ### 4.2 Vista de Contexto (Diagrama C4)
 

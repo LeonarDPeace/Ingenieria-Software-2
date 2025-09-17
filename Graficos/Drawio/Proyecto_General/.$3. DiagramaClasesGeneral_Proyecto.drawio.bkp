@@ -1,0 +1,233 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Diagrama de Clases General - ServiCiudad" id="AdEn_8ZgIc1_W0w9Dg7U">
+    <mxGraphModel dx="5226" dy="3854" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2336" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-1" value="DIAGRAMA DE CLASES GENERAL - SERVICIUDAD CONECTADA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1928" y="-1560" width="1520" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-17" value="AUDIT &amp; SECURITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-2099" y="-1156" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-18" value="&lt;&lt;Entity&gt;&gt;&#xa;RegistroAuditoria&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- accion: String&#xa;- entidad: String&#xa;- entidadId: String&#xa;- valoresAnteriores: String&#xa;- valoresNuevos: String&#xa;- timestamp: LocalDateTime&#xa;- ipAddress: String&#xa;&#xa;+ registrar(): void&#xa;+ consultar(): List&lt;RegistroAuditoria&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-2099" y="-1116" width="220" height="246" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-19" value="LEGACY INTEGRATION" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-969" y="-1276" width="244" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-20" value="&lt;&lt;Abstract&gt;&gt;&#xa;SistemaLegacy&#xa;(Adapter Pattern + Template Method)&#xa;&#xa;- nombre: String&#xa;- tipo: TipoSistema&#xa;- url: String&#xa;- estado: EstadoSistema&#xa;- ultimaSync: LocalDateTime&#xa;&#xa;+ abstract conectar(): boolean&#xa;+ abstract consultarDatos(): Object&#xa;+ abstract actualizarDatos(): boolean&#xa;+ verificarEstado(): boolean&#xa;+ template processRequest(): Object" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-969" y="-1266" width="244" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-21" value="&lt;&lt;Entity&gt;&gt;&#xa;MainframeIBM&#xa;(Adapter + Circuit Breaker Pattern)&#xa;&#xa;- terminal3270: String&#xa;- ventanaMantenimiento: String&#xa;- circuitBreaker: boolean&#xa;&#xa;+ conectar(): boolean&#xa;+ consultarDatos(): Object&#xa;+ actualizarDatos(): boolean&#xa;+ traducirEBCDIC(): String&#xa;+ handleFailure(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-459" y="-1236" width="210" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-23" value="MICROSERVICES LAYER" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-822" y="-975" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-24" value="&lt;&lt;Service&gt;&gt;&#xa;ClienteService&#xa;&#xa;+ validarCliente(): boolean&#xa;+ consultarPerfil(): Usuario&#xa;+ actualizarPerfil(): void&#xa;+ gestionarRoles(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-822" y="-920" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-25" value="&lt;&lt;Service&gt;&gt;&#xa;PaymentService&#xa;(Strategy + Command + Saga Pattern)&#xa;&#xa;+ procesarPagoUnificado(): PaymentResult&#xa;+ consultarEstado(): Payment&#xa;+ cancelarPago(): void&#xa;+ coordinarSaga(): SagaResult&#xa;+ executeCommand(): CommandResult&#xa;+ rollbackTransaction(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-622" y="-950" width="270" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-26" value="&lt;&lt;Service&gt;&gt;&#xa;NotificationService&#xa;&#xa;+ enviarNotificacion(): boolean&#xa;+ procesarTemplate(): String&#xa;+ gestionarCanales(): void&#xa;+ programarEnvio(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-822" y="-775" width="180" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-27" value="&lt;&lt;Service&gt;&gt;&#xa;IncidenciaService&#xa;&#xa;+ crearIncidencia(): Incidencia&#xa;+ asignarTecnico(): void&#xa;+ actualizarEstado(): void&#xa;+ enrutarPorTipo(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#b1ddf0;strokeColor=#10739e;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-332" y="-920" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-29" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" target="JGWOb-WuGtPD2TEfhMHL-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1203" y="-666" as="sourcePoint" />
+            <mxPoint x="-1283" y="-626" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-1203" y="-623" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-34" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-3" target="JGWOb-WuGtPD2TEfhMHL-9">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1153" y="-886" as="sourcePoint" />
+            <mxPoint x="-883" y="-886" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-35" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.927;exitY=0.006;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-3" target="JGWOb-WuGtPD2TEfhMHL-16">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1173" y="-936" as="sourcePoint" />
+            <mxPoint x="-1083" y="-346" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-36" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-3" target="JGWOb-WuGtPD2TEfhMHL-14">
+          <mxGeometry x="0.0016" width="160" relative="1" as="geometry">
+            <mxPoint x="-1283" y="-706" as="sourcePoint" />
+            <mxPoint x="-1283" y="-346" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-1278" y="-431" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-38" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-22" target="JGWOb-WuGtPD2TEfhMHL-20">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-172" y="-1296" as="sourcePoint" />
+            <mxPoint x="-312" y="-1316" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-579" y="-1236" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-39" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;entryX=0.998;entryY=0.076;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.008;exitY=0.113;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-24" target="JGWOb-WuGtPD2TEfhMHL-3">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-183" y="-886" as="sourcePoint" />
+            <mxPoint x="-1153" y="-886" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-913" y="-906" />
+              <mxPoint x="-973" y="-906" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-40" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;entryX=0.927;entryY=0.001;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-25" target="JGWOb-WuGtPD2TEfhMHL-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-183" y="-736" as="sourcePoint" />
+            <mxPoint x="-1153" y="-586" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-487" y="-756" />
+              <mxPoint x="-371" y="-756" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-41" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-26" target="JGWOb-WuGtPD2TEfhMHL-14">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-183" y="-636" as="sourcePoint" />
+            <mxPoint x="-1153" y="-286" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-733" y="-431" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-42" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;dashed=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-27" target="JGWOb-WuGtPD2TEfhMHL-16">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-183" y="-516" as="sourcePoint" />
+            <mxPoint x="-1093" y="-1086" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-242" y="-996" />
+              <mxPoint x="-1120" y="-996" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-2" value="USER MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1403" y="-966" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-3" value="&lt;&lt;Entity&gt;&gt;&#xa;Usuario&#xa;&#xa;- id: String&#xa;- numeroIdentificacion: String&#xa;- nombre: String&#xa;- apellido: String&#xa;- email: String&#xa;- telefono: String&#xa;- fechaRegistro: LocalDateTime&#xa;- estado: EstadoUsuario&#xa;- roles: Set&lt;Rol&gt;&#xa;&#xa;+ autenticar(): boolean&#xa;+ actualizarPerfil(): void&#xa;+ cambiarContrasena(): void&#xa;+ tieneRol(rol): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1403" y="-926" width="250" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-4" value="&lt;&lt;Entity&gt;&gt;&#xa;Rol&#xa;&#xa;- id: String&#xa;- nombre: RolTipo&#xa;- descripcion: String&#xa;- permisos: Set&lt;Permiso&gt;&#xa;- fechaCreacion: LocalDateTime&#xa;&#xa;+ agregarPermiso(): void&#xa;+ removerPermiso(): void&#xa;+ tienePermiso(permiso): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1083" y="-886" width="200" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-28" value="*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-3" target="JGWOb-WuGtPD2TEfhMHL-4">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1153" y="-866" as="sourcePoint" />
+            <mxPoint x="-1123" y="-866" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-5" value="PAYMENT MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-603" y="-726" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-6" value="&lt;&lt;Entity&gt;&gt;&#xa;PagoUnificado&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- servicios: List&lt;ServicioPago&gt;&#xa;- montoTotal: BigDecimal&#xa;- estado: EstadoPago&#xa;- fechaPago: LocalDateTime&#xa;- metodoPago: MetodoPago&#xa;- transactionId: String&#xa;&#xa;+ calcularTotal(): BigDecimal&#xa;+ procesarPago(): boolean&#xa;+ cancelar(): void&#xa;+ confirmar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-603" y="-686" width="250" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-7" value="&lt;&lt;Value Object&gt;&gt;&#xa;ServicioPago&#xa;&#xa;- tipoServicio: TipoServicio&#xa;- numeroServicio: String&#xa;- monto: BigDecimal&#xa;- saldoAnterior: BigDecimal&#xa;- saldoNuevo: BigDecimal&#xa;&#xa;+ calcularDescuento(): BigDecimal&#xa;+ aplicarPago(): void&#xa;+ validar(): boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-342" y="-626" width="200" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-30" value="1..*" style="endArrow=open;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.988;exitY=0.067;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-6" target="JGWOb-WuGtPD2TEfhMHL-7">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-378" y="-586" as="sourcePoint" />
+            <mxPoint x="-348" y="-586" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-243" y="-669" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-13" value="NOTIFICATION MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1083" y="-586" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-14" value="&lt;&lt;Entity&gt;&gt;&#xa;Notificacion&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- tipo: TipoNotificacion&#xa;- canal: CanalNotificacion&#xa;- mensaje: String&#xa;- estado: EstadoNotificacion&#xa;- fechaEnvio: LocalDateTime&#xa;- intentos: Integer&#xa;&#xa;+ enviar(): boolean&#xa;+ marcarComoLeida(): void&#xa;+ reintentar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1083" y="-546" width="250" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-8" value="SERVICE MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1750" y="-956" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-9" value="&lt;&lt;Abstract&gt;&gt;&#xa;ServicioPublico&#xa;&#xa;- id: String&#xa;- numeroServicio: String&#xa;- usuarioId: String&#xa;- tipoServicio: TipoServicio&#xa;- estado: EstadoServicio&#xa;- fechaInstalacion: LocalDate&#xa;- saldoActual: BigDecimal&#xa;&#xa;+ abstract consultarSaldo(): BigDecimal&#xa;+ abstract actualizarSaldo(): void&#xa;+ suspender(): void&#xa;+ reactivar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1750" y="-916" width="250" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-10" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioEnergia&#xa;&#xa;- consumoMensual: Double&#xa;- tarifa: BigDecimal&#xa;- factorPotencia: Double&#xa;- medidor: String&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ calcularConsumo(): Double&#xa;+ generarFactura(): Factura" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-2193" y="-631" width="200" height="195" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-11" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioAcueducto&#xa;&#xa;- consumoM3: Double&#xa;- tarifaBasica: BigDecimal&#xa;- estratoSocial: Integer&#xa;- medidor: String&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ calcularConsumo(): Double&#xa;+ aplicarSubsidio(): BigDecimal" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1973" y="-631" width="200" height="195" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-12" value="&lt;&lt;Entity&gt;&gt;&#xa;ServicioTelecomunicaciones&#xa;&#xa;- planDatos: String&#xa;- velocidadMbps: Integer&#xa;- minutosIncluidos: Integer&#xa;- datosRestantes: Double&#xa;&#xa;+ consultarSaldo(): BigDecimal&#xa;+ actualizarSaldo(): void&#xa;+ consultarDatosRestantes(): Double&#xa;+ cambiarPlan(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1755" y="-631" width="255" height="195" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-31" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-10" target="JGWOb-WuGtPD2TEfhMHL-9">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1650" y="-696" as="sourcePoint" />
+            <mxPoint x="-1650" y="-716" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-2095" y="-801" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-32" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-11" target="JGWOb-WuGtPD2TEfhMHL-9">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1500" y="-696" as="sourcePoint" />
+            <mxPoint x="-1600" y="-716" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-1873" y="-743" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-33" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-12" target="JGWOb-WuGtPD2TEfhMHL-9">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-1250" y="-696" as="sourcePoint" />
+            <mxPoint x="-1550" y="-716" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-15" value="INCIDENT MANAGEMENT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1270" y="-1338" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-16" value="&lt;&lt;Entity&gt;&gt;&#xa;Incidencia&#xa;&#xa;- id: String&#xa;- usuarioId: String&#xa;- tipoServicio: TipoServicio&#xa;- descripcion: String&#xa;- prioridad: Prioridad&#xa;- estado: EstadoIncidencia&#xa;- fechaCreacion: LocalDateTime&#xa;- fechaResolucion: LocalDateTime&#xa;- tecnicoAsignado: String&#xa;&#xa;+ asignarTecnico(): void&#xa;+ cambiarEstado(): void&#xa;+ resolver(): void&#xa;+ escalar(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-1270" y="-1298" width="200" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-49" value="" style="endArrow=block;endFill=0;endSize=12;html=1;strokeColor=#000000;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="JGWOb-WuGtPD2TEfhMHL-21" target="JGWOb-WuGtPD2TEfhMHL-20">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="-359" y="-1276" as="sourcePoint" />
+            <mxPoint x="-735" y="-1157" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-369" y="-1236" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JGWOb-WuGtPD2TEfhMHL-22" value="&lt;&lt;Entity&gt;&gt;&#xa;OracleSolaris&#xa;(Adapter + Observer + Builder Pattern)&#xa;&#xa;- conexionDB: String&#xa;- timeoutSQL: Integer&#xa;- formatoAncho: String&#xa;- observers: List&lt;Observer&gt;&#xa;&#xa;+ conectar(): boolean&#xa;+ consultarDatos(): Object&#xa;+ actualizarDatos(): boolean&#xa;+ parsearArchivo(): Object&#xa;+ notifyObservers(): void&#xa;+ buildResponse(): Response" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-669" y="-1236" width="210" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="DESIGN_PATTERNS_SECTION" value="DESIGN PATTERNS IMPLEMENTATION" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-400" y="-600" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="STRATEGY_PATTERN" value="&lt;&lt;Strategy&gt;&gt;&#xa;PaymentStrategy&#xa;&#xa;+ processPayment(): PaymentResult&#xa;+ validatePayment(): boolean&#xa;+ getPaymentType(): String" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-400" y="-560" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="COMMAND_PATTERN" value="&lt;&lt;Command&gt;&gt;&#xa;PagoCommand&#xa;&#xa;- commandId: String&#xa;- executedAt: LocalDateTime&#xa;&#xa;+ execute(): CommandResult&#xa;+ undo(): CompletableFuture&lt;Void&gt;&#xa;+ getCommandId(): String" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-200" y="-560" width="200" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="OBSERVER_PATTERN" value="&lt;&lt;Observer&gt;&gt;&#xa;TransaccionObserver&#xa;&#xa;+ onTransaccionProcessed(): void&#xa;+ getObserverType(): String" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-400" y="-410" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="BUILDER_PATTERN" value="&lt;&lt;Builder&gt;&gt;&#xa;ResponseBuilder&#xa;&#xa;+ setNumeroServicio(): Builder&#xa;+ setSaldo(): Builder&#xa;+ setFecha(): Builder&#xa;+ build(): Response&#xa;+ reset(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;container=0;" vertex="1" parent="1">
+          <mxGeometry x="-200" y="-410" width="180" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

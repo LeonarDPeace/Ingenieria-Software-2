@@ -302,21 +302,24 @@ public class AuthenticationController {
 }
 ```
 
-### 2.2 MS-Pagos (Saga Pattern Implementation)
+### 2.2 MS-Pagos (Patrones de Diseño Aplicados)
 
 #### **Responsabilidades Principales:**
 - Procesamiento de pagos unificados múltiples servicios
 - Implementación Saga Pattern para transacciones distribuidas
-- Integración con pasarela PSE
-- Coordinación de actualizaciones en sistemas legacy
+- Strategy Pattern para múltiples métodos de pago
+- Command Pattern para operaciones auditables
+- Integración con pasarela PSE y sistemas legacy
 
 #### **Stack Tecnológico:**
 ```
 Backend Framework: Spring Boot 3.2.0
 ├── Saga Pattern: Axon Framework 4.8.x
+├── Strategy Pattern: Payment method abstraction
+├── Command Pattern: Auditable operations
+├── Circuit Breaker: Resilience4j 2.0.x
 ├── Database: PostgreSQL 15.x + Event Store
-├── Messaging: Kafka 3.5.x (Saga coordination)
-├── External APIs: PSE Gateway, Legacy Adapters
+├── Messaging: Kafka 3.5.x (Event-driven)
 └── Monitoring: Micrometer + Prometheus
 
 Dependencias Específicas:
@@ -326,42 +329,469 @@ Dependencias Específicas:
 └── spring-cloud-starter-openfeign (External APIs)
 ```
 
+#### **Patrones de Diseño Implementados:**
+
+##### **1. Strategy Pattern - Métodos de Pago**
+```java
+public interface PaymentStrategy {
+    PaymentResult procesarPago(PaymentRequest request);
+    boolean soporta(PaymentMethod method);
+    List<PaymentMethod> getMetodosSoportados();
+    PaymentValidationResult validarRequest(PaymentRequest request);
+}
+
+@Component
+public class PSEPaymentStrategy implements PaymentStrategy {
+    
+    @Autowired
+    private PSEGatewayClient pseClient;
+    
+    @Override
+    public PaymentResult procesarPago(PaymentRequest request) {
+        // Validaciones específicas PSE
+        PaymentValidationResult validation = validarRequest(request);
+        if (!validation.isValid()) {
+            return PaymentResult.failed(validation.getErrors());
+        }
+        
+        // Procesar con gateway PSE
+        PSETransactionRequest pseRequest = PSETransactionRequest.builder()
+            .bankCode(request.getBankCode())
+            .accountType(request.getAccountType())
+            .amount(request.getAmount())
+            .reference(request.getReference())
+            .build();
+        
+        PSETransactionResponse response = pseClient.procesarTransaccion(pseRequest);
+        
+        return PaymentResult.builder()
+            .success(response.isApproved())
+            .transactionId(response.getTransactionId())
+            .authorizationCode(response.getAuthorizationCode())
+            .build();
+    }
+    
+    @Override
+    public PaymentValidationResult validarRequest(PaymentRequest request) {
+        List<String> errors = new ArrayList<>();
+        
+        if (request.getBankCode() == null) {
+            errors.add("Código de banco es requerido para PSE");
+        }
+        
+        if (request.getAmount().compareTo(BigDecimal.valueOf(20000000)) > 0) {
+            errors.add("Monto máximo PSE excedido: $20,000,000");
+        }
+        
+        return PaymentValidationResult.builder()
+            .valid(errors.isEmpty())
+            .errors(errors)
+            .build();
+    }
+}
+
+@Component
+public class CreditCardPaymentStrategy implements PaymentStrategy {
+    
+    @Autowired
+    private CreditCardProcessor cardProcessor;
+    
+    @Override
+    public PaymentResult procesarPago(PaymentRequest request) {
+        return cardProcessor.processPayment(
+            request.getCardNumber(),
+            request.getExpiryDate(), 
+            request.getCvv(),
+            request.getAmount()
+        );
+    }
+    
+    @Override
+    public boolean soporta(PaymentMethod method) {
+        return Arrays.asList(
+            PaymentMethod.VISA,
+            PaymentMethod.MASTERCARD,
+            PaymentMethod.AMERICAN_EXPRESS
+        ).contains(method);
+    }
+}
+
+// Payment Processor con Strategy Pattern
+@Service
+public class PaymentProcessor {
+    
+    private final Map<PaymentMethod, PaymentStrategy> strategies;
+    
+    public PaymentProcessor(List<PaymentStrategy> strategies) {
+        this.strategies = strategies.stream()
+            .flatMap(strategy -> strategy.getMetodosSoportados().stream()
+                .map(method -> Map.entry(method, strategy)))
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue
+            ));
+    }
+    
+    public PaymentResult procesar(PaymentRequest request) {
+        PaymentStrategy strategy = strategies.get(request.getMethod());
+        
+        if (strategy == null) {
+            throw new UnsupportedPaymentMethodException(
+                "Método de pago no soportado: " + request.getMethod());
+        }
+        
+        return strategy.procesarPago(request);
+    }
+}
+```
+
+##### **2. Command Pattern - Operaciones Auditables**
+```java
+public interface Command {
+    void execute();
+    void undo();
+    String getCommandId();
+    String getDescription();
+    CommandStatus getStatus();
+}
+
+@Component
+public class ProcesarPagoCommand extends AuditableCommand {
+    
+    private final PaymentRequest request;
+    private PaymentResponse response;
+    
+    @Autowired
+    private PaymentProcessor paymentProcessor;
+    
+    @Autowired
+    private PaymentRepository paymentRepository;
+    
+    public ProcesarPagoCommand(String userId, PaymentRequest request) {
+        super(userId);
+        this.request = request;
+    }
+    
+    @Override
+    protected void doExecute() {
+        // 1. Procesar pago
+        PaymentResult result = paymentProcessor.procesar(request);
+        
+        if (!result.isSuccess()) {
+            throw new PaymentProcessingException(
+                "Payment failed: " + result.getMessage());
+        }
+        
+        // 2. Crear registro de pago
+        Payment payment = Payment.builder()
+            .id(UUID.randomUUID().toString())
+            .userId(userId)
+            .amount(request.getAmount())
+            .method(request.getMethod())
+            .status(PaymentStatus.COMPLETED)
+            .transactionId(result.getTransactionId())
+            .build();
+        
+        paymentRepository.save(payment);
+        
+        this.response = PaymentResponse.from(payment);
+    }
+    
+    @Override
+    protected void doUndo() {
+        if (response == null) {
+            throw new IllegalStateException("Cannot undo: payment not executed");
+        }
+        
+        // Crear reverso en gateway
+        PaymentRefundRequest refundRequest = PaymentRefundRequest.builder()
+            .originalTransactionId(response.getTransactionId())
+            .amount(request.getAmount())
+            .reason("Command undo operation")
+            .build();
+        
+        PaymentResult refundResult = paymentProcessor.procesarReverso(refundRequest);
+        
+        if (!refundResult.isSuccess()) {
+            throw new PaymentReversalException(
+                "Failed to reverse payment: " + refundResult.getMessage());
+        }
+    }
+}
+
+@Component
+public class CommandInvoker {
+    
+    @Autowired
+    private CommandRepository commandRepository;
+    
+    @Transactional
+    public <T extends Command> T execute(T command) {
+        try {
+            commandRepository.save(CommandEntity.from(command));
+            command.execute();
+            commandRepository.updateStatus(command.getCommandId(), command.getStatus());
+            return command;
+        } catch (Exception e) {
+            commandRepository.updateStatus(command.getCommandId(), CommandStatus.FAILED);
+            throw e;
+        }
+    }
+}
+```
+
 #### **Arquitectura Hexagonal MS-Pagos:**
 
-**Propósito del Diagrama:** Documenta la implementación de Clean Architecture específicamente para el microservicio de pagos, mostrando la separación entre lógica de negocio (dominio) y detalles de infraestructura.
+**Propósito del Diagrama:** Documenta la implementación de Clean Architecture específicamente para el microservicio de pagos, mostrando la separación entre lógica de negocio (dominio) y detalles de infraestructura con aplicación de patrones de diseño.
 
 **Decisiones que Apoya:**
 - Inversión de dependencias hacia el dominio
+- Strategy Pattern para métodos de pago  
+- Command Pattern para auditoría
+- Interface Segregation Principle (ISP)
 - Testabilidad mediante inyección de puertos
-- Extensibilidad para nuevos adaptadores
-- Mantenimiento de reglas de negocio centralizadas
 
 **Fuente:** `Graficos/Drawio/Microrservicio_Pagos/4. DiagramaArquitecturaHexagonal_MicroservicioPagos.drawio`
 
 ```
 DOMAIN CORE (Hexágono Central):
-├── Payment Entity
+├── Payment Entity (DDD)
 ├── SagaOrchestrator (Domain Service)
 ├── PaymentValidator (Domain Service)
-└── Repository Interfaces (Ports)
+├── PaymentStrategy Interface (Strategy Pattern)
+└── Repository Interfaces (Ports - ISP)
 
-PRIMARY PORTS (Entrada):
-├── PaymentAPI Port (REST endpoints)
-├── EventHandler Port (Kafka consumers)
-└── ScheduledTask Port (Background jobs)
+APLICACIÓN LAYER:
+├── PaymentCommandHandler (Command Pattern)
+├── PaymentQueryHandler (CQRS)
+├── SagaCommandHandler
+└── PaymentApplicationService
 
-SECONDARY PORTS (Salida):
-├── PaymentRepository Port
-├── PSEGateway Port
-├── LegacySystem Port
-└── NotificationService Port
+PRIMARY PORTS (Entrada - ISP aplicado):
+├── PaymentProcessingPort (solo procesamientos)
+├── PaymentQueryPort (solo consultas)
+├── PaymentAdminPort (solo administración)
+└── EventHandlerPort (eventos Kafka)
+
+SECONDARY PORTS (Salida - ISP aplicado):
+├── PaymentRepositoryPort
+├── PSEGatewayPort
+├── LegacySystemPort
+├── NotificationPort
+└── AuditPort
 
 ADAPTERS (Infraestructura):
-├── REST Controllers → PaymentAPI Port
+├── REST Controllers → Primary Ports
 ├── Kafka Listeners → EventHandler Port
 ├── JPA Repositories → PaymentRepository Port
-├── HTTP Clients → External APIs Ports
-└── SMTP/SMS → NotificationService Port
+├── PSE HTTP Client → PSEGateway Port
+├── Mainframe SNA → LegacySystem Port
+└── SMTP/SMS → Notification Port
+
+STRATEGY IMPLEMENTATIONS:
+├── PSEPaymentStrategy
+├── CreditCardPaymentStrategy
+├── NequiPaymentStrategy
+└── BankTransferPaymentStrategy
+```
+
+##### **3. Template Method Pattern - Procesamiento Base**
+```java
+public abstract class BaseServiceProcessor {
+    
+    @Autowired
+    protected CacheService cacheService;
+    
+    @Autowired
+    protected AuditService auditService;
+    
+    @Autowired
+    protected MetricsService metricsService;
+    
+    // Template method - define el algoritmo
+    public final <T> T procesarConsulta(String numeroServicio, Class<T> responseType) {
+        
+        Timer.Sample sample = Timer.start(metricsService.getMeterRegistry());
+        String correlationId = UUID.randomUUID().toString();
+        
+        try {
+            // 1. Validación común
+            validarNumeroServicio(numeroServicio);
+            
+            // 2. Log inicio
+            logInicioConsulta(numeroServicio, correlationId);
+            
+            // 3. Check cache (hook method)
+            Optional<T> cached = verificarCache(numeroServicio, responseType);
+            if (cached.isPresent()) {
+                return cached.get();
+            }
+            
+            // 4. Consulta legacy (abstract method)
+            T resultado = consultarSistemaLegacy(numeroServicio, responseType);
+            
+            // 5. Validar respuesta (hook method)
+            validarRespuesta(resultado);
+            
+            // 6. Actualizar cache (hook method)
+            actualizarCache(numeroServicio, resultado);
+            
+            return resultado;
+            
+        } finally {
+            sample.stop(Timer.builder("service.consulta.duration")
+                .tag("service", getServiceName())
+                .register(metricsService.getMeterRegistry()));
+        }
+    }
+    
+    // Abstract methods - específicos por servicio
+    protected abstract <T> T consultarSistemaLegacy(String numeroServicio, Class<T> responseType);
+    protected abstract String getServiceName();
+    
+    // Hook methods - pueden ser sobrescritos
+    protected <T> Optional<T> verificarCache(String numeroServicio, Class<T> responseType) {
+        String cacheKey = buildCacheKey(numeroServicio);
+        return cacheService.get(cacheKey, responseType);
+    }
+    
+    protected <T> void validarRespuesta(T resultado) {
+        if (resultado == null) {
+            throw new InvalidResponseException("Response cannot be null");
+        }
+    }
+}
+
+// Implementación específica para Energía
+@Service
+public class EnergiaService extends BaseServiceProcessor {
+    
+    @Autowired
+    private MainframeAdapter mainframeAdapter;
+    
+    @Override
+    protected <T> T consultarSistemaLegacy(String numeroServicio, Class<T> responseType) {
+        if (responseType == SaldoResponse.class) {
+            return responseType.cast(mainframeAdapter.consultarSaldoEnergia(numeroServicio));
+        }
+        throw new UnsupportedOperationException("Response type not supported: " + responseType);
+    }
+    
+    @Override
+    protected String getServiceName() {
+        return "ENERGIA";
+    }
+}
+```
+
+##### **4. Decorator Pattern - Cross-cutting Concerns**
+```java
+// Core implementation - solo lógica de negocio
+@Component("corePaymentProcessor")
+public class CorePaymentProcessor implements PaymentProcessor {
+    
+    @Override
+    public PaymentResponse procesarPago(PaymentRequest request) {
+        // Solo lógica de negocio, sin logging ni métricas
+        PaymentStrategy strategy = findStrategy(request.getMethod());
+        PaymentResult result = strategy.procesarPago(request);
+        
+        Payment payment = Payment.from(request, result);
+        paymentRepository.save(payment);
+        
+        return PaymentResponse.from(payment);
+    }
+}
+
+// Logging Decorator
+@Component
+public class LoggingPaymentDecorator implements PaymentProcessor {
+    
+    private final PaymentProcessor delegate;
+    
+    public LoggingPaymentDecorator(@Qualifier("corePaymentProcessor") PaymentProcessor delegate) {
+        this.delegate = delegate;
+    }
+    
+    @Override
+    public PaymentResponse procesarPago(PaymentRequest request) {
+        String correlationId = UUID.randomUUID().toString();
+        MDC.put("correlationId", correlationId);
+        
+        try {
+            log.info("Iniciando procesamiento de pago: método={}, monto={}", 
+                request.getMethod(), request.getAmount());
+            
+            PaymentResponse response = delegate.procesarPago(request);
+            
+            log.info("Pago procesado exitosamente: paymentId={}, status={}", 
+                response.getPaymentId(), response.getStatus());
+            
+            return response;
+            
+        } catch (Exception e) {
+            log.error("Error procesando pago: {}", e.getMessage(), e);
+            throw e;
+        } finally {
+            MDC.clear();
+        }
+    }
+}
+
+// Metrics Decorator
+@Component
+public class MetricsPaymentDecorator implements PaymentProcessor {
+    
+    private final PaymentProcessor delegate;
+    private final MeterRegistry meterRegistry;
+    
+    @Override
+    public PaymentResponse procesarPago(PaymentRequest request) {
+        Timer.Sample sample = Timer.start(meterRegistry);
+        
+        try {
+            PaymentResponse response = delegate.procesarPago(request);
+            
+            sample.stop(Timer.builder("payment.processing.duration")
+                .tag("method", request.getMethod().toString())
+                .tag("status", "success")
+                .register(meterRegistry));
+            
+            Counter.builder("payment.processed")
+                .tag("method", request.getMethod().toString())
+                .register(meterRegistry)
+                .increment();
+            
+            return response;
+            
+        } catch (Exception e) {
+            sample.stop(Timer.builder("payment.processing.duration")
+                .tag("method", request.getMethod().toString())
+                .tag("status", "error")
+                .register(meterRegistry));
+            
+            throw e;
+        }
+    }
+}
+
+// Configuration para inyección ordenada
+@Configuration
+public class PaymentProcessorConfiguration {
+    
+    @Bean
+    @Primary
+    public PaymentProcessor paymentProcessor(
+            @Qualifier("corePaymentProcessor") PaymentProcessor core,
+            MeterRegistry meterRegistry) {
+        
+        // Orden: Core → Logging → Metrics → Security
+        PaymentProcessor loggingDecorator = new LoggingPaymentDecorator(core);
+        PaymentProcessor metricsDecorator = new MetricsPaymentDecorator(loggingDecorator, meterRegistry);
+        
+        return metricsDecorator;
+    }
+}
 ```
 
 #### **Saga Pattern Implementation:**
@@ -873,9 +1303,9 @@ public class AuthenticationFilter implements GatewayFilter, Ordered {
 }
 ```
 
-### 3.2 Event Bus (Apache Kafka)
+### 3.2 Event Bus (Apache Kafka) + Observer Pattern + Chain of Responsibility
 
-#### **Configuración de Tópicos:**
+#### **Configuración de Tópicos con Patrones de Diseño:**
 ```yaml
 # Configuración Kafka
 kafka:
@@ -921,7 +1351,7 @@ kafka:
       retries: 3
 ```
 
-#### **Event Publishing:**
+#### **Event Publishing con Observer Pattern:**
 ```java
 @Service
 public class EventPublisher {
@@ -929,16 +1359,43 @@ public class EventPublisher {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
     
+    @Autowired
+    private List<EventObserver> eventObservers;
+    
     @Value("${kafka.topics.pago-eventos.name}")
     private String pagoEventosTopic;
+    
+    // Observer Pattern para notificaciones de publicación
+    private final List<EventObserver> observers = new ArrayList<>();
+    
+    @PostConstruct
+    public void init() {
+        eventObservers.forEach(this::addObserver);
+    }
+    
+    public void addObserver(EventObserver observer) {
+        observers.add(observer);
+    }
+    
+    private void notifyObservers(EventPublishResult result) {
+        observers.forEach(observer -> {
+            try {
+                observer.onEventPublished(result);
+            } catch (Exception e) {
+                log.warn("Error notificando observer de eventos: {}", e.getMessage());
+            }
+        });
+    }
     
     @Async
     public CompletableFuture<SendResult<String, Object>> publishPagoEvent(PagoEvent event) {
         
+        long startTime = System.currentTimeMillis();
+        
         // Partitioning por cliente para ordenamiento
         String partitionKey = event.getClienteId();
         
-        // Headers para trazabilidad
+        // Headers para trazabilidad y versionado
         ProducerRecord<String, Object> record = new ProducerRecord<>(
             pagoEventosTopic,
             partitionKey,
@@ -948,26 +1405,221 @@ public class EventPublisher {
         record.headers().add("event-type", event.getClass().getSimpleName().getBytes());
         record.headers().add("event-version", "1.0".getBytes());
         record.headers().add("correlation-id", MDC.get("correlationId").getBytes());
+        record.headers().add("source-service", "ms-pagos".getBytes());
+        record.headers().add("timestamp", String.valueOf(System.currentTimeMillis()).getBytes());
         
-        return kafkaTemplate.send(record);
+        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(record);
+        
+        // Observer Pattern - notificar resultado de publicación
+        future.whenComplete((result, throwable) -> {
+            long duration = System.currentTimeMillis() - startTime;
+            
+            EventPublishResult publishResult = EventPublishResult.builder()
+                .eventType(event.getClass().getSimpleName())
+                .topic(pagoEventosTopic)
+                .partition(result != null ? result.getRecordMetadata().partition() : -1)
+                .offset(result != null ? result.getRecordMetadata().offset() : -1)
+                .duration(duration)
+                .success(throwable == null)
+                .error(throwable != null ? throwable.getMessage() : null)
+                .correlationId(MDC.get("correlationId"))
+                .build();
+            
+            notifyObservers(publishResult);
+        });
+        
+        return future;
     }
 }
 
-// Event Consumer
-@KafkaListener(topics = "${kafka.topics.pago-eventos.name}")
+// Observer Pattern para eventos publicados
+public interface EventObserver {
+    void onEventPublished(EventPublishResult result);
+}
+
 @Component
+@Slf4j
+public class EventMetricsObserver implements EventObserver {
+    
+    @Autowired
+    private MeterRegistry meterRegistry;
+    
+    @Override
+    public void onEventPublished(EventPublishResult result) {
+        // Métricas de eventos publicados
+        Counter.builder("kafka.events.published")
+            .tag("event-type", result.getEventType())
+            .tag("topic", result.getTopic())
+            .tag("success", String.valueOf(result.isSuccess()))
+            .register(meterRegistry)
+            .increment();
+            
+        // Tiempo de publicación
+        Timer.builder("kafka.events.publish.duration")
+            .tag("event-type", result.getEventType())
+            .register(meterRegistry)
+            .record(result.getDuration(), TimeUnit.MILLISECONDS);
+    }
+}
+
+@Component
+@Slf4j
+public class EventAuditObserver implements EventObserver {
+    
+    @Autowired
+    private EventAuditRepository auditRepository;
+    
+    @Override
+    @Async
+    public void onEventPublished(EventPublishResult result) {
+        EventAuditLog auditLog = EventAuditLog.builder()
+            .eventType(result.getEventType())
+            .topic(result.getTopic())
+            .partition(result.getPartition())
+            .offset(result.getOffset())
+            .correlationId(result.getCorrelationId())
+            .success(result.isSuccess())
+            .errorMessage(result.getError())
+            .publishedAt(LocalDateTime.now())
+            .duration(result.getDuration())
+            .build();
+            
+        auditRepository.save(auditLog);
+    }
+}
+
+// Chain of Responsibility para procesamiento de eventos
+@Component
+@KafkaListener(topics = "${kafka.topics.pago-eventos.name}")
 public class PagoEventListener {
+    
+    @Autowired
+    private List<EventProcessor> eventProcessors;
+    
+    private EventProcessorChain processorChain;
+    
+    @PostConstruct
+    public void initChain() {
+        // Construir cadena de procesadores
+        processorChain = EventProcessorChain.builder()
+            .addProcessor(new ValidationEventProcessor())
+            .addProcessor(new SecurityEventProcessor())
+            .addProcessor(new BusinessEventProcessor())
+            .addProcessor(new NotificationEventProcessor())
+            .build();
+    }
+    
+    @KafkaHandler
+    public void handle(PagoCompletadoEvent event, 
+                      @Header("correlation-id") String correlationId,
+                      @Header("event-type") String eventType) {
+        
+        MDC.put("correlationId", correlationId);
+        log.info("Procesando evento pago completado: {}", event.getPaymentId());
+        
+        try {
+            // Chain of Responsibility para procesamiento
+            EventProcessingContext context = EventProcessingContext.builder()
+                .event(event)
+                .correlationId(correlationId)
+                .eventType(eventType)
+                .receivedAt(LocalDateTime.now())
+                .build();
+                
+            processorChain.process(context);
+            
+        } catch (Exception e) {
+            log.error("Error procesando evento pago: {}", e.getMessage(), e);
+            // Enviar a DLQ (Dead Letter Queue)
+            handleProcessingError(event, correlationId, e);
+        } finally {
+            MDC.clear();
+        }
+    }
+}
+
+// Chain of Responsibility Pattern para eventos
+public abstract class EventProcessor {
+    
+    protected EventProcessor nextProcessor;
+    
+    public void setNext(EventProcessor nextProcessor) {
+        this.nextProcessor = nextProcessor;
+    }
+    
+    public void process(EventProcessingContext context) {
+        if (canProcess(context)) {
+            doProcess(context);
+        }
+        
+        if (nextProcessor != null) {
+            nextProcessor.process(context);
+        }
+    }
+    
+    protected abstract boolean canProcess(EventProcessingContext context);
+    protected abstract void doProcess(EventProcessingContext context);
+}
+
+@Component
+public class ValidationEventProcessor extends EventProcessor {
+    
+    @Override
+    protected boolean canProcess(EventProcessingContext context) {
+        return context.getEvent() != null;
+    }
+    
+    @Override
+    protected void doProcess(EventProcessingContext context) {
+        log.debug("Validando evento: {}", context.getEventType());
+        
+        // Validar estructura del evento
+        if (context.getEvent() instanceof PagoCompletadoEvent) {
+            PagoCompletadoEvent event = (PagoCompletadoEvent) context.getEvent();
+            
+            if (event.getPaymentId() == null || event.getPaymentId().isEmpty()) {
+                throw new EventValidationException("PaymentId es requerido");
+            }
+            
+            if (event.getAmount() == null || event.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new EventValidationException("Monto debe ser mayor a cero");
+            }
+        }
+        
+        context.addProcessingStep("VALIDATION_COMPLETED");
+    }
+}
+
+@Component
+public class BusinessEventProcessor extends EventProcessor {
     
     @Autowired
     private FacturacionService facturacionService;
     
-    @KafkaHandler
-    public void handle(PagoCompletadoEvent event) {
+    @Override
+    protected boolean canProcess(EventProcessingContext context) {
+        return context.hasProcessingStep("VALIDATION_COMPLETED");
+    }
+    
+    @Override
+    protected void doProcess(EventProcessingContext context) {
+        log.debug("Procesando lógica de negocio para evento: {}", context.getEventType());
         
-        log.info("Procesando evento pago completado: {}", event.getPaymentId());
-        
-        try {
+        if (context.getEvent() instanceof PagoCompletadoEvent) {
+            PagoCompletadoEvent event = (PagoCompletadoEvent) context.getEvent();
+            
             // Actualizar facturación después de pago exitoso
+            facturacionService.marcarFacturaComoPagada(
+                event.getFacturaId(), 
+                event.getPaymentId(),
+                event.getAmount()
+            );
+            
+            context.addProcessingStep("BUSINESS_LOGIC_COMPLETED");
+        }
+    }
+}
+```
             facturacionService.actualizarFacturacion(
                 event.getClienteId(),
                 event.getServicios(),
@@ -1092,9 +1744,9 @@ config set save "900 1 300 10 60 10000"  # Persistence snapshots
 
 ---
 
-## 4. ADAPTADORES LEGACY
+## 4. ADAPTADORES LEGACY Y PATRONES APLICADOS
 
-### 4.1 Mainframe IBM Z Adapter
+### 4.1 Mainframe IBM Z Adapter (Circuit Breaker + Adapter Patterns)
 
 #### **Desafíos Técnicos:**
 - Protocolo SNA/LU6.2 legacy
@@ -1103,11 +1755,30 @@ config set save "900 1 300 10 60 10000"  # Persistence snapshots
 - Ventana de mantenimiento dominical
 - Limitaciones de conexiones concurrentes
 
-#### **Arquitectura del Adaptador:**
+#### **Patrones de Diseño Aplicados:**
+
+##### **1. Adapter Pattern + Interface Segregation**
 ```java
+// ISP: Interfaces segregadas por responsabilidad
+@FunctionalInterface
+public interface SaldoConsultaService {
+    CompletableFuture<SaldoResponse> consultarSaldo(String numeroServicio);
+}
+
+@FunctionalInterface  
+public interface PagoProcesamientoService {
+    CompletableFuture<PagoResponse> procesarPago(PagoRequest request);
+}
+
+public interface HistorialService {
+    CompletableFuture<List<TransaccionResponse>> obtenerHistorial(
+        String numeroServicio, DateRange periodo);
+}
+
+// Adapter Pattern implementation
 @Component
 @Slf4j
-public class MainframeAdapter implements LegacySystemAdapter {
+public class MainframeAdapter implements SaldoConsultaService, HistorialService {
     
     @Autowired
     private SNAConnectionPool snaConnectionPool;
@@ -1121,7 +1792,7 @@ public class MainframeAdapter implements LegacySystemAdapter {
     @CircuitBreaker(name = "mainframe", fallbackMethod = "fallbackConsultaSaldo")
     @Retry(name = "mainframe")
     @TimeLimiter(name = "mainframe")
-    public CompletableFuture<ConsultaSaldoResponse> consultarSaldo(String numeroServicio) {
+    public CompletableFuture<SaldoResponse> consultarSaldo(String numeroServicio) {
         
         return CompletableFuture.supplyAsync(() -> {
             
@@ -1135,26 +1806,22 @@ public class MainframeAdapter implements LegacySystemAdapter {
                     .programa("BALPGM01")  // Programa COBOL consulta saldos
                     .campo("CUST-ID", numeroServicio.padLeft(12, '0'))
                     .campo("TRANS-TYPE", "BAL")
-                    .campo("DATE-REQ", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                     .build();
                 
                 // 3. Convertir a EBCDIC
                 byte[] ebcdicRequest = messageTranslator.toEBCDIC(request);
                 
                 // 4. Enviar a mainframe
-                log.debug("Enviando consulta saldo a mainframe para servicio: {}", numeroServicio);
                 byte[] ebcdicResponse = connection.send(ebcdicRequest);
                 
                 // 5. Traducir respuesta
                 CobolResponse response = messageTranslator.fromEBCDIC(ebcdicResponse);
                 
                 // 6. Mapear a domain object
-                return mapToConsultaSaldoResponse(response);
+                return mapToSaldoResponse(response);
                 
             } catch (SNAException e) {
-                log.error("Error comunicación SNA con mainframe: {}", e.getMessage());
                 throw new LegacySystemException("Mainframe communication failed", e);
-                
             } finally {
                 if (connection != null) {
                     snaConnectionPool.returnConnection(connection);
@@ -1163,21 +1830,87 @@ public class MainframeAdapter implements LegacySystemAdapter {
         });
     }
     
-    public CompletableFuture<ConsultaSaldoResponse> fallbackConsultaSaldo(String numeroServicio, Exception ex) {
-        log.warn("Mainframe no disponible, consultando cache para servicio: {}", numeroServicio);
+    // Fallback method for Circuit Breaker
+    public CompletableFuture<SaldoResponse> fallbackConsultaSaldo(String numeroServicio, Exception ex) {
+        log.warn("Mainframe no disponible, consultando cache: {}", numeroServicio);
         
-        // Fallback a datos en cache
         return cacheService.getLastKnownBalance(numeroServicio)
-            .map(cachedBalance -> ConsultaSaldoResponse.builder()
+            .map(cachedBalance -> SaldoResponse.builder()
                 .numeroServicio(numeroServicio)
                 .saldoActual(cachedBalance.getSaldo())
-                .fechaUltimaActualizacion(cachedBalance.getFecha())
                 .fuente("CACHE")
                 .disclaimer("Datos del " + cachedBalance.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .build())
-            .orElse(ConsultaSaldoResponse.noDisponible(numeroServicio));
+            .orElse(SaldoResponse.noDisponible(numeroServicio));
+    }
+    
+    @Override
+    public CompletableFuture<List<TransaccionResponse>> obtenerHistorial(
+            String numeroServicio, DateRange periodo) {
+        // Implementación específica para histórico mainframe
+        return CompletableFuture.supplyAsync(() -> {
+            // Lógica para obtener histórico del mainframe
+            return obtenerHistorialMainframe(numeroServicio, periodo);
+        });
     }
 }
+
+// Oracle Adapter - implementa diferentes interfaces
+@Component
+public class OracleAdapter implements SaldoConsultaService, FacturacionService {
+    
+    @Override
+    public CompletableFuture<SaldoResponse> consultarSaldo(String numeroServicio) {
+        // Implementación Oracle específica
+    }
+    
+    @Override
+    public CompletableFuture<FacturaResponse> generarFactura(String numeroServicio) {
+        // Oracle Reports integration
+    }
+}
+
+// PSE Adapter - solo maneja pagos
+@Component
+public class PSEAdapter implements PagoProcesamientoService {
+    
+    @Override
+    public CompletableFuture<PagoResponse> procesarPago(PagoRequest request) {
+        // Implementación PSE específica
+    }
+}
+```
+
+##### **2. Factory Pattern para Adaptadores**
+```java
+@Component
+public class LegacyAdapterFactory {
+    
+    private final Map<TipoSistema, LegacySystemAdapter> adapters;
+    
+    public LegacyAdapterFactory(List<LegacySystemAdapter> adapters) {
+        this.adapters = adapters.stream()
+            .collect(Collectors.toMap(
+                LegacySystemAdapter::getTipoSistema,
+                Function.identity()
+            ));
+    }
+    
+    public LegacySystemAdapter createAdapter(TipoSistema tipo) {
+        LegacySystemAdapter adapter = adapters.get(tipo);
+        if (adapter == null) {
+            throw new UnsupportedSystemException("Sistema no soportado: " + tipo);
+        }
+        return adapter;
+    }
+    
+    public List<LegacySystemAdapter> getAdaptersForService(TipoServicio servicio) {
+        return adapters.values().stream()
+            .filter(adapter -> adapter.soportaServicio(servicio))
+            .collect(Collectors.toList());
+    }
+}
+```
 ```
 
 #### **Message Translator EBCDIC:**
@@ -1272,15 +2005,17 @@ public class EBCDICMessageTranslator {
 }
 ```
 
-### 4.2 Oracle Solaris Adapter
+### 4.2 Oracle Solaris Adapter (Observer Pattern + Builder Pattern)
 
 #### **Características:**
 - Conexión via Oracle Net Services
-- Stored procedures PL/SQL
+- Stored procedures PL/SQL  
 - Connection pooling optimizado
 - Transaction management con XA
+- Observer Pattern para auditoría y métricas
+- Builder Pattern para respuestas complejas
 
-#### **Implementation:**
+#### **Implementation con Patrones de Diseño:**
 ```java
 @Repository
 @Transactional
@@ -1292,11 +2027,41 @@ public class OracleSolarisAdapter implements LegacySystemAdapter {
     @Autowired
     private SimpleJdbcCall jdbcCall;
     
+    @Autowired
+    private List<TransaccionObserver> observers;
+    
+    @Autowired
+    private ConsultaSaldoResponseBuilder responseBuilder;
+    
+    // Observer Pattern para notificaciones
+    private final List<TransaccionObserver> transaccionObservers = new ArrayList<>();
+    
+    @PostConstruct
+    public void init() {
+        observers.forEach(this::addObserver);
+    }
+    
+    public void addObserver(TransaccionObserver observer) {
+        transaccionObservers.add(observer);
+    }
+    
+    private void notifyObservers(TransaccionEvent event) {
+        transaccionObservers.forEach(observer -> {
+            try {
+                observer.onTransaccionProcessed(event);
+            } catch (Exception e) {
+                log.warn("Error notificando observer: {}", e.getMessage());
+            }
+        });
+    }
+    
     @CircuitBreaker(name = "oracle-solaris")
     @Retry(name = "oracle-solaris")
     public CompletableFuture<ConsultaSaldoResponse> consultarSaldoAcueducto(String numeroServicio) {
         
         return CompletableFuture.supplyAsync(() -> {
+            
+            long startTime = System.currentTimeMillis();
             
             try {
                 // Llamar stored procedure PL/SQL
@@ -1312,20 +2077,182 @@ public class OracleSolarisAdapter implements LegacySystemAdapter {
                 String returnCode = (String) result.get("p_return_code");
                 
                 if ("SUCCESS".equals(returnCode)) {
-                    return ConsultaSaldoResponse.builder()
+                    
+                    // Builder Pattern para construir respuesta compleja
+                    ConsultaSaldoResponse response = responseBuilder
                         .numeroServicio(numeroServicio)
                         .saldoActual((BigDecimal) result.get("p_saldo_actual"))
                         .fechaUltimaActualizacion(((Date) result.get("p_fecha_ultima_actualizacion")).toLocalDate().atStartOfDay())
                         .consumoPromedio((BigDecimal) result.get("p_consumo_promedio"))
+                        .factorCorreccion((BigDecimal) result.get("p_factor_correccion"))
+                        .tarifaActual((BigDecimal) result.get("p_tarifa_actual"))
+                        .diasVencimiento((Integer) result.get("p_dias_vencimiento"))
+                        .fuente("ORACLE_SOLARIS")
                         .build();
+                    
+                    // Observer Pattern - notificar consulta exitosa
+                    long duration = System.currentTimeMillis() - startTime;
+                    TransaccionEvent event = TransaccionEvent.builder()
+                        .tipo(TipoTransaccion.CONSULTA_SALDO)
+                        .numeroServicio(numeroServicio)
+                        .timestamp(LocalDateTime.now())
+                        .duracion(duration)
+                        .estado("EXITOSO")
+                        .saldoConsultado(response.getSaldoActual())
+                        .build();
+                    
+                    notifyObservers(event);
+                    
+                    return response;
+                    
                 } else {
-                    throw new LegacySystemException(
-                        "Oracle procedure failed: " + result.get("p_error_message"));
+                    String errorMessage = (String) result.get("p_error_message");
+                    
+                    // Notificar error de negocio
+                    TransaccionEvent errorEvent = TransaccionEvent.builder()
+                        .tipo(TipoTransaccion.CONSULTA_SALDO)
+                        .numeroServicio(numeroServicio)
+                        .timestamp(LocalDateTime.now())
+                        .duracion(System.currentTimeMillis() - startTime)
+                        .estado("ERROR_NEGOCIO")
+                        .error(errorMessage)
+                        .build();
+                    
+                    notifyObservers(errorEvent);
+                    
+                    throw new LegacySystemException("Oracle procedure failed: " + errorMessage);
                 }
                 
             } catch (DataAccessException e) {
                 log.error("Error consultando Oracle Solaris: {}", e.getMessage());
+                
+                // Notificar error técnico
+                TransaccionEvent errorEvent = TransaccionEvent.builder()
+                    .tipo(TipoTransaccion.CONSULTA_SALDO)
+                    .numeroServicio(numeroServicio)
+                    .timestamp(LocalDateTime.now())
+                    .duracion(System.currentTimeMillis() - startTime)
+                    .estado("ERROR_TECNICO")
+                    .error(e.getMessage())
+                    .build();
+                
+                notifyObservers(errorEvent);
+                
                 throw new LegacySystemException("Oracle Solaris query failed", e);
+            }
+        });
+    }
+}
+
+// Builder Pattern para respuestas complejas de Oracle
+@Component
+public class ConsultaSaldoResponseBuilder {
+    
+    private String numeroServicio;
+    private BigDecimal saldoActual;
+    private LocalDateTime fechaUltimaActualizacion;
+    private BigDecimal consumoPromedio;
+    private BigDecimal factorCorreccion;
+    private BigDecimal tarifaActual;
+    private Integer diasVencimiento;
+    private String fuente;
+    
+    public ConsultaSaldoResponseBuilder numeroServicio(String numeroServicio) {
+        this.numeroServicio = numeroServicio;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder saldoActual(BigDecimal saldoActual) {
+        this.saldoActual = saldoActual;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder fechaUltimaActualizacion(LocalDateTime fecha) {
+        this.fechaUltimaActualizacion = fecha;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder consumoPromedio(BigDecimal consumoPromedio) {
+        this.consumoPromedio = consumoPromedio;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder factorCorreccion(BigDecimal factor) {
+        this.factorCorreccion = factor;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder tarifaActual(BigDecimal tarifa) {
+        this.tarifaActual = tarifa;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder diasVencimiento(Integer dias) {
+        this.diasVencimiento = dias;
+        return this;
+    }
+    
+    public ConsultaSaldoResponseBuilder fuente(String fuente) {
+        this.fuente = fuente;
+        return this;
+    }
+    
+    public ConsultaSaldoResponse build() {
+        // Validaciones de Builder
+        Objects.requireNonNull(numeroServicio, "Número de servicio es requerido");
+        Objects.requireNonNull(saldoActual, "Saldo actual es requerido");
+        
+        // Calcular valores derivados
+        BigDecimal saldoPendiente = calcularSaldoPendiente();
+        EstadoServicio estado = determinarEstadoServicio();
+        
+        ConsultaSaldoResponse response = ConsultaSaldoResponse.builder()
+            .numeroServicio(numeroServicio)
+            .saldoActual(saldoActual)
+            .saldoPendiente(saldoPendiente)
+            .fechaUltimaActualizacion(fechaUltimaActualizacion)
+            .consumoPromedio(consumoPromedio)
+            .factorCorreccion(factorCorreccion)
+            .tarifaActual(tarifaActual)
+            .diasVencimiento(diasVencimiento)
+            .estadoServicio(estado)
+            .fuente(fuente)
+            .fechaConsulta(LocalDateTime.now())
+            .build();
+        
+        // Reset builder para siguiente uso
+        reset();
+        
+        return response;
+    }
+    
+    private BigDecimal calcularSaldoPendiente() {
+        if (diasVencimiento != null && diasVencimiento > 0) {
+            return saldoActual.multiply(factorCorreccion != null ? factorCorreccion : BigDecimal.ONE);
+        }
+        return BigDecimal.ZERO;
+    }
+    
+    private EstadoServicio determinarEstadoServicio() {
+        if (diasVencimiento == null) return EstadoServicio.ACTIVO;
+        
+        if (diasVencimiento > 60) return EstadoServicio.SUSPENDIDO;
+        if (diasVencimiento > 30) return EstadoServicio.MORA_ALTA;
+        if (diasVencimiento > 0) return EstadoServicio.MORA_BAJA;
+        
+        return EstadoServicio.ACTIVO;
+    }
+    
+    private void reset() {
+        this.numeroServicio = null;
+        this.saldoActual = null;
+        this.fechaUltimaActualizacion = null;
+        this.consumoPromedio = null;
+        this.factorCorreccion = null;
+        this.tarifaActual = null;
+        this.diasVencimiento = null;
+        this.fuente = null;
+    }
             }
         });
     }

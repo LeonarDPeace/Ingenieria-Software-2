@@ -137,31 +137,139 @@ Evita Singleton cuando tienes frameworks de Dependency Injection disponibles com
 Eager Initialization significa creación al cargar la clase, thread-safe automático, implementación simple, pero no es lazy (siempre se crea).
 
 ### 🔍 **[ANÁLISIS DEL CÓDIGO DE LA DIAPOSITIVA]**
-Veamos el ejemplo de SystemConfigManager:
+## Explicación del Código: SystemConfigManager (Eager Initialization)
 
+Te explico línea por línea este ejemplo de **Singleton con Eager Initialization**:
+
+### 🏗️ **Declaración de la Clase**
 ```java
 public class SystemConfigManager {
-    // Instancia creada al cargar la clase
-    private static final SystemConfigManager INSTANCE = 
-        new SystemConfigManager();
-    
-    private Properties config;
-    
-    private SystemConfigManager() {
-        // Constructor privado - CRÍTICO
-        loadSystemConfiguration();
-    }
-    
-    public static SystemConfigManager getInstance() {
-        return INSTANCE; // Solo retorna referencia
-    }
+```
+Clase pública que implementará el patrón Singleton para manejar configuración del sistema.
+
+### ⚡ **Creación Inmediata de la Instancia**
+```java
+private static final SystemConfigManager INSTANCE = 
+    new SystemConfigManager();
+```
+**LÍNEA CLAVE**: Aquí ocurre la "magia" del Eager Initialization:
+- **`private static`**: Solo accesible desde la clase, compartida por todas las instancias
+- **`final`**: No se puede cambiar después de inicializada 
+- **`new SystemConfigManager()`**: Se crea **INMEDIATAMENTE** cuando la JVM carga la clase
+- **Timing**: Esto pasa **ANTES** de que alguien llame a `getInstance()`
+
+### 📦 **Variable de Estado**
+```java
+private Properties config;
+```
+Almacena las propiedades de configuración del sistema. Es **privada** para mantener encapsulación.
+
+### 🔒 **Constructor Privado - CRÍTICO**
+```java
+private SystemConfigManager() {
+    // Constructor privado - CRÍTICO
+    loadSystemConfiguration();
 }
 ```
+**FUNDAMENTAL del patrón**:
+- **`private`**: Nadie desde afuera puede hacer `new SystemConfigManager()`
+- **Previene múltiples instancias**: Solo la clase misma puede crear objetos
+- **Llama a carga**: Inmediatamente carga la configuración al crear la instancia
+
+### 🚪 **Punto de Acceso Global**
+```java
+public static SystemConfigManager getInstance() {
+    return INSTANCE; // Solo retorna referencia
+}
+```
+**Método de acceso único**:
+- **`public static`**: Accesible globalmente sin crear instancia
+- **Solo retorna**: No crea nada, solo devuelve la instancia ya creada
+- **Súper rápido**: No hay lógica, solo retorna referencia
+
+### ⚙️ **Método de Inicialización**
+```java
+private void loadSystemConfiguration() {
+    // Carga configuración del sistema
+    config = new Properties();
+    config.load(getClass().getResourceAsStream("/config.properties"));
+}
+```
+**Carga la configuración**:
+- **`private`**: Solo la clase puede llamarlo
+- **`Properties`**: Estructura clave-valor para configuraciones
+- **`getResourceAsStream()`**: Carga archivo desde classpath
+- **Archivo `/config.properties`**: Configuración en la raíz del proyecto
 
 ### 🔄 **[FLUJO DE EJECUCIÓN]**
 ```
 [JVM carga clase] → [Crea INSTANCE] → [getInstance()] → [Retorna INSTANCE]
      ⚡ Inmediato        💾 Una vez         ⚡ Rápido        ✅ Mismo objeto
+```
+
+## Explicación del Flujo de Ejecución: Eager Initialization
+
+Te explico paso a paso este flujo temporal del patrón Singleton con **Eager Initialization**:
+
+### 🔄 **SECUENCIA TEMPORAL COMPLETA**
+
+#### **Paso 1: [JVM carga clase] → ⚡ Inmediato**
+```java
+// Cuando tu aplicación inicia y encuentra esta línea:
+SystemConfigManager config = SystemConfigManager.getInstance();
+
+// La JVM dice: "Necesito la clase SystemConfigManager"
+// ⚡ INMEDIATAMENTE carga la clase en memoria
+```
+
+**¿Cuándo ocurre?**
+- Al **primer uso** de la clase (primera referencia)
+- Durante el **startup** de la aplicación
+- **Antes** de que cualquier código tuyo se ejecute
+
+#### **Paso 2: [Crea INSTANCE] → 💾 Una vez**
+```java
+// Al cargar la clase, la JVM ve esta línea:
+private static final SystemConfigManager INSTANCE = new SystemConfigManager();
+
+// ⚡ AUTOMÁTICAMENTE ejecuta:
+// 1. new SystemConfigManager() - llama al constructor privado
+// 2. loadSystemConfiguration() - carga el archivo config
+// 3. Asigna el objeto creado a INSTANCE
+```
+
+**Características clave:**
+- Ocurre **UNA SOLA VEZ** en toda la vida de la aplicación
+- **ANTES** de que tu código llame a `getInstance()`
+- **Thread-safe** garantizado por la JVM
+- El objeto queda **listo para usar**
+
+#### **Paso 3: [getInstance()] → ⚡ Rápido**
+```java
+// Cuando tu código llama:
+SystemConfigManager manager = SystemConfigManager.getInstance();
+
+// El método getInstance() simplemente ejecuta:
+public static SystemConfigManager getInstance() {
+    return INSTANCE;  // Solo retorna la referencia
+}
+```
+
+**Por qué es rápido:**
+- **NO crea nada** - solo retorna referencia
+- **NO hay validaciones** - no necesita if/null checks
+- **NO hay sincronización** - no hay locks
+- **Operación atómica** - una sola instrucción CPU
+
+#### **Paso 4: [Retorna INSTANCE] → ✅ Mismo objeto**
+```java
+// TODAS las llamadas retornan el MISMO objeto:
+SystemConfigManager config1 = SystemConfigManager.getInstance();
+SystemConfigManager config2 = SystemConfigManager.getInstance();
+SystemConfigManager config3 = SystemConfigManager.getInstance();
+
+// config1 == config2 == config3 → TRUE
+// Todas son referencias al MISMO objeto en memoria
 ```
 
 ### ✅ **[VENTAJAS]**

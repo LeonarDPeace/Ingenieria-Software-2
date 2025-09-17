@@ -4,16 +4,6 @@
 
 ---
 
-### Garantías del Patrón
-
-| **Garantiza** | **Propósito** |
-|:-------------:|:-------------:|
-| • Una sola instancia | • Controlar la creación de objetos |
-| • Acceso global | • Proveer acceso global controlado |
-| • Lazy initialization | • Lazy initialization (creación bajo demanda) |
-
----
-
 ### Definición
 
 > **Patrón creacional** que garantiza **UNA SOLA INSTANCIA** de una clase y proporciona **ACCESO GLOBAL** controlado a esa instancia.
@@ -22,9 +12,11 @@
 
 ### Características Clave
 
-- INSTANCIA ÚNICA - Solo un objeto de la clase
-- ACCESO GLOBAL - Disponible desde cualquier parte del código  
-   LAZY INITIALIZATION - Creación bajo demanda
+| **Garantiza** | **Propósito** |
+|:-------------:|:-------------:|
+| • Una sola instancia | • Controlar la creación de objetos |
+| • Acceso global | • Proveer acceso global controlado |
+| • Lazy initialization | • Lazy initialization (creación bajo demanda) |
 
 ---
 

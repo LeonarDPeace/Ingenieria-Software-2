@@ -83,7 +83,7 @@ if (user == null) {
 
 ---
 
-### 🎯 Regla de Oro
+###  Regla de Oro
 
 > **"Usa Singleton solo para RECURSOS, no para LÓGICA"**
 

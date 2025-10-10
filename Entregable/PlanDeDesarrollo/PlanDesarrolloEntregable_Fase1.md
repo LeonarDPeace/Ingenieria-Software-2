@@ -72,109 +72,112 @@ ProyectoFinal/
 ## 📁 ESTRUCTURA COMPLETA DEL PROYECTO
 
 ```
-ProyectoFinal/Ingenieria-Software-2/Entregable/
-│
+SERVICIUDAD-CALI/
+├── data/
+│   └── consumos_energia.txt
+├── postman/
+│   └── ServiCiudad_API.postman_collection.json
 ├── src/
 │   ├── main/
-│   │   ├── java/com/serviciudad/
-│   │   │   ├── adapter/              # Patrón Adapter (archivo energía)
-│   │   │   │   ├── ArchivoEnergiaAdapter.java
-│   │   │   │   ├── ServicioEnergiaPort.java
-│   │   │   │   └── exception/
-│   │   │   │       ├── ArchivoEnergiaException.java
-│   │   │   │       └── ClienteNoEncontradoException.java
-│   │   │   │
-│   │   │   ├── builder/              # Patrón Builder (construcción DTOs)
-│   │   │   │   ├── DeudaConsolidadaDTOBuilder.java
-│   │   │   │   └── ResumenDeudaDTOBuilder.java
-│   │   │   │
-│   │   │   ├── dto/                  # Data Transfer Objects
-│   │   │   │   ├── DeudaConsolidadaDTO.java
-│   │   │   │   ├── ResumenDeudaDTO.java
-│   │   │   │   ├── DetalleServicioDTO.java
-│   │   │   │   └── ErrorResponseDTO.java
-│   │   │   │
-│   │   │   ├── entity/               # Entidades JPA
-│   │   │   │   ├── FacturaAcueducto.java
-│   │   │   │   └── FacturaEnergia.java
-│   │   │   │
-│   │   │   ├── repository/           # Patrón Repository (Spring Data)
-│   │   │   │   └── FacturaAcueductoRepository.java
-│   │   │   │
-│   │   │   ├── service/              # Lógica de negocio
-│   │   │   │   ├── DeudaConsolidadaService.java
-│   │   │   │   ├── ServicioEnergiaService.java
-│   │   │   │   └── mapper/
-│   │   │   │       └── DeudaConsolidadaDTOMapper.java
-│   │   │   │
-│   │   │   ├── controller/           # REST Controllers
-│   │   │   │   ├── DeudaConsolidadaController.java
-│   │   │   │   └── advice/
-│   │   │   │       └── GlobalExceptionHandler.java
-│   │   │   │
-│   │   │   ├── config/               # Configuración Spring
-│   │   │   │   ├── DatabaseConfig.java
-│   │   │   │   ├── OpenApiConfig.java
-│   │   │   │   └── CorsConfig.java
-│   │   │   │
-│   │   │   └── ServiCiudadApplication.java  # Main class
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── serviciudad/
+│   │   │           ├── adapter/              # Patrón Adapter (archivo energía)
+│   │   │           │   ├── exception/
+│   │   │           │   │   ├── ArchivoEnergiaException.java
+│   │   │           │   │   └── ClienteNoEncontradoException.java
+│   │   │           │   ├── AdaptadorArchivoEnergia.java
+│   │   │           │   └── ServicioEnergiaPort.java
+│   │   │           │
+│   │   │           ├── controller/           # Controladores REST
+│   │   │           │   └── DeudaConsolidadaController.java
+│   │   │           │
+│   │   │           ├── domain/               # Entidades de Dominio (DDD)
+│   │   │           │   ├── FacturaAcueducto.java
+│   │   │           │   └── FacturaEnergia.java
+│   │   │           │
+│   │   │           ├── dto/                  # Data Transfer Objects
+│   │   │           │   ├── DetalleServicioDTO.java
+│   │   │           │   ├── DeudaConsolidadaDTO.java
+│   │   │           │   └── ResumenDeudaDTO.java
+│   │   │           │
+│   │   │           ├── repository/           # Patrón Repository (Spring Data)
+│   │   │           │   └── FacturaAcueductoRepository.java
+│   │   │           │
+│   │   │           ├── service/              # Lógica de negocio + Builder
+│   │   │           │   ├── exception/
+│   │   │           │   │   └── FacturaNoEncontradaException.java
+│   │   │           │   ├── mapper/
+│   │   │           │   │   └── DeudaConsolidadaDTOMapper.java
+│   │   │           │   ├── ClienteService.java
+│   │   │           │   ├── DeudaConsolidadaBuilder.java  # Patrón Builder
+│   │   │           │   └── DeudaConsolidadaService.java
+│   │   │           │
+│   │   │           ├── config/               # Configuración Spring
+│   │   │           │   ├── CorsConfig.java
+│   │   │           │   ├── DatabaseConfig.java
+│   │   │           │   ├── OpenApiConfig.java
+│   │   │           │   └── RedisConfig.java
+│   │   │           │
+│   │   │           ├── exception/            # Manejo global de excepciones
+│   │   │           │   ├── GlobalExceptionHandler.java
+│   │   │           │   └── ResourceNotFoundException.java
+│   │   │           │
+│   │   │           └── DeudaConsolidadaApplication.java  # Main Spring Boot
 │   │   │
 │   │   └── resources/
-│   │       ├── application.yml       # Configuración principal
-│   │       ├── application-dev.yml   # Perfil desarrollo
-│   │       ├── application-prod.yml  # Perfil producción
-│   │       ├── data.sql              # Datos iniciales PostgreSQL
-│   │       ├── schema.sql            # Schema base de datos
-│   │       └── consumos_energia.txt  # Archivo plano legacy (COBOL-style)
+│   │       ├── application.yml               # Configuración principal
+│   │       ├── application-dev.yml           # Perfil desarrollo
+│   │       ├── application-test.yml          # Perfil tests
+│   │       ├── application-prod.yml          # Perfil producción
+│   │       ├── schema.sql                    # Schema PostgreSQL
+│   │       ├── data.sql                      # Datos iniciales
+│   │       └── logback-spring.xml            # Configuración logs
 │   │
 │   └── test/
-│       ├── java/com/serviciudad/
-│       │   ├── adapter/
-│       │   │   └── ArchivoEnergiaAdapterTest.java
-│       │   ├── service/
-│       │   │   └── DeudaConsolidadaServiceTest.java
-│       │   ├── controller/
-│       │   │   └── DeudaConsolidadaControllerTest.java
-│       │   └── integration/
-│       │       └── DeudaConsolidadaIntegrationTest.java
+│       ├── java/
+│       │   └── com/
+│       │       └── serviciudad/
+│       │           ├── adapter/
+│       │           │   └── AdaptadorArchivoEnergiaTest.java
+│       │           ├── controller/
+│       │           │   └── DeudaConsolidadaControllerTest.java
+│       │           ├── integration/
+│       │           │   └── DeudaConsolidadaIntegrationTest.java
+│       │           ├── repository/
+│       │           │   └── FacturaAcueductoRepositoryTest.java
+│       │           └── service/
+│       │               └── DeudaConsolidadaServiceTest.java
 │       │
 │       └── resources/
 │           ├── application-test.yml
 │           └── consumos_energia_test.txt
 │
-├── docker/
-│   ├── Dockerfile                    # Dockerfile multi-stage para app
-│   ├── docker-compose.yml            # Orquestación de servicios
-│   └── init-scripts/
-│       ├── 01-create-database.sql
-│       └── 02-insert-data.sql
+├── target/                                   # Artefactos Maven (generados)
+│   ├── classes/
+│   ├── test-classes/
+│   └── serviciudad-cali-1.0.0.jar
 │
-├── postman/
-│   ├── ServiCiudad_API.postman_collection.json
-│   ├── ServiCiudad_ENV_Local.postman_environment.json
-│   └── ServiCiudad_ENV_Docker.postman_environment.json
-│
-├── docs/
-│   ├── INFORME.md                    # Justificación técnica de patrones
-│   ├── SUSTENTACION.md               # Guía para presentación oral
-│   ├── DEPLOYMENT.md                 # Montaje en entorno de pruebas
-│   ├── arquitectura/
-│   │   ├── diagrama_componentes.png
-│   │   ├── diagrama_clases.png
-│   │   └── diagrama_secuencia.png
-│   └── ejemplos/
-│       ├── ejemplo_request.json
-│       └── ejemplo_response.json
-│
-├── scripts/
-│   ├── setup-local.sh                # Script configuración local (Linux/Mac)
-│   ├── setup-local.ps1               # Script configuración local (Windows)
-│   ├── integration-tests.sh          # Tests de integración
-│   └── backup-db.sh                  # Backup base de datos
-│
-├── .github/
-│   └── workflows/
-│       ├── ci-pipeline.yml           # CI/CD con GitHub Actions
+├── .gitignore                                # Ignorar archivos innecesarios
+├── INFORME.md                                # Justificación técnica patrones
+├── pom.xml                                   # Configuración Maven
+└── README.md                                 # Documentación principal
+```
+
+### 📌 **Cambios Clave vs. Estructura Original:**
+
+| **Cambio** | **Antes** | **Ahora** | **Justificación** |
+|------------|-----------|-----------|-------------------|
+| **Carpeta entidades** | `entity/` | `domain/` | Mejor alineado con DDD, nomenclatura más semántica |
+| **Nombre adapter** | `ArchivoEnergiaAdapter` | `AdaptadorArchivoEnergia` | Consistencia en español en toda la nomenclatura |
+| **Builder location** | `builder/` paquete separado | `service/DeudaConsolidadaBuilder.java` | El Builder es lógica de negocio, pertenece a service layer |
+| **Archivo legacy** | `resources/consumos_energia.txt` | `data/consumos_energia.txt` | Separar data externa del classpath de la app |
+| **Postman** | `postman/` dentro de docs | `postman/` en raíz | Uso directo, no es documentación sino herramienta |
+| **Documentación** | `docs/INFORME.md` | `INFORME.md` raíz | Mayor visibilidad en repositorio |
+| **Docker** | `docker/` compleja | Eliminado (se ve en Fase 4) | Simplificar fase inicial |
+| **Scripts CI/CD** | `.github/workflows/` | Eliminado (se ve en Fase 6) | Separar concerns por fase |
+
+---
 │       └── docker-build.yml          # Build automático de imágenes Docker
 │
 ├── .gitignore

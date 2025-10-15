@@ -5,7 +5,61 @@ spring:
   profiles:
     active: dev
 
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:serviciudad_db}
+    username: ${POSTGRES_USER:serviciudad_user}
+    password: ${POSTGRES_PASSWORD:serviciudad_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        '[format_sql]': true
+        '[use_sql_comments]': true
+        jdbc:
+          '[batch_size]': 20
+        '[order_inserts]': true
+        '[order_updates]': true
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
 server:
   port: 8080
   servlet:
     context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    root: INFO
+    '[com.serviciudad]': DEBUG
+    '[org.springframework.web]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
+
+energia:
+  archivo:
+    path: ${ENERGIA_ARCHIVO_PATH:./data/consumos_energia.txt}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true

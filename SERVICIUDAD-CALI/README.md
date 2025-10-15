@@ -5,17 +5,17 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📋 Descripción
+## Descripción
 
 **ServiCiudad Cali** es una API RESTful monolítica que centraliza la consulta de deudas de servicios públicos (Energía y Acueducto) para la ciudad de Cali. El sistema integra sistemas legacy (archivos planos formato COBOL) con tecnologías modernas para proporcionar una experiencia unificada a los ciudadanos.
 
-### 🎯 Objetivo
+### Objetivo
 
 Proporcionar un **endpoint único** para que los ciudadanos consulten su deuda consolidada de servicios públicos, eliminando la necesidad de acceder a múltiples sistemas y simplificando el proceso de pago.
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 - **Tipo:** Monolito modular
 - **Framework:** Spring Boot 3.2.0
@@ -23,15 +23,15 @@ Proporcionar un **endpoint único** para que los ciudadanos consulten su deuda c
 - **Base de Datos:** PostgreSQL 15
 - **Build Tool:** Maven 3.9+
 - **Patrones de Diseño:**
-  - ✅ **Adapter Pattern** - Integración con archivo legacy
-  - ✅ **Repository Pattern** - Acceso a datos con Spring Data JPA
-  - ✅ **Builder Pattern** - Construcción de DTOs complejos
-  - ✅ **DTO Pattern** - Separación de capas
-  - ✅ **IoC/DI Pattern** - Inversión de Control con Spring
+  - **Adapter Pattern** - Integración con archivo legacy
+  - **Repository Pattern** - Acceso a datos con Spring Data JPA
+  - **Builder Pattern** - Construcción de DTOs complejos
+  - **DTO Pattern** - Separación de capas
+  - **IoC/DI Pattern** - Inversión de Control con Spring
 
 ---
 
-## 📂 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 SERVICIUDAD-CALI/
@@ -63,14 +63,14 @@ SERVICIUDAD-CALI/
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Requisitos Previos
 
-- ☕ **Java 17 o superior** ([Descargar OpenJDK](https://adoptium.net/))
-- 🔨 **Maven 3.9+** ([Descargar Maven](https://maven.apache.org/download.cgi))
-- 🐘 **PostgreSQL 15** ([Descargar PostgreSQL](https://www.postgresql.org/download/))
-- 🐳 **Docker y Docker Compose** (opcional, recomendado)
+- **Java 17 o superior** ([Descargar OpenJDK](https://adoptium.net/))
+- **Maven 3.9+** ([Descargar Maven](https://maven.apache.org/download.cgi))
+- **PostgreSQL 15** ([Descargar PostgreSQL](https://www.postgresql.org/download/))
+- **Docker y Docker Compose** (opcional, recomendado)
 
 ### Opción 1: Ejecución con Docker (Recomendado)
 
@@ -172,7 +172,7 @@ GET /api/v1/clientes/{clienteId}/deuda-consolidada
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Ejecutar Tests Unitarios
 
@@ -196,14 +196,14 @@ mvn clean test jacoco:report
 
 ---
 
-## 📚 Documentación Adicional
+## Documentación Adicional
 
 - **[INFORME.md](INFORME.md)** - Justificación técnica detallada de patrones de diseño
 - **[Colección Postman](postman/)** - Ejemplos de requests para testing
 
 ---
 
-## 👥 Equipo de Desarrollo
+## Equipo de Desarrollo
 
 | Nombre | Código | Rol |
 |--------|--------|-----|
@@ -225,7 +225,7 @@ mvn clean test jacoco:report
 
 ---
 
-## 🐛 Solución de Problemas
+## Solución de Problemas
 
 ### Error: "Connection refused" a PostgreSQL
 
@@ -260,19 +260,19 @@ energia:
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
 ---
 
-## 🤝 Contribuciones
+## Contribuciones
 
 Este es un proyecto académico. Para consultas o sugerencias, contactar al equipo de desarrollo.
 
 ---
 
-## 📞 Contacto
+## Contacto
 
 - **Repositorio:** [github.com/LeonarDPeace/Ingenieria-Software-2](https://github.com/LeonarDPeace/Ingenieria-Software-2)
 - **Universidad:** [UAO - Universidad Autónoma de Occidente](https://www.uao.edu.co/)

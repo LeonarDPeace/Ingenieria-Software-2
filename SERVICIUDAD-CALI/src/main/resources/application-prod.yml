@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: serviciudad-cali
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:serviciudad_db}
+    username: ${POSTGRES_USER:serviciudad_user}
+    password: ${POSTGRES_PASSWORD:serviciudad_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        '[format_sql]': false
+        '[use_sql_comments]': false
+        jdbc:
+          '[batch_size]': 50
+        '[order_inserts]': true
+        '[order_updates]': true
+
+  sql:
+    init:
+      mode: never
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+logging:
+  level:
+    root: WARN
+    '[com.serviciudad]': INFO
+    '[org.springframework]': WARN
+    '[org.hibernate]': WARN
+  file:
+    name: logs/serviciudad-prod.log
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never
+
+energia:
+  archivo:
+    path: ${ENERGIA_ARCHIVO_PATH:/app/data/consumos_energia.txt}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: false

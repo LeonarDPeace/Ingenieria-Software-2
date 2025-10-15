@@ -1,0 +1,505 @@
+{
+  "info": {
+    "name": "ServiCiudad Cali API",
+    "description": "Coleccion completa de endpoints para ServiCiudad Cali - Sistema de Consulta Unificada de Servicios Publicos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "serviciudad-cali"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "clienteId",
+      "value": "0001234567",
+      "type": "string"
+    },
+    {
+      "key": "facturaId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "periodo",
+      "value": "202510",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Facturas Acueducto",
+      "item": [
+        {
+          "name": "01 - Listar Todas las Facturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Obtener Factura por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "{{facturaId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Crear Nueva Factura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has id\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "    pm.environment.set('facturaId', jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has correct cliente\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.idCliente).to.eql(pm.variables.get('clienteId'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCliente\": \"{{clienteId}}\",\n  \"nombreCliente\": \"Juan Carlos Perez\",\n  \"periodo\": \"{{periodo}}\",\n  \"consumoMetrosCubicos\": 18,\n  \"valorPagar\": 108000.00,\n  \"fechaVencimiento\": \"2025-10-25\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Actualizar Factura",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCliente\": \"{{clienteId}}\",\n  \"nombreCliente\": \"Juan Carlos Perez\",\n  \"periodo\": \"{{periodo}}\",\n  \"consumoMetrosCubicos\": 20,\n  \"valorPagar\": 120000.00,\n  \"fechaVencimiento\": \"2025-10-30\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "{{facturaId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Eliminar Factura",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "{{facturaId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 - Obtener Facturas por Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "cliente", "{{clienteId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07 - Obtener Deuda Consolidada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has totalAPagar\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.totalAPagar).to.be.a('number');",
+                  "});",
+                  "",
+                  "pm.test(\"Response has estadisticas\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estadisticas).to.be.an('object');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/deuda-consolidada",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "cliente", "{{clienteId}}", "deuda-consolidada"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "08 - Obtener Facturas por Periodo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/periodo/{{periodo}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "periodo", "{{periodo}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "09 - Obtener Facturas Vencidas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/vencidas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "vencidas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10 - Calcular Deuda Total Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/deuda-total",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "cliente", "{{clienteId}}", "deuda-total"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11 - Contar Facturas Pendientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/pendientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "cliente", "{{clienteId}}", "pendientes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12 - Registrar Pago de Factura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Factura marcada como pagada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.pagada).to.be.true;",
+                  "    pm.expect(jsonData.estado).to.eql('PAGADA');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}/pagar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "facturas", "{{facturaId}}", "pagar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Consumos Energia",
+      "item": [
+        {
+          "name": "01 - Listar Todos los Consumos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Obtener Consumos por Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia/cliente/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia", "cliente", "{{clienteId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Obtener Consumos por Periodo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia/periodo/{{periodo}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia", "periodo", "{{periodo}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Obtener Consumo Especifico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia/cliente/{{clienteId}}/periodo/{{periodo}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia", "cliente", "{{clienteId}}", "periodo", "{{periodo}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Validar Archivo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Archivo es valido\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.valido).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia/validar-archivo",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia", "validar-archivo"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 - Contar Registros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consumos-energia/count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "consumos-energia", "count"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Actuator - Monitoring",
+      "item": [
+        {
+          "name": "01 - Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application is UP\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('UP');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Liveness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health/liveness",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health", "liveness"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Readiness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health/readiness",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health", "readiness"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Application Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "info"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Metrics List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 - JVM Memory Used",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics", "jvm.memory.used"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07 - HTTP Server Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/http.server.requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics", "http.server.requests"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "08 - Prometheus Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/prometheus",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "prometheus"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

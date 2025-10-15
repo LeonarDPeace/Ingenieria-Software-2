@@ -90,6 +90,7 @@ API RESTful monolítica que centraliza la consulta de saldos de Energía y Acued
 ### 2.2 Decisiones de Diseño Arquitectónicas
 
 #### ¿Por qué Monolito y no Microservicios?
+
 | Aspecto | Monolito (Elegido) | Microservicios |
 |---------|-------------------|----------------|
 | **Complejidad** | Baja, ideal para prototipo | Alta, overhead de coordinación |

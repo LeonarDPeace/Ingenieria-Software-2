@@ -1,0 +1,269 @@
+<mxfile host="app.diagrams.net" modified="2025-10-17T00:00:00.000Z" agent="ServiCiudad Team" version="22.0.0" type="device">
+  <diagram name="Arquitectura Hexagonal ServiCiudad" id="arq-hex">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TITULO PRINCIPAL -->
+        <mxCell id="titulo-main" value="ARQUITECTURA HEXAGONAL - SERVICIUDAD CALI" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="subtitulo" value="Ports &amp; Adapters Pattern - Domain-Driven Design Implementation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="500" y="60" width="600" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- HEXAGONO CENTRAL - DOMAIN LAYER -->
+        <mxCell id="hexagon-domain" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;size=30;" vertex="1" parent="1">
+          <mxGeometry x="550" y="300" width="500" height="350" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="domain-title" value="DOMAIN LAYER&#xa;(Núcleo Hexagonal - Business Logic)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#990000;" vertex="1" parent="1">
+          <mxGeometry x="650" y="315" width="300" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- VALUE OBJECTS -->
+        <mxCell id="value-objects-box" value="VALUE OBJECTS&#xa;(Objetos Inmutables)" style="swimlane;startSize=40;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="380" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="vo-list" value="• ClienteId&#xa;• FacturaId&#xa;• Periodo&#xa;• ConsumoAgua&#xa;• ConsumoEnergia&#xa;• Dinero" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="value-objects-box">
+          <mxGeometry x="10" y="45" width="180" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- DOMAIN MODELS -->
+        <mxCell id="domain-models-box" value="DOMAIN MODELS&#xa;(POJOs Puros)" style="swimlane;startSize=40;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="820" y="380" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dm-list" value="• FacturaAcueducto&#xa;• ConsumoEnergiaModel&#xa;• DeudaConsolidada&#xa;• EstadisticasDeuda&#xa;• EstadoFactura (Enum)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="domain-models-box">
+          <mxGeometry x="10" y="45" width="180" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- PORTS INPUT -->
+        <mxCell id="ports-input-box" value="PORTS (INPUT)&#xa;Use Cases Interfaces" style="swimlane;startSize=40;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="520" width="195" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port-input-list" value="• ConsultarDeudaUseCase&#xa;• GestionarFacturaUseCase&#xa;• ConsultarConsumo&#xa;   EnergiaUseCase" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="ports-input-box">
+          <mxGeometry x="10" y="45" width="175" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- PORTS OUTPUT -->
+        <mxCell id="ports-output-box" value="PORTS (OUTPUT)&#xa;Repository Interfaces" style="swimlane;startSize=40;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="820" y="520" width="195" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="port-output-list" value="• FacturaRepositoryPort&#xa;• ConsumoEnergia&#xa;   ReaderPort" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="ports-output-box">
+          <mxGeometry x="10" y="45" width="175" height="45" as="geometry" />
+        </mxCell>
+        
+        <!-- APPLICATION LAYER (Arriba del hexágono) -->
+        <mxCell id="app-layer-title" value="APPLICATION LAYER" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#006600;" vertex="1" parent="1">
+          <mxGeometry x="650" y="120" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- USE CASES -->
+        <mxCell id="use-cases-box" value="USE CASES&#xa;(Casos de Uso)" style="swimlane;startSize=35;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="160" width="220" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="uc-list" value="• ConsultarDeuda&#xa;   UseCaseImpl&#xa;• GestionarFactura&#xa;   UseCaseImpl&#xa;• ConsultarConsumo&#xa;   EnergiaUseCaseImpl" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontFamily=Courier New;" vertex="1" parent="use-cases-box">
+          <mxGeometry x="5" y="35" width="210" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- DTOs -->
+        <mxCell id="dtos-box" value="DTOs&#xa;(Data Transfer Objects)" style="swimlane;startSize=35;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="160" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dto-list" value="Request:&#xa;• ConsultarDeudaRequest&#xa;• RegistrarPagoRequest&#xa;Response:&#xa;• DeudaConsolidadaResponse&#xa;• FacturaResponse&#xa;• ConsumoEnergiaResponse&#xa;• EstadisticasResponse" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=8;fontFamily=Courier New;" vertex="1" parent="dtos-box">
+          <mxGeometry x="5" y="35" width="170" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- MAPPERS -->
+        <mxCell id="mappers-box" value="MAPPERS&#xa;(Transformaciones)" style="swimlane;startSize=35;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="860" y="160" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mapper-list" value="• DeudaMapper" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="mappers-box">
+          <mxGeometry x="10" y="40" width="120" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- INFRASTRUCTURE LAYER -->
+        
+        <!-- INPUT ADAPTERS (Izquierda) -->
+        <mxCell id="input-adapters-title" value="INFRASTRUCTURE - INPUT ADAPTERS" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#000099;" vertex="1" parent="1">
+          <mxGeometry x="50" y="300" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- REST CONTROLLERS -->
+        <mxCell id="rest-controllers-box" value="REST CONTROLLERS" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="350" width="240" height="130" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rest-list" value="1. DeudaRestController&#xa;   /api/deuda (2 endpoints)&#xa;&#xa;2. FacturaRestController&#xa;   /api/facturas (6 endpoints)&#xa;&#xa;3. ConsumoEnergiaRestController&#xa;   /api/consumos-energia (3 endpoints)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontFamily=Courier New;" vertex="1" parent="rest-controllers-box">
+          <mxGeometry x="10" y="35" width="220" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- HTTP CLIENTS -->
+        <mxCell id="http-clients" value="HTTP CLIENTS&#xa;&#xa;Web Browser / Mobile App&#xa;Postman / cURL&#xa;Third-party Apps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="500" width="200" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- OUTPUT ADAPTERS (Derecha) -->
+        <mxCell id="output-adapters-title" value="INFRASTRUCTURE - OUTPUT ADAPTERS" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#990000;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="300" width="350" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- JPA PERSISTENCE ADAPTER -->
+        <mxCell id="jpa-adapter-box" value="JPA PERSISTENCE ADAPTER" style="swimlane;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="350" width="310" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="jpa-content" value="FacturaRepositoryAdapter&#xa;├─ Implementa: FacturaRepositoryPort&#xa;├─ Usa: FacturaJpaRepository&#xa;├─ Usa: FacturaJpaMapper&#xa;└─ Entities: FacturaJpaEntity&#xa;&#xa;ConsumoEnergiaReaderAdapter&#xa;├─ Implementa: ConsumoEnergiaReaderPort&#xa;├─ Usa: ConsumoEnergiaJpaRepository&#xa;├─ Usa: ConsumoEnergiaJpaMapper&#xa;└─ Entities: ConsumoEnergiaJpaEntity" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontFamily=Courier New;" vertex="1" parent="jpa-adapter-box">
+          <mxGeometry x="10" y="35" width="290" height="110" as="geometry" />
+        </mxCell>
+        
+        <!-- FILE READER ADAPTER -->
+        <mxCell id="file-adapter-box" value="FILE READER ADAPTER&#xa;(COBOL Legacy Integration)" style="swimlane;startSize=40;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="520" width="310" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="file-content" value="AdaptadorArchivoEnergia&#xa;├─ Lee: consumos_energia.txt (78 chars)&#xa;├─ Parsea: Formato COBOL ancho fijo&#xa;└─ Convierte: String → ConsumoEnergiaModel" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontFamily=Courier New;" vertex="1" parent="file-adapter-box">
+          <mxGeometry x="10" y="45" width="290" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- SPRING CONFIGURATION -->
+        <mxCell id="config-box" value="SPRING CONFIGURATION" style="swimlane;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="640" width="310" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="config-content" value="HexagonalConfig&#xa;└─ @Bean creation for all Use Cases&#xa;    (Dependency Injection orchestration)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontFamily=Courier New;" vertex="1" parent="config-box">
+          <mxGeometry x="10" y="35" width="290" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- DATA SOURCES -->
+        <mxCell id="data-sources-title" value="EXTERNAL DATA SOURCES" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#CC0000;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="750" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- PostgreSQL Database -->
+        <mxCell id="postgresql-db" value="PostgreSQL 15&#xa;&#xa;Database: serviciudad_db&#xa;Table: facturas_acueducto&#xa;Rows: 20+ registros&#xa;Indices: 4 (B-tree)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="790" width="150" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Legacy File -->
+        <mxCell id="legacy-file" value="consumos_energia.txt&#xa;&#xa;Format: COBOL 78 chars&#xa;Fixed-width&#xa;Legacy Mainframe&#xa;Rows: 10+ registros" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="790" width="130" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- FLECHAS DE FLUJO -->
+        
+        <!-- Clients -> REST Controllers -->
+        <mxCell id="arrow-1" value="HTTP&#xa;Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#0066CC;" edge="1" parent="1" source="http-clients" target="rest-controllers-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- REST Controllers -> Use Cases -->
+        <mxCell id="arrow-2" value="Invokes&#xa;(via Port)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#006600;dashed=1;" edge="1" parent="1" source="rest-controllers-box" target="use-cases-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Use Cases -> Domain -->
+        <mxCell id="arrow-3" value="Uses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#990000;" edge="1" parent="1" source="use-cases-box" target="hexagon-domain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- DTOs -> Domain -->
+        <mxCell id="arrow-4" value="Maps&#xa;to/from" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#990000;dashed=1;" edge="1" parent="1" source="dtos-box" target="hexagon-domain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Domain -> Output Adapters -->
+        <mxCell id="arrow-5" value="Repository&#xa;Port" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#CC6600;dashed=1;" edge="1" parent="1" source="hexagon-domain" target="jpa-adapter-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Domain -> File Adapter -->
+        <mxCell id="arrow-6" value="Reader&#xa;Port" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#CC6600;dashed=1;" edge="1" parent="1" source="hexagon-domain" target="file-adapter-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- JPA Adapter -> PostgreSQL -->
+        <mxCell id="arrow-7" value="JDBC&#xa;Spring Data&#xa;JPA" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="jpa-adapter-box" target="postgresql-db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- File Adapter -> Legacy File -->
+        <mxCell id="arrow-8" value="Files.read&#xa;AllLines()" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="file-adapter-box" target="legacy-file">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- LEYENDA DE PATRONES -->
+        <mxCell id="leyenda" value="5 PATRONES DE DISEÑO IMPLEMENTADOS" style="swimlane;startSize=35;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="650" width="300" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patron-adapter" value="1. ADAPTER PATTERN&#xa;   ConsumoEnergiaReaderAdapter&#xa;   → Lee archivo COBOL legacy" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" vertex="1" parent="leyenda">
+          <mxGeometry x="10" y="45" width="280" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patron-repository" value="2. REPOSITORY PATTERN&#xa;   FacturaRepositoryPort + Adapter&#xa;   → Spring Data JPA abstraction" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" vertex="1" parent="leyenda">
+          <mxGeometry x="10" y="95" width="280" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patron-dto" value="3. DTO PATTERN&#xa;   Request/Response DTOs&#xa;   → Decoupling layers" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" vertex="1" parent="leyenda">
+          <mxGeometry x="10" y="145" width="280" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patron-builder" value="4. BUILDER PATTERN&#xa;   Response DTOs con @Builder&#xa;   → Immutable object construction" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" vertex="1" parent="leyenda">
+          <mxGeometry x="10" y="195" width="280" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patron-ioc" value="5. IoC/DI PATTERN&#xa;   Spring @Autowired injection&#xa;   → Dependency Inversion Principle" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" vertex="1" parent="leyenda">
+          <mxGeometry x="10" y="245" width="280" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- STACK TECNOLOGICO -->
+        <mxCell id="stack-box" value="STACK TECNOLÓGICO" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="380" y="650" width="260" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="stack-content" value="Backend:&#xa;• Spring Boot 3.2.0&#xa;• Java 17 LTS&#xa;• Maven 3.9.11&#xa;&#xa;Persistence:&#xa;• PostgreSQL 15&#xa;• Hibernate 6.3 (JPA)&#xa;• HikariCP 5.0&#xa;&#xa;Infrastructure:&#xa;• Docker + Compose&#xa;• OpenAPI 3.0 (SpringDoc)&#xa;&#xa;Testing:&#xa;• JUnit 5 + Mockito&#xa;• AssertJ 3.24&#xa;&#xa;Observability:&#xa;• Spring Actuator&#xa;• Prometheus + Grafana" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="stack-box">
+          <mxGeometry x="10" y="35" width="240" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- METRICAS -->
+        <mxCell id="metricas-box" value="MÉTRICAS DE CALIDAD" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="670" y="650" width="260" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="metricas-content" value="Cobertura de Tests:&#xa;• Lines: 85%&#xa;• Branches: 78%&#xa;&#xa;Complejidad:&#xa;• Cyclomatic avg: 6.2&#xa;• Max complexity: 12&#xa;&#xa;Performance:&#xa;• P95 response: 1.2s&#xa;• Throughput: 120 RPS&#xa;• Error rate: 0.3%&#xa;&#xa;Calidad de Código:&#xa;• Critical bugs: 0&#xa;• Major bugs: 0&#xa;• Code smells: 12 (minor)&#xa;&#xa;Vulnerabilities:&#xa;• Critical CVEs: 0&#xa;• Dependency issues: 0" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Courier New;" vertex="1" parent="metricas-box">
+          <mxGeometry x="10" y="35" width="240" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- ENDPOINTS DOCUMENTADOS -->
+        <mxCell id="endpoints-box" value="11 ENDPOINTS REST" style="swimlane;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="960" y="650" width="230" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="endpoints-content" value="DeudaRestController:&#xa;• POST /api/deuda/consultar&#xa;• GET /api/deuda/cliente/{id}&#xa;&#xa;FacturaRestController:&#xa;• GET /api/facturas/{id}&#xa;• GET /api/facturas/cliente/{id}&#xa;• GET /api/facturas/cliente/{id}/&#xa;     periodo/{periodo}&#xa;• POST /api/facturas/pagar&#xa;• POST /api/facturas/{id}/anular&#xa;• POST /api/facturas/marcar-vencidas&#xa;&#xa;ConsumoEnergiaRestController:&#xa;• GET /api/consumos-energia/&#xa;     cliente/{id}&#xa;• GET /api/consumos-energia/&#xa;     cliente/{id}/periodo/{periodo}&#xa;• GET /api/consumos-energia/&#xa;     cliente/{id}/elevados" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=8;fontFamily=Courier New;" vertex="1" parent="endpoints-box">
+          <mxGeometry x="10" y="35" width="210" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- FOOTER -->
+        <mxCell id="footer" value="Diagrama de Arquitectura Hexagonal - ServiCiudad Cali | Universidad Autónoma de Occidente | Ingeniería de Software 2 | Octubre 2025&#xa;Equipo: Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena, Juan Sebastian Castillo" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="930" width="1500" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- DEPENDENCY RULE ANNOTATION -->
+        <mxCell id="dependency-rule" value="⚠ HEXAGONAL ARCHITECTURE RULE:&#xa;Dependencies ALWAYS point INWARD → DOMAIN is at the center&#xa;Domain has ZERO dependencies on outer layers (Infrastructure, Application)" style="text;html=1;strokeColor=#CC0000;fillColor=#FFE6E6;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;fontColor=#CC0000;" vertex="1" parent="1">
+          <mxGeometry x="380" y="740" width="550" height="60" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

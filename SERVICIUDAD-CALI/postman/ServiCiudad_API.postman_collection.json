@@ -1,9 +1,25 @@
 {
   "info": {
     "name": "ServiCiudad Cali API",
-    "description": "Coleccion completa de endpoints para ServiCiudad Cali - Sistema de Consulta Unificada de Servicios Publicos",
+    "description": "Colección completa de endpoints para ServiCiudad Cali - Sistema de Consulta Unificada de Servicios Públicos\n\n✅ ENDPOINTS PRINCIPALES FUNCIONANDO (100%)\n- Deuda Consolidada: /api/deuda/cliente/{id}\n- Facturas por Cliente: /api/facturas/cliente/{id}\n- Consumos por Cliente: /api/consumos-energia/cliente/{id}\n- Health Check: /actuator/health\n\n🔧 CONFIGURACIÓN:\n- Base URL: http://localhost:8080\n- Autenticación: HTTP Basic (serviciudad:dev2025)\n- Cliente de prueba: 1001234567 (con datos reales)\n\n📊 ARQUITECTURA:\n- Arquitectura Hexagonal implementada\n- 5 patrones de diseño aplicados\n- Docker + PostgreSQL operativo",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "serviciudad-cali"
+    "_exporter_id": "serviciudad-cali",
+    "version": "2.0.0"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{username}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{password}}",
+        "type": "string"
+      }
+    ]
   },
   "variable": [
     {
@@ -13,7 +29,7 @@
     },
     {
       "key": "clienteId",
-      "value": "0001234567",
+      "value": "1001234567",
       "type": "string"
     },
     {
@@ -25,58 +41,53 @@
       "key": "periodo",
       "value": "202510",
       "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "serviciudad",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "dev2025",
+      "type": "string"
     }
   ],
   "item": [
     {
-      "name": "Facturas Acueducto",
+      "name": "🏛️ ENDPOINTS PRINCIPALES",
+      "description": "Endpoints principales del sistema ServiCiudad Cali - 100% funcionales",
       "item": [
         {
-          "name": "01 - Listar Todas las Facturas",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "02 - Obtener Factura por ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "{{facturaId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "03 - Crear Nueva Factura",
+          "name": "01 - Deuda Consolidada (PRINCIPAL)",
+          "description": "Endpoint principal para consultar deuda consolidada de un cliente\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: deuda total, facturas, consumos, estadísticas\n🔧 Autenticación: HTTP Basic requerida",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "pm.test(\"Response has id\", function () {",
+                  "pm.test(\"Response has totalGeneral\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.be.a('number');",
-                  "    pm.environment.set('facturaId', jsonData.id);",
+                  "    pm.expect(jsonData.totalGeneral).to.be.a('number');",
                   "});",
                   "",
-                  "pm.test(\"Response has correct cliente\", function () {",
+                  "pm.test(\"Response has estadisticas\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.idCliente).to.eql(pm.variables.get('clienteId'));",
+                  "    pm.expect(jsonData.estadisticas).to.be.an('object');",
+                  "});",
+                  "",
+                  "pm.test(\"Response has facturasAcueducto\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.facturasAcueducto).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Response has consumosEnergia\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.consumosEnergia).to.be.an('array');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -84,62 +95,37 @@
             }
           ],
           "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"idCliente\": \"{{clienteId}}\",\n  \"nombreCliente\": \"Juan Carlos Perez\",\n  \"periodo\": \"{{periodo}}\",\n  \"consumoMetrosCubicos\": 18,\n  \"valorPagar\": 108000.00,\n  \"fechaVencimiento\": \"2025-10-25\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "04 - Actualizar Factura",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"idCliente\": \"{{clienteId}}\",\n  \"nombreCliente\": \"Juan Carlos Perez\",\n  \"periodo\": \"{{periodo}}\",\n  \"consumoMetrosCubicos\": 20,\n  \"valorPagar\": 120000.00,\n  \"fechaVencimiento\": \"2025-10-30\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "{{facturaId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "05 - Eliminar Factura",
-          "request": {
-            "method": "DELETE",
+            "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
+              "raw": "{{baseUrl}}/api/deuda/cliente/{{clienteId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "{{facturaId}}"]
+              "path": ["api", "deuda", "cliente", "{{clienteId}}"]
             }
           },
           "response": []
         },
         {
-          "name": "06 - Obtener Facturas por Cliente",
+          "name": "02 - Facturas por Cliente",
+          "description": "Obtener todas las facturas de acueducto de un cliente\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: array de facturas con detalles\n🔧 Autenticación: HTTP Basic requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -152,7 +138,8 @@
           "response": []
         },
         {
-          "name": "07 - Obtener Deuda Consolidada",
+          "name": "03 - Consumos de Energía por Cliente",
+          "description": "Obtener todos los consumos de energía de un cliente\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: array de consumos (puede estar vacío)\n🔧 Autenticación: HTTP Basic requerida",
           "event": [
             {
               "listen": "test",
@@ -162,135 +149,15 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "pm.test(\"Response has totalAPagar\", function () {",
+                  "pm.test(\"Response is array\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.totalAPagar).to.be.a('number');",
-                  "});",
-                  "",
-                  "pm.test(\"Response has estadisticas\", function () {",
-                  "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.estadisticas).to.be.an('object');",
+                  "    pm.expect(jsonData).to.be.an('array');",
                   "});"
                 ],
                 "type": "text/javascript"
               }
             }
           ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/deuda-consolidada",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "cliente", "{{clienteId}}", "deuda-consolidada"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "08 - Obtener Facturas por Periodo",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/periodo/{{periodo}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "periodo", "{{periodo}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "09 - Obtener Facturas Vencidas",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/vencidas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "vencidas"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "10 - Calcular Deuda Total Cliente",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/deuda-total",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "cliente", "{{clienteId}}", "deuda-total"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "11 - Contar Facturas Pendientes",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/cliente/{{clienteId}}/pendientes",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "cliente", "{{clienteId}}", "pendientes"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "12 - Registrar Pago de Factura",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "    pm.response.to.have.status(200);",
-                  "});",
-                  "",
-                  "pm.test(\"Factura marcada como pagada\", function () {",
-                  "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.pagada).to.be.true;",
-                  "    pm.expect(jsonData.estado).to.eql('PAGADA');",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}/pagar",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "facturas", "{{facturaId}}", "pagar"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Consumos Energia",
-      "item": [
-        {
-          "name": "01 - Listar Todos los Consumos",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/consumos-energia",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "consumos-energia"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "02 - Obtener Consumos por Cliente",
           "request": {
             "method": "GET",
             "header": [],
@@ -303,33 +170,8 @@
           "response": []
         },
         {
-          "name": "03 - Obtener Consumos por Periodo",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/consumos-energia/periodo/{{periodo}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "consumos-energia", "periodo", "{{periodo}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "04 - Obtener Consumo Especifico",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/consumos-energia/cliente/{{clienteId}}/periodo/{{periodo}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "consumos-energia", "cliente", "{{clienteId}}", "periodo", "{{periodo}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "05 - Validar Archivo",
+          "name": "04 - Factura por ID",
+          "description": "Obtener una factura específica por su ID\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: detalles de la factura\n🔧 Autenticación: HTTP Basic requerida",
           "event": [
             {
               "listen": "test",
@@ -339,9 +181,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "pm.test(\"Archivo es valido\", function () {",
+                  "pm.test(\"Response has id\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.valido).to.be.true;",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -352,22 +194,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/consumos-energia/validar-archivo",
+              "raw": "{{baseUrl}}/api/facturas/{{facturaId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "consumos-energia", "validar-archivo"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "06 - Contar Registros",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/consumos-energia/count",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "consumos-energia", "count"]
+              "path": ["api", "facturas", "{{facturaId}}"]
             }
           },
           "response": []
@@ -375,10 +204,80 @@
       ]
     },
     {
-      "name": "Actuator - Monitoring",
+      "name": "🌐 FRONTEND Y RECURSOS PÚBLICOS",
+      "description": "Endpoints públicos del frontend y recursos estáticos",
       "item": [
         {
-          "name": "01 - Health Check",
+          "name": "01 - Frontend Principal",
+          "description": "Página principal del frontend web\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: HTML del frontend\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is HTML\", function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('text/html');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Favicon",
+          "description": "Icono del sitio web\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: SVG del favicon\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is SVG\", function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('image/svg');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favicon.svg",
+              "host": ["{{baseUrl}}"],
+              "path": ["favicon.svg"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 MONITOREO Y HEALTH CHECKS",
+      "description": "Endpoints de monitoreo y verificación de salud del sistema",
+      "item": [
+        {
+          "name": "01 - Health Check Principal",
+          "description": "Verificación general del estado del sistema\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: estado UP/DOWN del sistema\n🔧 Sin autenticación requerida",
           "event": [
             {
               "listen": "test",
@@ -391,6 +290,11 @@
                   "pm.test(\"Application is UP\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData.status).to.eql('UP');",
+                  "});",
+                  "",
+                  "pm.test(\"Response has groups\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.groups).to.be.an('array');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -410,6 +314,20 @@
         },
         {
           "name": "02 - Liveness Probe",
+          "description": "Verificación de que la aplicación está viva\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: estado de liveness\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -423,6 +341,20 @@
         },
         {
           "name": "03 - Readiness Probe",
+          "description": "Verificación de que la aplicación está lista para recibir tráfico\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: estado de readiness\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -436,6 +368,20 @@
         },
         {
           "name": "04 - Application Info",
+          "description": "Información general de la aplicación\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: información de la app\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -449,6 +395,20 @@
         },
         {
           "name": "05 - Metrics List",
+          "description": "Lista de métricas disponibles\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: lista de métricas\n🔧 Sin autenticación requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -459,42 +419,72 @@
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "🧪 TESTS ADICIONALES",
+      "description": "Tests adicionales para validación completa del sistema",
+      "item": [
         {
-          "name": "06 - JVM Memory Used",
+          "name": "01 - Test con Cliente Sin Datos",
+          "description": "Probar endpoint con cliente que no tiene datos\n\n✅ FUNCIONANDO - 200 OK\n📊 Retorna: respuesta vacía pero válida\n🔧 Autenticación: HTTP Basic requerida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has empty arrays\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.facturasAcueducto).to.be.an('array');",
+                  "    pm.expect(jsonData.consumosEnergia).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
+              "raw": "{{baseUrl}}/api/deuda/cliente/0001234567",
               "host": ["{{baseUrl}}"],
-              "path": ["actuator", "metrics", "jvm.memory.used"]
+              "path": ["api", "deuda", "cliente", "0001234567"]
             }
           },
           "response": []
         },
         {
-          "name": "07 - HTTP Server Requests",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/actuator/metrics/http.server.requests",
-              "host": ["{{baseUrl}}"],
-              "path": ["actuator", "metrics", "http.server.requests"]
+          "name": "02 - Test de Autenticación (Sin Credenciales)",
+          "description": "Probar endpoint sin autenticación para verificar seguridad\n\n❌ ESPERADO - 401 Unauthorized\n📊 Retorna: error de autenticación\n🔧 Sin autenticación (para probar seguridad)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
-          },
-          "response": []
-        },
-        {
-          "name": "08 - Prometheus Metrics",
+          ],
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/actuator/prometheus",
+              "raw": "{{baseUrl}}/api/deuda/cliente/{{clienteId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["actuator", "prometheus"]
+              "path": ["api", "deuda", "cliente", "{{clienteId}}"]
+            },
+            "auth": {
+              "type": "noauth"
             }
           },
           "response": []

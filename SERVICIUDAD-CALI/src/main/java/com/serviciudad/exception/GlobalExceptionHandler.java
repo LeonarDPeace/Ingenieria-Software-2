@@ -1,9 +1,10 @@
 package com.serviciudad.exception;
 
-import com.serviciudad.adapter.exception.ArchivoLecturaException;
-import com.serviciudad.service.exception.FacturaDuplicadaException;
-import com.serviciudad.service.exception.FacturaNoEncontradaException;
+import com.serviciudad.domain.exception.FacturaDuplicadaException;
+import com.serviciudad.domain.exception.FacturaNoEncontradaException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +28,9 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @Autowired
+    private Environment environment;
 
     /**
      * Maneja excepciones cuando una factura no es encontrada.
@@ -105,30 +110,14 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja excepciones de lectura de archivos legacy.
-     * 
-     * @param ex Excepcion lanzada
-     * @param request Peticion web
-     * @return Respuesta con codigo 500
-     */
-    @ExceptionHandler(ArchivoLecturaException.class)
-    public ResponseEntity<ErrorResponse> handleArchivoLectura(
-            ArchivoLecturaException ex, WebRequest request) {
-        log.error("Error al leer archivo: {}", ex.getMessage());
-        
-        ErrorResponse error = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Error de lectura de archivo")
-                .message(ex.getMessage())
-                .path(request.getDescription(false).replace("uri=", ""))
-                .build();
-        
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    /**
      * Maneja excepciones genericas no capturadas por otros handlers.
+     * 
+     * Implementa sanitización de logs según el entorno:
+     * - PRODUCCIÓN: Solo loguea el mensaje de error (sin stack trace completo)
+     * - DESARROLLO/TEST: Loguea stack trace completo para debugging
+     * 
+     * Esto previene la exposición de información sensible en logs de producción
+     * como rutas de archivos, configuraciones internas, etc.
      * 
      * @param ex Excepcion lanzada
      * @param request Peticion web
@@ -137,7 +126,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(
             Exception ex, WebRequest request) {
-        log.error("Error inesperado: {}", ex.getMessage(), ex);
+        
+        // Verificar si estamos en producción
+        boolean isProduction = Arrays.asList(environment.getActiveProfiles())
+            .contains("prod");
+        
+        // Sanitizar logs según el entorno
+        if (isProduction) {
+            // PRODUCCIÓN: Solo mensaje (sin stack trace)
+            log.error("Error inesperado: {} | Path: {} | Exception: {}",
+                     ex.getMessage(),
+                     request.getDescription(false).replace("uri=", ""),
+                     ex.getClass().getSimpleName());
+        } else {
+            // DESARROLLO: Stack trace completo para debugging
+            log.error("Error inesperado: {} | Path: {}",
+                     ex.getMessage(),
+                     request.getDescription(false).replace("uri=", ""),
+                     ex);  // Incluye stack trace completo
+        }
         
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())

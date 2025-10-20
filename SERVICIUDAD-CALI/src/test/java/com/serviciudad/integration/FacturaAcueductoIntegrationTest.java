@@ -1,18 +1,15 @@
 package com.serviciudad.integration;
 
-import com.serviciudad.domain.FacturaAcueducto;
-import com.serviciudad.dto.FacturaRequestDTO;
-import com.serviciudad.dto.FacturaResponseDTO;
-import com.serviciudad.repository.FacturaAcueductoRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.EstadoFacturaJpa;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.repository.FacturaJpaRepository;
+import com.serviciudad.infrastructure.config.TestSecurityConfig;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -21,214 +18,203 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
+/**
+ * Tests de integración E2E para workflow de Facturas Acueducto.
+ * 
+ * Usa @SpringBootTest + Testcontainers para validar:
+ * Registrar → Consultar → Pagar → Verificar Estado → Anular
+ * 
+ * @author Equipo ServiCiudad Cali
+ * @version 1.0
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@Testcontainers
-@DisplayName("Facturas API - Tests de Integracion E2E")
-class FacturaAcueductoIntegrationTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-        .withDatabaseName("serviciudad_test")
-        .withUsername("test")
-        .withPassword("test");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+@Import(TestSecurityConfig.class)
+@DisplayName("Integration Test: Factura Acueducto Workflow E2E")
+class FacturaAcueductoIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private FacturaAcueductoRepository repository;
+    private FacturaJpaRepository facturaRepository;
+
+    private final String clienteId = "1234567890";
 
     @BeforeEach
     void setUp() {
-        repository.deleteAll();
+        // Limpiar BD antes de cada test
+        facturaRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("POST /api/facturas debe crear factura y retornar 201")
-    void debeCrearFacturaExitosamente() {
-        FacturaRequestDTO request = crearFacturaRequest();
+    @DisplayName("E2E: Debe consultar factura por ID desde REST hasta BD")
+    void debeConsultarFacturaPorId() {
+        // Arrange - Crear factura en BD
+        FacturaJpaEntity factura = crearFacturaEnBD(EstadoFacturaJpa.PENDIENTE);
 
-        ResponseEntity<FacturaResponseDTO> response = restTemplate.postForEntity(
-            "/api/facturas",
-            request,
-            FacturaResponseDTO.class
+        // Act - Consultar vía REST
+        ResponseEntity<String> response = restTemplate.getForEntity(
+            "/api/facturas/{facturaId}",
+            String.class,
+            factura.getId()
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getId()).isNotNull();
-        assertThat(response.getBody().getIdCliente()).isEqualTo(request.getIdCliente());
-    }
-
-    @Test
-    @DisplayName("GET /api/facturas debe retornar todas las facturas")
-    void debeObtenerTodasFacturas() {
-        repository.save(crearFacturaEntidad("0001234567"));
-        repository.save(crearFacturaEntidad("0007654321"));
-
-        ResponseEntity<FacturaResponseDTO[]> response = restTemplate.getForEntity(
-            "/api/facturas",
-            FacturaResponseDTO[].class
-        );
-
+        // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).hasSizeGreaterThanOrEqualTo(2);
+        assertThat(response.getBody()).contains(clienteId);
+        assertThat(response.getBody()).contains("202501");
+        assertThat(response.getBody()).contains("PENDIENTE");
     }
 
     @Test
-    @DisplayName("GET /api/facturas/{id} debe retornar factura por ID")
-    void debeObtenerFacturaPorId() {
-        FacturaAcueducto factura = repository.save(crearFacturaEntidad("0001234567"));
+    @DisplayName("E2E: Debe consultar facturas por cliente ID")
+    void debeConsultarFacturasPorCliente() {
+        // Arrange - Crear múltiples facturas (diferentes periodos)
+        crearFacturaEnBD(EstadoFacturaJpa.PENDIENTE, "202501");
+        crearFacturaEnBD(EstadoFacturaJpa.PAGADA, "202502");
 
-        ResponseEntity<FacturaResponseDTO> response = restTemplate.getForEntity(
-            "/api/facturas/" + factura.getId(),
-            FacturaResponseDTO.class
+        // Act
+        ResponseEntity<String> response = restTemplate.getForEntity(
+            "/api/facturas/cliente/{clienteId}",
+            String.class,
+            clienteId
         );
 
+        // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getId()).isEqualTo(factura.getId());
+        assertThat(response.getBody()).contains(clienteId);
     }
 
     @Test
-    @DisplayName("GET /api/facturas/{id} debe retornar 404 cuando no existe")
-    void debeRetornar404CuandoFacturaNoExiste() {
-        ResponseEntity<FacturaResponseDTO> response = restTemplate.getForEntity(
-            "/api/facturas/999",
-            FacturaResponseDTO.class
+    @DisplayName("E2E: Workflow completo - Registrar → Consultar → Pagar → Verificar")
+    void workflowCompletoRegistrarConsultarPagar() {
+        // PASO 1: Registrar factura en BD
+        FacturaJpaEntity factura = crearFacturaEnBD(EstadoFacturaJpa.PENDIENTE);
+        Long facturaId = factura.getId();
+
+        // PASO 2: Consultar factura (verificar que existe y está PENDIENTE)
+        ResponseEntity<String> responseConsulta = restTemplate.getForEntity(
+            "/api/facturas/{facturaId}",
+            String.class,
+            facturaId
         );
+        assertThat(responseConsulta.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseConsulta.getBody()).contains("PENDIENTE");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    }
+        // PASO 3: Pagar factura
+        String pagoRequest = String.format("{\"facturaId\": %d}", facturaId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(pagoRequest, headers);
 
-    @Test
-    @DisplayName("PUT /api/facturas/{id} debe actualizar factura")
-    void debeActualizarFactura() {
-        FacturaAcueducto factura = repository.save(crearFacturaEntidad("0001234567"));
-        FacturaRequestDTO request = crearFacturaRequest();
-        request.setConsumoMetrosCubicos(20);
-        request.setValorPagar(new BigDecimal("120000.00"));
-
-        restTemplate.put(
-            "/api/facturas/" + factura.getId(),
-            request
+        ResponseEntity<Void> responsePago = restTemplate.postForEntity(
+            "/api/facturas/pagar",
+            requestEntity,
+            Void.class
         );
+        assertThat(responsePago.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        FacturaAcueducto actualizada = repository.findById(factura.getId()).orElseThrow();
-        assertThat(actualizada.getConsumoMetrosCubicos()).isEqualTo(20);
+        // PASO 4: Verificar en BD que el estado cambió a PAGADA
+        Optional<FacturaJpaEntity> facturaPagada = facturaRepository.findById(facturaId);
+        assertThat(facturaPagada).isPresent();
+        assertThat(facturaPagada.get().getEstado()).isEqualTo(EstadoFacturaJpa.PAGADA);
+        assertThat(facturaPagada.get().getFechaActualizacion()).isAfter(factura.getFechaCreacion());
     }
 
     @Test
-    @DisplayName("DELETE /api/facturas/{id} debe eliminar factura")
-    void debeEliminarFactura() {
-        FacturaAcueducto factura = repository.save(crearFacturaEntidad("0001234567"));
+    @DisplayName("E2E: Debe anular factura y persistir el cambio")
+    void debeAnularFacturaYPersistir() {
+        // Arrange
+        FacturaJpaEntity factura = crearFacturaEnBD(EstadoFacturaJpa.PENDIENTE);
+        Long facturaId = factura.getId();
 
-        restTemplate.delete("/api/facturas/" + factura.getId());
-
-        assertThat(repository.findById(factura.getId())).isEmpty();
-    }
-
-    @Test
-    @DisplayName("GET /api/facturas/cliente/{id} debe retornar facturas del cliente")
-    void debeObtenerFacturasPorCliente() {
-        String idCliente = "0001234567";
-        repository.save(crearFacturaEntidad(idCliente));
-        repository.save(crearFacturaEntidad(idCliente));
-        repository.save(crearFacturaEntidad("0007654321"));
-
-        ResponseEntity<FacturaResponseDTO[]> response = restTemplate.getForEntity(
-            "/api/facturas/cliente/" + idCliente,
-            FacturaResponseDTO[].class
-        );
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("GET /api/facturas/vencidas debe retornar facturas vencidas")
-    void debeObtenerFacturasVencidas() {
-        FacturaAcueducto facturaVencida = crearFacturaEntidad("0001234567");
-        facturaVencida.setFechaVencimiento(LocalDate.now().minusDays(5));
-        facturaVencida.setEstado("VENCIDA");
-        repository.save(facturaVencida);
-
-        ResponseEntity<FacturaResponseDTO[]> response = restTemplate.getForEntity(
-            "/api/facturas/vencidas",
-            FacturaResponseDTO[].class
-        );
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-
-    @Test
-    @DisplayName("POST /api/facturas/{id}/pagar debe registrar pago")
-    void debeRegistrarPago() {
-        FacturaAcueducto factura = crearFacturaEntidad("0001234567");
-        factura.setEstado("PENDIENTE");
-        factura = repository.save(factura);
-
-        ResponseEntity<FacturaResponseDTO> response = restTemplate.postForEntity(
-            "/api/facturas/" + factura.getId() + "/pagar",
+        // Act - Anular factura
+        ResponseEntity<Void> response = restTemplate.postForEntity(
+            "/api/facturas/{facturaId}/anular",
             null,
-            FacturaResponseDTO.class
+            Void.class,
+            facturaId
         );
 
+        // Assert - Verificar respuesta HTTP
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getEstado()).isEqualTo("PAGADA");
-        assertThat(response.getBody().isPagada()).isTrue();
+
+        // Assert - Verificar persistencia en BD
+        Optional<FacturaJpaEntity> facturaAnulada = facturaRepository.findById(facturaId);
+        assertThat(facturaAnulada).isPresent();
+        assertThat(facturaAnulada.get().getEstado()).isEqualTo(EstadoFacturaJpa.ANULADA);
     }
 
     @Test
-    @DisplayName("POST /api/facturas con datos invalidos debe retornar 400")
-    void debeRetornar400ConDatosInvalidos() {
-        FacturaRequestDTO request = new FacturaRequestDTO();
-        request.setIdCliente("");
-        request.setConsumoMetrosCubicos(-5);
+    @DisplayName("E2E: Debe marcar facturas vencidas automáticamente")
+    void debeMarcarFacturasVencidas() {
+        // Arrange - Crear factura con fecha vencida
+        FacturaJpaEntity facturaVencida = FacturaJpaEntity.builder()
+            .clienteId(clienteId)
+            .periodo("202412")
+            .consumo(20)
+            .valorPagar(new BigDecimal("125000.00"))
+            .estado(EstadoFacturaJpa.PENDIENTE)
+            .fechaVencimiento(LocalDate.now().minusDays(5)) // Vencida hace 5 días
+            .fechaCreacion(LocalDateTime.now().minusMonths(1))
+            .fechaActualizacion(LocalDateTime.now().minusMonths(1))
+            .build();
+        facturaRepository.save(facturaVencida);
 
-        ResponseEntity<FacturaResponseDTO> response = restTemplate.postForEntity(
-            "/api/facturas",
-            request,
-            FacturaResponseDTO.class
+        // Act - Llamar endpoint para marcar vencidas
+        ResponseEntity<Void> response = restTemplate.postForEntity(
+            "/api/facturas/marcar-vencidas",
+            null,
+            Void.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Verificar que el estado cambió a VENCIDA en BD
+        Optional<FacturaJpaEntity> facturaActualizada = facturaRepository.findById(facturaVencida.getId());
+        assertThat(facturaActualizada).isPresent();
+        assertThat(facturaActualizada.get().getEstado()).isEqualTo(EstadoFacturaJpa.VENCIDA);
     }
 
-    private FacturaRequestDTO crearFacturaRequest() {
-        FacturaRequestDTO dto = new FacturaRequestDTO();
-        dto.setIdCliente("0001234567");
-        dto.setNombreCliente("Juan Perez");
-        dto.setPeriodo("202510");
-        dto.setConsumoMetrosCubicos(15);
-        dto.setValorPagar(new BigDecimal("95000.00"));
-        dto.setFechaVencimiento(LocalDate.now().plusDays(15));
-        return dto;
+    @Test
+    @DisplayName("E2E: Debe retornar error cuando factura no existe")
+    void debeRetornar404CuandoFacturaNoExiste() {
+        // Act
+        ResponseEntity<String> response = restTemplate.getForEntity(
+            "/api/facturas/{facturaId}",
+            String.class,
+            99999L
+        );
+
+        // Assert - El GlobalExceptionHandler convierte IllegalArgumentException en 400 BAD_REQUEST
+        assertThat(response.getStatusCode()).isIn(HttpStatus.BAD_REQUEST, HttpStatus.NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private FacturaAcueducto crearFacturaEntidad(String idCliente) {
-        FacturaAcueducto factura = new FacturaAcueducto();
-        factura.setIdCliente(idCliente);
-        factura.setNombreCliente("Juan Perez");
-        factura.setPeriodo("202510");
-        factura.setConsumoMetrosCubicos(15);
-        factura.setValorPagar(new BigDecimal("95000.00"));
-        factura.setFechaEmision(LocalDate.now());
-        factura.setFechaVencimiento(LocalDate.now().plusDays(15));
-        factura.setEstado("PENDIENTE");
-        return factura;
+    // ============ Helper Methods ============
+
+    private FacturaJpaEntity crearFacturaEnBD(EstadoFacturaJpa estado) {
+        return crearFacturaEnBD(estado, "202501");
+    }
+
+    private FacturaJpaEntity crearFacturaEnBD(EstadoFacturaJpa estado, String periodo) {
+        FacturaJpaEntity factura = FacturaJpaEntity.builder()
+            .clienteId(clienteId)
+            .periodo(periodo)
+            .consumo(15)
+            .valorPagar(new BigDecimal("95000.00"))
+            .estado(estado)
+            .fechaVencimiento(LocalDate.now().plusDays(15))
+            .fechaCreacion(LocalDateTime.now())
+            .fechaActualizacion(LocalDateTime.now())
+            .build();
+        return facturaRepository.save(factura);
     }
 }

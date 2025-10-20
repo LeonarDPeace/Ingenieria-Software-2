@@ -9,6 +9,7 @@ RUN mvn dependency:go-offline -B
 
 COPY src ./src
 COPY data ./data
+COPY frontend ./frontend
 
 RUN mvn clean package -DskipTests -B
 
@@ -26,6 +27,7 @@ USER spring:spring
 
 COPY --from=builder /app/target/*.jar app.jar
 COPY --from=builder /app/data ./data
+COPY --from=builder /app/frontend ./frontend
 
 EXPOSE 8080
 

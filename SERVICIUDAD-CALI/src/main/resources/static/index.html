@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiCiudad Cali - Consulta de Servicios Públicos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ ServiCiudad Cali</h1>
+            <p class="subtitle">Sistema Unificado de Consulta de Servicios Públicos</p>
+            <div class="docker-status" id="dockerStatus">
+                🐳 Conectado a Docker (localhost:8080)
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label for="clienteId">
+                    📋 Número de Identificación
+                </label>
+                <input 
+                    type="text" 
+                    id="clienteId" 
+                    placeholder="Ingrese 10 dígitos (Ej: 0001234567)" 
+                    maxlength="10"
+                    pattern="\d{10}"
+                    required
+                >
+                <div class="input-hint">
+                    ℹ️ Debe tener exactamente 10 dígitos numéricos
+                </div>
+            </div>
+
+            <button class="btn" id="consultarBtn" onclick="consultarDeuda()">
+                🔍 Consultar Deuda Consolidada
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Consultando información en el servidor Docker...</p>
+        </div>
+
+        <div class="error" id="error">
+            <div class="error-title">⚠️ Error en la Consulta</div>
+            <div id="errorMessage"></div>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-header">
+                <h2>📊 Resumen de Deuda</h2>
+                <p class="fecha">Fecha de consulta: <span id="fechaConsulta"></span></p>
+            </div>
+
+            <div class="result-body">
+                <div class="result-item">
+                    <div class="result-label">👤 Cliente</div>
+                    <div class="result-value" id="nombreCliente"></div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">🆔 Número de Identificación</div>
+                    <div class="result-value" id="clienteIdDisplay"></div>
+                </div>
+
+                <h3 class="section-title">📈 Estadísticas Consolidadas</h3>
+                <div class="estadisticas" id="estadisticas"></div>
+
+                <div id="alertas" class="alertas"></div>
+
+                <h3 class="section-title">💧 Facturas de Acueducto</h3>
+                <div id="facturasAcueducto" class="facturas-section"></div>
+
+                <h3 class="section-title">⚡ Consumos de Energía</h3>
+                <div id="consumosEnergia" class="energia-section"></div>
+
+                <div class="total-section">
+                    <div class="total-label">💰 TOTAL A PAGAR</div>
+                    <div class="total-value" id="totalAPagar"></div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nuevaConsulta()">
+                    🔄 Nueva Consulta
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                🎓 Proyecto Académico - Universidad Autónoma de Occidente<br>
+                📚 Ingeniería de Software 2 - Octubre 2025<br>
+                💻 <a href="https://github.com/LeonarDPeace/Ingenieria-Software-2" target="_blank">Ver Código en GitHub</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

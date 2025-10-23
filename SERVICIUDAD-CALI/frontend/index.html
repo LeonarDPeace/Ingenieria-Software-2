@@ -3,18 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>ServiCiudad Cali - Consulta de Servicios Públicos</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/styles.css?v=2.0">
+    <style>
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+        .logout-btn:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        .header {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
+    <script src="js/auth.js"></script>
+    <script>
+        // Verificar autenticación antes de cargar la página
+        verificarSesion();
+    </script>
     <div class="container">
         <div class="header">
+            <button class="logout-btn" onclick="cerrarSesion()">
+                🔓 Cerrar Sesión
+            </button>
             <h1>🏛️ ServiCiudad Cali</h1>
             <p class="subtitle">Sistema Unificado de Consulta de Servicios Públicos</p>
             <div class="docker-status" id="dockerStatus">
                 🐳 Conectado a Docker (localhost:8080)
+            </div>
+        </div>
+
+        <!-- Tabla de Clientes de Prueba -->
+        <div class="test-clients-section">
+            <h3 class="test-clients-title">🧪 Clientes de Prueba Disponibles</h3>
+            <p class="test-clients-subtitle">Click en cualquier ID para copiarlo y probarlo</p>
+            <div class="test-clients-table-container">
+                <table class="test-clients-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente ID</th>
+                            <th>Nombre</th>
+                            <th>Consumo Agua</th>
+                            <th>Consumo Energía</th>
+                            <th>Deuda Aprox.</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="test-client-row" onclick="copyClientId('1001234567')">
+                            <td class="client-id"><strong>1001234567</strong> 📋</td>
+                            <td>Juan Pérez García</td>
+                            <td>15 m³</td>
+                            <td>150 kWh</td>
+                            <td>$255,000</td>
+                            <td><span class="badge badge-success">✅ Al día</span></td>
+                        </tr>
+                        <tr class="test-client-row" onclick="copyClientId('1002345678')">
+                            <td class="client-id"><strong>1002345678</strong> 📋</td>
+                            <td>María López Castro</td>
+                            <td>22 m³</td>
+                            <td>125 kWh</td>
+                            <td>$245,001</td>
+                            <td><span class="badge badge-success">✅ Pagada</span></td>
+                        </tr>
+                        <tr class="test-client-row" onclick="copyClientId('1004567890')">
+                            <td class="client-id"><strong>1004567890</strong> 📋</td>
+                            <td>Carlos Rodríguez M.</td>
+                            <td>30 m³</td>
+                            <td>200 kWh</td>
+                            <td>$390,000</td>
+                            <td><span class="badge badge-danger">❌ Mora</span></td>
+                        </tr>
+                        <tr class="test-client-row" onclick="copyClientId('1006789012')">
+                            <td class="client-id"><strong>1006789012</strong> 📋</td>
+                            <td>Ana Martínez Silva</td>
+                            <td>25 m³</td>
+                            <td>165 kWh</td>
+                            <td>$312,502</td>
+                            <td><span class="badge badge-warning">⚠️ Por vencer</span></td>
+                        </tr>
+                        <tr class="test-client-row" onclick="copyClientId('1000123456')">
+                            <td class="client-id"><strong>1000123456</strong> 📋</td>
+                            <td>Roberto Gómez Díaz</td>
+                            <td>35 m³</td>
+                            <td>143 kWh</td>
+                            <td>$340,801</td>
+                            <td><span class="badge badge-danger">❌ Mora crítica</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="copy-notification" id="copyNotification">
+                ✅ ID copiado al portapapeles
             </div>
         </div>
 
@@ -26,7 +134,7 @@
                 <input 
                     type="text" 
                     id="clienteId" 
-                    placeholder="Ingrese 10 dígitos (Ej: 0001234567)" 
+                    placeholder="Ingrese 10 dígitos (Ej: 1001234567)" 
                     maxlength="10"
                     pattern="\d{10}"
                     required
@@ -99,6 +207,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="js/app.js?v=2.0"></script>
 </body>
 </html>

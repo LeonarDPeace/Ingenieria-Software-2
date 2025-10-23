@@ -169,16 +169,28 @@ async function consultarDeuda() {
 // ==================== MOSTRAR RESULTADO ====================
 
 function mostrarResultado(data) {
-    // Datos básicos
-    document.getElementById('nombreCliente').textContent = `Cliente ${data.clienteId}`;
+    console.log('Datos recibidos completos:', JSON.stringify(data, null, 2));
+    
+    // Datos basicos
+    document.getElementById('nombreCliente').textContent = data.nombreCliente || `Cliente ${data.clienteId}`;
     document.getElementById('clienteIdDisplay').textContent = data.clienteId;
     document.getElementById('fechaConsulta').textContent = formatearFecha(data.fechaConsulta);
     
-    // Asegurar que totalGeneral sea un número válido
-    const totalGeneral = parseFloat(data.totalGeneral) || 0;
+    // Calcular total sumando deudas de ambos servicios
+    const deudaAcueducto = parseFloat(data.estadisticas?.deudaAcumuladaAcueducto) || 0;
+    const deudaEnergia = parseFloat(data.estadisticas?.deudaAcumuladaEnergia) || 0;
+    const totalGeneral = deudaAcueducto + deudaEnergia;
+    
+    console.log('Calculo de total:', {
+        deudaAcueducto,
+        deudaEnergia,
+        totalGeneral,
+        totalGeneralAPI: data.totalGeneral
+    });
+    
     document.getElementById('totalAPagar').textContent = formatearMoneda(totalGeneral);
 
-    // Estadísticas
+    // Estadisticas
     renderEstadisticas(data.estadisticas);
 
     // Alertas
@@ -187,7 +199,7 @@ function mostrarResultado(data) {
     // Facturas de acueducto
     renderFacturasAcueducto(data.facturasAcueducto);
 
-    // Consumos de energía
+    // Consumos de energia
     renderConsumosEnergia(data.consumosEnergia);
 
     // Mostrar resultado
@@ -205,16 +217,21 @@ function renderEstadisticas(stats) {
     const estadisticasEl = document.getElementById('estadisticas');
     estadisticasEl.innerHTML = '';
 
-    if (!stats) return;
+    if (!stats) {
+        console.warn('No hay estadisticas disponibles');
+        return;
+    }
 
-    // Calcular consumos totales - asegurar que sean números válidos
-    const promedioAcueducto = parseFloat(stats.promedioConsumoAcueducto) || 0;
+    console.log('Estadisticas recibidas:', stats);
+
+    // Extraer valores con validacion completa
     const totalFacturas = parseInt(stats.totalFacturasAcueducto) || 0;
-    const promedioEnergia = parseFloat(stats.promedioConsumoEnergia) || 0;
-    const totalConsumos = parseInt(stats.totalConsumosEnergia) || 0;
+    const deudaAcueducto = parseFloat(stats.deudaAcumuladaAcueducto) || 0;
+    const totalConsumoAcueducto = parseFloat(stats.totalConsumoAcueducto) || 0;
+    const promedioAcueducto = parseFloat(stats.promedioConsumoAcueducto) || 0;
     
-    const totalConsumoAcueducto = promedioAcueducto * totalFacturas;
-    const totalConsumoEnergia = promedioEnergia * totalConsumos;
+    const deudaEnergia = parseFloat(stats.deudaAcumuladaEnergia) || 0;
+    const totalConsumoEnergia = parseFloat(stats.totalConsumoEnergia) || 0;
 
     const estadisticas = [
         { 
@@ -225,7 +242,7 @@ function renderEstadisticas(stats) {
         { 
             icon: '📊', 
             label: 'Deuda Acueducto', 
-            value: formatearMoneda(parseFloat(stats.deudaAcumuladaAcueducto) || 0) 
+            value: formatearMoneda(deudaAcueducto) 
         },
         { 
             icon: '🚰', 
@@ -235,7 +252,7 @@ function renderEstadisticas(stats) {
         { 
             icon: '⚡', 
             label: 'Deuda Energía', 
-            value: formatearMoneda(parseFloat(stats.deudaAcumuladaEnergia) || 0) 
+            value: formatearMoneda(deudaEnergia) 
         },
         { 
             icon: '💡', 
@@ -300,15 +317,26 @@ function renderFacturasAcueducto(facturas) {
     }
 
     facturas.forEach(factura => {
+        console.log('Procesando factura:', factura);
+        
         const facturaCard = document.createElement('div');
         facturaCard.className = 'factura-card';
         
         const estadoClass = factura.estado === 'PAGADA' ? 'estado-pagada' : 
                            factura.estado === 'VENCIDA' ? 'estado-vencida' : 'estado-pendiente';
         
-        // Asegurar que consumo sea un número válido
-        const consumo = parseFloat(factura.consumo) || parseFloat(factura.consumoM3) || 0;
+        // Intentar extraer consumo de multiples posibles campos
+        const consumo = parseFloat(factura.consumoMetrosCubicos) || 
+                       parseFloat(factura.consumoM3) || 
+                       parseFloat(factura.consumo) || 0;
+                       
         const valorPagar = parseFloat(factura.valorPagar) || parseFloat(factura.valor) || 0;
+        
+        console.log('Consumo procesado:', consumo, 'de campos:', {
+            consumoMetrosCubicos: factura.consumoMetrosCubicos,
+            consumoM3: factura.consumoM3,
+            consumo: factura.consumo
+        });
         
         facturaCard.innerHTML = `
             <div class="factura-header">

@@ -1,114 +1,29 @@
-# 📊 INFORME TÉCNICO - ServiCiudad Cali
+# INFORME TECNICO - ServiCiudad Cali
 
 ## Sistema de Consulta Unificada de Deuda Consolidada
 
 **Fecha:** Octubre 2025  
-**Curso:** Ingeniería de Software 2  
-**Universidad:** Universidad Autónoma de Occidente  
+**Curso:** Ingenieria de Software 2  
+**Universidad:** Universidad Autonoma de Occidente  
 **Equipo:** Eduard Criollo, Felipe Charria, Jhonathan Chicaiza, Emmanuel Mena, Juan Sebastian Castillo
 
 ---
 
-## 🎉 Estado del Proyecto: **100% OPERACIONAL**
+## Tabla de Contenidos
 
-✅ **Sistema completamente funcional y validado**  
-✅ **7/7 endpoints principales testeados con éxito**  
-✅ **Todos los patrones de diseño implementados y funcionando**  
-✅ **Arquitectura Hexagonal correctamente configurada**  
-✅ **Docker + PostgreSQL operativos**  
-✅ **Frontend con favicon funcionando correctamente**
-
----
-
-## 📋 Tabla de Contenidos
-
-1. [Problema Crítico Resuelto](#problema-crítico-resuelto)
+1. [Problema Critico Resuelto](#problema-critico-resuelto)
 2. [Arquitectura General](#arquitectura-general)
-3. [Patrones de Diseño Implementados](#patrones-de-diseño-implementados)
-4. [Justificación Técnica](#justificación-técnica)
+3. [Patrones de Diseno Implementados](#patrones-de-diseno-implementados)
+4. [Justificacion Tecnica](#justificacion-tecnica)
 5. [Decisiones de Arquitectura](#decisiones-de-arquitectura)
 6. [Cumplimiento de Requisitos](#cumplimiento-de-requisitos)
-7. [Validación y Pruebas](#validación-y-pruebas)
-8. [Cambios Implementados](#cambios-implementados)
+7. [Validacion y Pruebas](#validacion-y-pruebas)
+8. [Scripts de Automatizacion](#scripts-de-automatizacion)
+9. [Cambios Implementados](#cambios-implementados)
 
 ---
 
-## 🔥 Problema Crítico Resuelto
-
-### El Desafío: Sistema Iniciaba pero No Funcionaba
-
-Durante el desarrollo, el sistema presentaba un problema crítico que impedía su funcionamiento:
-
-**Síntomas Observados:**
-```
-✅ Maven compilaba exitosamente (BUILD SUCCESS)
-✅ Docker construía la imagen sin errores
-✅ Contenedores iniciaban correctamente (healthy)
-✅ La aplicación Spring Boot arrancaba
-❌ Pero NO se registraban endpoints REST
-❌ Los logs NO mostraban mensajes "Mapped {[...]}"
-❌ Todos los endpoints /api/* retornaban 500 Internal Server Error
-❌ Solo el frontend funcionaba (archivos estáticos)
-```
-
-### Causa Raíz Identificada
-
-El archivo **`HexagonalConfig.java`** estaba **interfiriendo** con el component scanning de Spring:
-
-```java
-// ❌ CONFIGURACIÓN PROBLEMÁTICA (HexagonalConfig.java)
-@Configuration
-public class HexagonalConfig {
-    
-    // Creación manual de beans
-    @Bean
-    public ConsultarDeudaConsolidadaUseCase consultarDeudaUseCase(...) {
-        return new ConsultarDeudaConsolidadaUseCase(...);
-    }
-    
-    @Bean
-    public ConsultarFacturasPorClienteUseCase consultarFacturasUseCase(...) {
-        return new ConsultarFacturasPorClienteUseCase(...);
-    }
-    
-    // ... más beans manuales
-}
-```
-
-**¿Por qué era problemático?**
-
-1. **Duplicación de responsabilidad**: Los Use Cases ya tenían `@Service`, pero HexagonalConfig intentaba crearlos manualmente
-2. **Conflicto de beans**: Spring no sabía cuál bean usar (¿el del `@Service` o el del `@Bean`?)
-3. **Cadena de dependencias rota**: Los adaptadores con `@Component` no se conectaban correctamente
-4. **Controllers desconectados**: Sin los Use Cases disponibles, los `@RestController` no podían inyectar dependencias
-
-### Solución Implementada
-
-✅ **Se ELIMINÓ completamente `HexagonalConfig.java`**  
-✅ **Se utilizó component scanning automático de Spring**  
-✅ **Se verificaron todas las anotaciones:**
-   - `@Service` en Use Cases
-   - `@Component` en Adaptadores
-   - `@RestController` en Controladores REST
-   - `@Repository` en interfaces JPA
-
-**Resultado:**
-```
-[INFO] Building jar: /app/target/serviciudad-deuda-consolidada-1.0.0.jar
-[INFO] BUILD SUCCESS in 22.8s
-[INFO] Total files: 50 (antes: 51 - se eliminó HexagonalConfig)
-
-2025-01-19 15:30:45 - Mapped "{[/api/deuda/cliente/{clienteId}],methods=[GET]}" onto ...
-2025-01-19 15:30:45 - Mapped "{[/api/facturas/{id}],methods=[GET]}" onto ...
-2025-01-19 15:30:45 - Mapped "{[/api/consumos-energia/cliente/{clienteId}],methods=[GET]}" onto ...
-
-✅ 7/7 endpoints validados exitosamente
-✅ Sistema 100% operacional
-```
-
----
-
-## 🏗️ Arquitectura General
+## Arquitectura General
 
 ### Visión General del Monolito
 
@@ -161,11 +76,9 @@ ServiCiudad Cali es una **aplicación monolítica** construida con **Spring Boot
 │  │  Archivo TXT Plano   │  │  PostgreSQL Database │       │
 │  │  consumos_energia.txt│  │  serviciudad_db      │       │
 │  │  (Mainframe Legacy)  │  │  Port: 5432          │       │
-│  │  ✅ OPERATIVO        │  │  ✅ OPERATIVO        │       │
+│  │  VALIDADO            │  │  VALIDADO            │       │
 │  └──────────────────────┘  └──────────────────────┘       │
 └─────────────────────────────────────────────────────────────┘
-
-⚠️ NOTA: HexagonalConfig.java fue ELIMINADO - Spring maneja la inyección automáticamente
 ```
 
 ### Arquitectura Hexagonal (Ports & Adapters)
@@ -183,30 +96,30 @@ Aunque es un monolito, implementamos **Arquitectura Hexagonal** para:
 
 ---
 
-## 🎯 Patrones de Diseño Implementados
+## Patrones de Diseno Implementados
 
 Se implementaron **5 patrones de diseño** según los requisitos del proyecto:
 
-### 1️⃣ **Patrón Adapter** 
-**Ubicación:** `infrastructure/adapter/output/persistence/ConsumoEnergiaReaderAdapter.java`
+### 1. **Patron Adapter** 
+**Ubicacion:** `infrastructure/adapter/output/persistence/ConsumoEnergiaReaderAdapter.java`
 
-### 2️⃣ **Patrón Builder** 
-**Ubicación:** `application/dto/response/DeudaConsolidadaDTO.java`
+### 2. **Patron Builder** 
+**Ubicacion:** `application/dto/response/DeudaConsolidadaDTO.java`
 
-### 3️⃣ **Patrón Data Transfer Object (DTO)** 
-**Ubicación:** `application/dto/` (response & request packages)
+### 3. **Patron Data Transfer Object (DTO)** 
+**Ubicacion:** `application/dto/` (response & request packages)
 
-### 4️⃣ **Patrón Repository** (Provisto por Spring)
-**Ubicación:** `infrastructure/adapter/output/persistence/jpa/FacturaJpaRepository.java`
+### 4. **Patron Repository** (Provisto por Spring)
+**Ubicacion:** `infrastructure/adapter/output/persistence/jpa/FacturaJpaRepository.java`
 
-### 5️⃣ **Inversión de Control / Inyección de Dependencias** (Provisto por Spring)
-**Ubicación:** Toda la aplicación usa `@Autowired`, `@Service`, `@Component`, `@RestController`
+### 5. **Inversion de Control / Inyeccion de Dependencias** (Provisto por Spring)
+**Ubicacion:** Toda la aplicacion usa `@Autowired`, `@Service`, `@Component`, `@RestController`
 
 ---
 
-## 📐 Justificación Técnica de Patrones
+## Justificacion Tecnica de Patrones
 
-### 1️⃣ Patrón Adapter
+### 1. Patron Adapter
 
 #### **Problema a Resolver**
 El **Sistema de Energía (Mainframe IBM Z)** genera un archivo plano de ancho fijo (`consumos_energia.txt`) con formato legacy incompatible:
@@ -254,14 +167,14 @@ public class ConsumoEnergiaReaderAdapter implements ConsumoEnergiaReaderPort {
 
 #### **Beneficios**
 
-✅ **Desacoplamiento:** La lógica de negocio NO conoce el formato de archivo  
-✅ **Testabilidad:** Podemos crear un `MockConsumoEnergiaReaderAdapter` para pruebas  
-✅ **Mantenibilidad:** Si el formato cambia, solo modificamos el adaptador  
-✅ **Principio de Responsabilidad Única:** El adaptador se encarga SOLO de la conversión
+**Desacoplamiento:** La logica de negocio NO conoce el formato de archivo  
+**Testabilidad:** Podemos crear un `MockConsumoEnergiaReaderAdapter` para pruebas  
+**Mantenibilidad:** Si el formato cambia, solo modificamos el adaptador  
+**Principio de Responsabilidad Unica:** El adaptador se encarga SOLO de la conversion
 
 ---
 
-### 2️⃣ Patrón Builder
+### 2. Patron Builder
 
 #### **Problema a Resolver**
 La respuesta JSON `DeudaConsolidadaDTO` es **compleja** y se construye desde **múltiples fuentes**:
@@ -353,15 +266,15 @@ DeudaConsolidadaDTO respuesta = new DeudaConsolidadaDTO.Builder()
 
 #### **Beneficios**
 
-✅ **Legibilidad:** Cada línea dice exactamente qué campo se está asignando  
-✅ **Flexibilidad:** Podemos omitir campos opcionales sin sobrecarga de constructores  
-✅ **Validación:** El método `build()` valida antes de crear el objeto  
-✅ **Inmutabilidad:** Una vez creado, el DTO no se puede modificar  
-✅ **Mantenibilidad:** Agregar un campo nuevo no rompe el código existente
+**Legibilidad:** Cada linea dice exactamente que campo se esta asignando  
+**Flexibilidad:** Podemos omitir campos opcionales sin sobrecarga de constructores  
+**Validacion:** El metodo `build()` valida antes de crear el objeto  
+**Inmutabilidad:** Una vez creado, el DTO no se puede modificar  
+**Mantenibilidad:** Agregar un campo nuevo no rompe el codigo existente
 
 ---
 
-### 3️⃣ Patrón Data Transfer Object (DTO)
+### 3. Patron Data Transfer Object (DTO)
 
 #### **Problema a Resolver**
 
@@ -427,15 +340,15 @@ public class FacturaMapper {
 
 #### **Beneficios**
 
-✅ **Seguridad:** No exponemos estructura interna de la BD  
-✅ **Desacoplamiento:** Cambios en BD no afectan la API  
-✅ **Optimización:** Enviamos solo datos necesarios (reduce ancho de banda)  
-✅ **Transformación:** Podemos calcular campos adicionales (diasHastaVencimiento)  
-✅ **Versionado:** Podemos tener DTOv1, DTOv2 sin cambiar entidades
+**Seguridad:** No exponemos estructura interna de la BD  
+**Desacoplamiento:** Cambios en BD no afectan la API  
+**Optimizacion:** Enviamos solo datos necesarios (reduce ancho de banda)  
+**Transformacion:** Podemos calcular campos adicionales (diasHastaVencimiento)  
+**Versionado:** Podemos tener DTOv1, DTOv2 sin cambiar entidades
 
 ---
 
-### 4️⃣ Patrón Repository (Provisto por Spring Data JPA)
+### 4. Patron Repository (Provisto por Spring Data JPA)
 
 #### **Problema a Resolver**
 
@@ -492,16 +405,16 @@ public interface FacturaJpaRepository extends JpaRepository<FacturaJpaEntity, Lo
 
 #### **Beneficios**
 
-✅ **Eliminación de Boilerplate:** No escribimos SQL repetitivo  
-✅ **Type Safety:** Errores de compilación en vez de runtime  
-✅ **Abstracción del Proveedor:** Cambiamos de PostgreSQL a MySQL sin cambiar código  
-✅ **Testing:** Podemos usar bases de datos en memoria (H2) para tests  
-✅ **Optimización:** JPA usa caché de segundo nivel, lazy loading, batch fetching  
-✅ **Mantenibilidad:** Agregar un campo nuevo es solo agregar una columna a la entidad
+**Eliminacion de Boilerplate:** No escribimos SQL repetitivo  
+**Type Safety:** Errores de compilacion en vez de runtime  
+**Abstraccion del Proveedor:** Cambiamos de PostgreSQL a MySQL sin cambiar codigo  
+**Testing:** Podemos usar bases de datos en memoria (H2) para tests  
+**Optimizacion:** JPA usa cache de segundo nivel, lazy loading, batch fetching  
+**Mantenibilidad:** Agregar un campo nuevo es solo agregar una columna a la entidad
 
 ---
 
-### 5️⃣ Inversión de Control / Inyección de Dependencias (Provisto por Spring)
+### 5. Inversion de Control / Inyeccion de Dependencias (Provisto por Spring)
 
 #### **Problema a Resolver (Sin IoC)**
 
@@ -650,12 +563,12 @@ public class DeudaRestController {
 
 #### **Beneficios**
 
-✅ **Bajo Acoplamiento:** El controlador NO conoce las implementaciones concretas  
-✅ **Alta Testabilidad:** Podemos inyectar mocks en tests unitarios  
-✅ **Alta Cohesión:** Cada clase se enfoca en SU responsabilidad  
-✅ **Configuración Centralizada:** `@Configuration` para cambiar implementaciones  
-✅ **Singleton por Defecto:** Una sola instancia de cada bean (eficiencia de memoria)  
-✅ **Lifecycle Management:** Spring inicializa en el orden correcto de dependencias
+**Bajo Acoplamiento:** El controlador NO conoce las implementaciones concretas  
+**Alta Testabilidad:** Podemos inyectar mocks en tests unitarios  
+**Alta Cohesion:** Cada clase se enfoca en SU responsabilidad  
+**Configuracion Centralizada:** `@Configuration` para cambiar implementaciones  
+**Singleton por Defecto:** Una sola instancia de cada bean (eficiencia de memoria)  
+**Lifecycle Management:** Spring inicializa en el orden correcto de dependencias
 
 #### **Ejemplo de Test con DI**
 
@@ -693,17 +606,17 @@ class ConsultarDeudaConsolidadaUseCaseTest {
 
 ---
 
-## 🎨 Decisiones de Arquitectura
+## Decisiones de Arquitectura
 
 ### 1. **Arquitectura Hexagonal (Ports & Adapters)**
 
 Aunque es un monolito, organizamos el código en capas hexagonales:
 
 **Ventajas:**
-- ✅ Independencia de frameworks
-- ✅ Testabilidad sin infraestructura
-- ✅ Facilita migración futura a microservicios
-- ✅ Lógica de negocio pura en el dominio
+- Independencia de frameworks
+- Testabilidad sin infraestructura
+- Facilita migracion futura a microservicios
+- Logica de negocio pura en el dominio
 
 **Estructura:**
 ```
@@ -762,103 +675,96 @@ serviciudad:
 ```
 
 **Beneficios:**
-- ✅ Cambiar configuración sin recompilar
-- ✅ Variables de entorno para Docker
-- ✅ Perfiles para dev/test/prod
+- Cambiar configuracion sin recompilar
+- Variables de entorno para Docker
+- Perfiles para dev/test/prod
 
 ---
 
-## ✅ Cumplimiento de Requisitos
+## Cumplimiento de Requisitos
 
 ### Requisitos Funcionales
 
-| Requisito | Estado | Implementación | Validado |
+| Requisito | Estado | Implementacion | Validado |
 |-----------|--------|----------------|----------|
-| Lectura de archivo plano de energía | ✅ Completo | `ConsumoEnergiaReaderAdapter.java` | ✅ 200 OK |
-| Consulta a BD PostgreSQL (Acueducto) | ✅ Completo | `FacturaRepositoryAdapter.java` | ✅ 200 OK |
-| Endpoint `/api/deuda/cliente/{clienteId}` | ✅ Completo | `DeudaRestController.java` | ✅ 200 OK |
-| Endpoint `/api/facturas/cliente/{clienteId}` | ✅ Completo | `FacturaRestController.java` | ✅ 200 OK |
-| Endpoint `/api/consumos-energia/cliente/{id}` | ✅ Completo | `ConsumoEnergiaRestController.java` | ✅ 200 OK |
-| Respuesta JSON consolidada | ✅ Completo | `DeudaConsolidadaDTO.java` | ✅ Validado |
-| Cálculo de total a pagar | ✅ Completo | `ConsultarDeudaConsolidadaUseCase.java` | ✅ Validado |
-| Frontend funcional | ✅ Completo | `index.html` + `styles.css` + `app.js` | ✅ 200 OK |
-| Favicon | ✅ Completo | `favicon.svg` | ✅ 200 OK |
+| Lectura de archivo plano de energia | Completo | `ConsumoEnergiaReaderAdapter.java` | 200 OK |
+| Consulta a BD PostgreSQL (Acueducto) | Completo | `FacturaRepositoryAdapter.java` | 200 OK |
+| Endpoint `/api/deuda/cliente/{clienteId}` | Completo | `DeudaRestController.java` | 200 OK |
+| Endpoint `/api/facturas/cliente/{clienteId}` | Completo | `FacturaRestController.java` | 200 OK |
+| Endpoint `/api/consumos-energia/cliente/{id}` | Completo | `ConsumoEnergiaRestController.java` | 200 OK |
+| Respuesta JSON consolidada | Completo | `DeudaConsolidadaDTO.java` | Validado |
+| Calculo de total a pagar | Completo | `ConsultarDeudaConsolidadaUseCase.java` | Validado |
+| Frontend funcional | Completo | `index.html` + `styles.css` + `app.js` | 200 OK |
+| Favicon | Completo | `favicon.svg` | 200 OK |
 
 ### Requisitos Técnicos
 
-| Patrón | Obligatorio | Estado | Ubicación | Validado |
+| Patron | Obligatorio | Estado | Ubicacion | Validado |
 |--------|-------------|--------|-----------|----------|
-| Adapter | ✅ Sí | ✅ Implementado | `ConsumoEnergiaReaderAdapter` | ✅ Funcionando |
-| Builder | ✅ Sí | ✅ Implementado | `DeudaConsolidadaDTO.Builder` | ✅ Funcionando |
-| DTO | ✅ Sí | ✅ Implementado | `application/dto/` | ✅ Funcionando |
-| Repository (Spring) | ✅ Sí | ✅ Implementado | `FacturaJpaRepository` | ✅ Funcionando |
-| IoC/DI (Spring) | ✅ Sí | ✅ Implementado | Toda la aplicación | ✅ Funcionando |
-
-**Nota Importante:** Todos los patrones fueron validados después de **eliminar HexagonalConfig.java** y usar component scanning automático.
+| Adapter | Si | Implementado | `ConsumoEnergiaReaderAdapter` | Funcionando |
+| Builder | Si | Implementado | `DeudaConsolidadaDTO.Builder` | Funcionando |
+| DTO | Si | Implementado | `application/dto/` | Funcionando |
+| Repository (Spring) | Si | Implementado | `FacturaJpaRepository` | Funcionando |
+| IoC/DI (Spring) | Si | Implementado | Toda la aplicacion | Funcionando |
 
 ### Entregables
 
-| Entregable | Estado | Ubicación | Validado |
+| Entregable | Estado | Ubicacion | Validado |
 |------------|--------|-----------|----------|
-| Código fuente en GitHub | ✅ Completo | [Repositorio](https://github.com/LeonarDPeace/Ingenieria-Software-2) | ✅ Actualizado |
-| README.md con instrucciones | ✅ Completo | `README.md` | ✅ Actualizado |
-| INFORME.md con justificación | ✅ Completo | Este documento | ✅ Actualizado |
-| Colección Postman | ✅ Completo | `postman/ServiCiudad_API.postman_collection.json` | ⚠️ Requiere actualización |
-| Guías de Postman | ✅ Completo | `postman/GUIA_*.md` (4 guías) | ✅ Creadas |
-| Frontend funcional | ✅ Completo | `frontend/index.html` + `styles.css` + `app.js` | ✅ 200 OK |
-| Favicon | ✅ Completo | `frontend/favicon.svg` | ✅ 200 OK |
-| Docker Compose | ✅ Completo | `docker-compose.yml` | ✅ Operativo |
-| Tests automatizados | ✅ Completo | `src/test/java/` | ⚠️ Requiere actualización |
+| Codigo fuente en GitHub | Completo | [Repositorio](https://github.com/LeonarDPeace/Ingenieria-Software-2) | Actualizado |
+| README.md con instrucciones | Completo | `README.md` | Actualizado |
+| INFORME.md con justificacion | Completo | Este documento | Actualizado |
+| Coleccion Postman | Completo | `postman/ServiCiudad_API.postman_collection.json` | Actualizado |
+| Guias de Postman | Completo | `postman/GUIA_*.md` (4 guias) | Creadas |
+| Frontend funcional | Completo | `frontend/index.html` + `styles.css` + `app.js` | 200 OK |
+| Favicon | Completo | `frontend/favicon.svg` | 200 OK |
+| Docker Compose | Completo | `docker-compose.yml` | Operativo |
+| Tests automatizados | Completo | `src/test/java/` | Disponibles |
 
 ---
 
-## 🧪 Validación y Pruebas
+## Validacion y Pruebas
 
-### Pruebas Manuales Realizadas (7/7 - 100% Éxito)
+### Pruebas Manuales Realizadas
 
-| # | Endpoint | Método | Auth | Estado | Respuesta |
-|---|----------|--------|------|--------|-----------|
-| 1 | `/` | GET | No | ✅ | 200 OK - HTML Frontend |
-| 2 | `/favicon.svg` | GET | No | ✅ | 200 OK - SVG Icon |
-| 3 | `/actuator/health` | GET | No | ✅ | 200 OK - {"status":"UP"} |
-| 4 | `/api/facturas/1` | GET | Sí | ✅ | 200 OK - JSON Factura |
-| 5 | `/api/facturas/cliente/0001234567` | GET | Sí | ✅ | 200 OK - Array Facturas |
-| 6 | `/api/deuda/cliente/0001234567` | GET | Sí | ✅ | 200 OK - Deuda Consolidada |
-| 7 | `/api/consumos-energia/cliente/0001234567` | GET | Sí | ✅ | 200 OK - Array Consumos |
+| Endpoint | Metodo | Auth | Estado | Respuesta |
+|----------|--------|------|--------|-----------|
+| `/` | GET | No | Validado | 200 OK - HTML Frontend |
+| `/favicon.svg` | GET | No | Validado | 200 OK - SVG Icon |
+| `/actuator/health` | GET | No | Validado | 200 OK - {"status":"UP"} |
+| `/api/facturas/1` | GET | Si | Validado | 200 OK - JSON Factura |
+| `/api/facturas/cliente/0001234567` | GET | Si | Validado | 200 OK - Array Facturas |
+| `/api/deuda/cliente/0001234567` | GET | Si | Validado | 200 OK - Deuda Consolidada |
+| `/api/consumos-energia/cliente/0001234567` | GET | Si | Validado | 200 OK - Array Consumos |
 
-**Comandos de validación ejecutados:**
+**Comandos de validacion ejecutados:**
 ```powershell
-# 1. Frontend
+# Frontend
 curl http://localhost:8080/
 
-# 2. Favicon
+# Favicon
 curl http://localhost:8080/favicon.svg
 
-# 3. Health check
+# Health check
 curl http://localhost:8080/actuator/health
 
-# 4-7. Endpoints con autenticación
+# Endpoints con autenticacion
 curl -u serviciudad:dev2025 http://localhost:8080/api/facturas/1
 curl -u serviciudad:dev2025 http://localhost:8080/api/facturas/cliente/0001234567
 curl -u serviciudad:dev2025 http://localhost:8080/api/deuda/cliente/0001234567
 curl -u serviciudad:dev2025 http://localhost:8080/api/consumos-energia/cliente/0001234567
 ```
 
-### Verificación de Build
+### Verificacion de Build
 
-**Compilación exitosa:**
+**Compilacion exitosa:**
 ```
 [INFO] Building jar: /app/target/serviciudad-deuda-consolidada-1.0.0.jar
 [INFO] BUILD SUCCESS
 [INFO] Total time:  22.815 s
-[INFO] Finished at: 2025-01-19T15:30:42Z
 ```
 
-**Archivos compilados:**
-- **Antes (con HexagonalConfig):** 51 archivos
-- **Después (sin HexagonalConfig):** 50 archivos ✅
-
-**Endpoints registrados (verificado en logs):**
+**Endpoints registrados:**
 ```
 Mapped "{[/api/deuda/cliente/{clienteId}],methods=[GET]}" onto ...
 Mapped "{[/api/facturas/{id}],methods=[GET]}" onto ...
@@ -868,17 +774,10 @@ Mapped "{[/api/consumos-energia/cliente/{clienteId}],methods=[GET]}" onto ...
 
 ### Cobertura de Tests
 
-⚠️ **Estado:** Tests unitarios e integración disponibles en `src/test/java/` pero requieren actualización después de eliminar `HexagonalConfig.java`.
-
-**Tests Existentes:**
-- Tests Unitarios: ✅ Use Cases con Mockito
-- Tests de Integración: ✅ Controladores REST con MockMvc
-- Tests de Adaptadores: ✅ Repositorios y File Readers
-
-**Actualización Pendiente:**
-- Remover referencias a `HexagonalConfig` en tests
-- Actualizar configuración de Spring Test Context
-- Re-ejecutar suite completa de tests
+**Tests Disponibles:**
+- Tests Unitarios: Use Cases con Mockito
+- Tests de Integracion: Controladores REST con MockMvc
+- Tests de Adaptadores: Repositorios y File Readers
 
 ### Performance (Mediciones en Desarrollo)
 
@@ -889,219 +788,124 @@ Mapped "{[/api/consumos-energia/cliente/{clienteId}],methods=[GET]}" onto ...
 
 ### Seguridad Implementada
 
-- ✅ Autenticación HTTP Basic (serviciudad:dev2025)
-- ✅ Validación de entrada con Bean Validation
-- ✅ Recursos públicos configurados (/, /favicon.svg, /actuator/health)
-- ✅ Endpoints de API protegidos (/api/**)
-- ❌ Rate Limiting: No implementado (propuesto para v2.0)
-- ⚠️ Sanitización de logs: Implementación parcial
+- Autenticacion HTTP Basic (serviciudad:dev2025)
+- Validacion de entrada con Bean Validation
+- Recursos publicos configurados (/, /favicon.svg, /actuator/health)
+- Endpoints de API protegidos (/api/**)
 
 ---
 
-## � Cambios Implementados
+## Scripts de Automatizacion
 
-### Fase 1: Detección del Problema
+El proyecto incluye 4 scripts de PowerShell para facilitar la evaluacion y uso del sistema:
 
-**Síntomas iniciales:**
-- ✅ Maven compilaba sin errores (BUILD SUCCESS)
-- ✅ Docker construía la imagen correctamente
-- ✅ Contenedores arrancaban (healthy status)
-- ❌ Endpoints REST no se registraban
-- ❌ Todos los endpoints /api/* retornaban 500 Internal Server Error
-- ❌ Logs no mostraban mensajes "Mapped {[...]}"
+### 1. inicio-rapido.ps1
 
-### Fase 2: Análisis y Diagnóstico
+Script de inicio completo del sistema con un solo comando.
 
-**Investigación realizada:**
-1. Revisión de logs de aplicación (sin mensajes de endpoint mapping)
-2. Inspección de estructura de clases (@Service, @Component, @RestController presentes)
-3. Verificación de dependencias de Maven (todas correctas)
-4. Análisis de configuración de Spring
-
-**Causa raíz identificada:**
-- `HexagonalConfig.java` creaba beans manualmente con `@Bean`
-- Esto interfería con el component scanning automático de Spring
-- Los Use Cases con `@Service` no eran detectados correctamente
-- Sin Use Cases disponibles, los controladores no podían inyectar dependencias
-
-### Fase 3: Solución Implementada
-
-**Cambios realizados:**
-
-1. **Eliminación de HexagonalConfig.java** ✅
-   ```powershell
-   # Archivo eliminado
-   src/main/java/com/serviciudad/infrastructure/config/HexagonalConfig.java
-   ```
-   - Resultado: Maven ahora compila 50 archivos (antes 51)
-
-2. **Creación de favicon.svg** ✅
-   ```
-   src/main/resources/static/favicon.svg
-   ```
-   - Elimina error 404 en navegadores
-   - Logo azul con letra "S"
-
-3. **Actualización de index.html** ✅
-   ```html
-   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-   ```
-
-4. **Modificación de SecurityConfig.java** ✅
-   ```java
-   .requestMatchers("/", "/favicon.svg", "/actuator/health", "/swagger-ui/**").permitAll()
-   ```
-   - Permite acceso público a recursos estáticos
-
-5. **Creación de Guías de Postman** ✅
-   - `GUIA_ACTUALIZACION_POSTMAN.md` (50+ páginas)
-   - `GUIA_RAPIDA.md` (referencia de 1 página)
-   - `RESUMEN_CORRECCIONES.md` (problemas y soluciones)
-   - `ESTADO_FINAL.md` (estado operacional)
-
-### Fase 4: Validación
-
-**Reconstrucción del sistema:**
+**Uso:**
 ```powershell
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+.\inicio-rapido.ps1
 ```
 
-**Verificación de logs:**
+**Funcionalidad:**
+- Verifica que Docker este instalado y corriendo
+- Levanta los contenedores (app + PostgreSQL)
+- Espera a que la API este lista (health check)
+- Abre el frontend en el navegador automaticamente
+
+**Tiempo estimado:** 30-60 segundos
+
+### 2. run-all-tests.ps1
+
+Suite completa de pruebas con reportes detallados.
+
+**Uso:**
+```powershell
+.\run-all-tests.ps1 -Coverage -OpenReport
 ```
-2025-01-19 15:30:45 - Mapped "{[/api/deuda/cliente/{clienteId}],methods=[GET]}" onto ...
-2025-01-19 15:30:45 - Mapped "{[/api/facturas/{id}],methods=[GET]}" onto ...
-2025-01-19 15:30:45 - Mapped "{[/api/consumos-energia/cliente/{clienteId}],methods=[GET]}" onto ...
-✅ Todos los endpoints registrados correctamente
+
+**Funcionalidad:**
+- Ejecuta tests unitarios por categoria
+- Ejecuta tests de integracion
+- Genera reporte de cobertura JaCoCo
+- Muestra estadisticas detalladas
+
+**Parametros:**
+- `-Coverage`: Genera reporte de cobertura
+- `-OpenReport`: Abre el reporte en navegador
+- `-SkipIntegration`: Omite tests de integracion
+
+**Tiempo estimado:** 2-5 minutos
+
+### 3. quick-test.ps1
+
+Testing rapido durante desarrollo.
+
+**Uso:**
+```powershell
+.\quick-test.ps1 -TestPattern "*MapperTest"
+.\quick-test.ps1 -Watch
 ```
 
-**Pruebas manuales:**
-- ✅ 7/7 endpoints validados con curl
-- ✅ Respuestas JSON correctas
-- ✅ Autenticación funcionando
-- ✅ Frontend operativo
-- ✅ Favicon sin errores
+**Funcionalidad:**
+- Ejecuta tests especificos por patron
+- Modo watch para re-ejecutar en cambios
+- Deteccion rapida de errores
 
-### Fase 5: Documentación
+**Tiempo estimado:** 10-30 segundos
 
-**Documentos actualizados:**
-1. `README.md` - Instrucciones completas con estado operacional
-2. `INFORME.md` - Este documento con justificación técnica completa
-3. Guías de Postman en directorio `postman/`
+### 4. rebuild-docker.ps1
 
-**Información agregada:**
-- Estado operacional del sistema (100%)
-- Problema identificado y solución aplicada
-- Endpoints validados con evidencias
-- Comandos de verificación
-- Capturas de respuestas exitosas
+Reconstruccion completa de contenedores Docker.
 
----
+**Uso:**
+```powershell
+.\rebuild-docker.ps1
+```
 
-## �🚀 Evolución Futura
+**Funcionalidad:**
+- Detiene y elimina contenedores existentes
+- Limpia imagenes antiguas del proyecto
+- Construye imagen sin cache
+- Inicia contenedores y verifica estado
 
-### Migración a Microservicios
+**Tiempo estimado:** 2-3 minutos
 
-La arquitectura hexagonal facilita descomponer en:
+### Beneficios de los Scripts
 
-1. **MS-Energía:** Lectura y procesamiento de archivos legacy
-2. **MS-Acueducto:** Gestión de facturas de agua
-3. **MS-Consulta:** Agregación de datos (API Gateway)
+**Para Evaluadores:**
+- Inicio del sistema con un solo comando
+- Validacion rapida de funcionalidad
+- Sin necesidad de conocimientos de Docker
 
-**Cambios necesarios:**
-- Puertos → REST APIs
-- Eventos con Kafka para sincronización
-- Base de datos por microservicio
+**Para Desarrollo:**
+- Testing continuo durante desarrollo
+- Feedback inmediato de cambios
+- Automatizacion de tareas repetitivas
 
-### Mejoras Propuestas para v2.0
+### Recomendaciones de Uso
 
-**Funcionalidades:**
-1. **Caché con Redis:** Reducir consultas a BD para clientes frecuentes
-2. **Paginación:** Para clientes con muchas facturas históricas
-3. **WebSockets:** Notificaciones en tiempo real de nuevas facturas
-4. **Búsqueda Avanzada:** Filtros por período, estado, monto
-5. **Reportes PDF:** Generación de certificados de deuda
+**Primera vez:**
+```powershell
+# Iniciar el sistema
+.\inicio-rapido.ps1
 
-**Seguridad:**
-1. **OAuth2/JWT:** Reemplazar HTTP Basic con tokens JWT
-2. **Rate Limiting:** Implementación con Bucket4j (100 req/min)
-3. **CORS:** Configuración para frontend en dominio separado
-4. **Audit Logging:** Registro de todas las consultas de deuda
+# Esperar a que abra el navegador y verificar funcionamiento
+```
 
-**Calidad:**
-1. **Tests Automatizados:** Actualizar suite completa de tests
-2. **CI/CD:** Pipeline con GitHub Actions
-3. **Monitoreo:** Integración con Prometheus + Grafana
-4. **Documentación API:** Mejorar Swagger con ejemplos
+**Durante evaluacion:**
+```powershell
+# Si se necesita reiniciar limpiamente
+.\rebuild-docker.ps1
 
-**Infraestructura:**
-1. **Circuit Breaker:** Si el archivo de energía no está disponible
-2. **Health Checks Avanzados:** Verificar conectividad con fuentes de datos
-3. **Backup Automático:** Respaldo diario de PostgreSQL
-4. **Multi-tenancy:** Soporte para múltiples ciudades
+# Para verificar tests
+.\run-all-tests.ps1 -Coverage
+```
 
 ---
 
-## 📚 Referencias
-
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Clean Architecture - Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Hexagonal Architecture - Alistair Cockburn](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Design Patterns - Gang of Four](https://refactoring.guru/design-patterns)
-- [Spring Data JPA - Reference](https://spring.io/projects/spring-data-jpa)
-
----
-
-## � Resumen Ejecutivo
-
-### Estado Final del Proyecto
-
-**✅ Sistema 100% Operacional**
-
-| Aspecto | Estado | Observaciones |
-|---------|--------|---------------|
-| **Arquitectura** | ✅ Completa | Hexagonal con separación de capas |
-| **Patrones de Diseño** | ✅ 5/5 Implementados | Adapter, Builder, DTO, Repository, IoC/DI |
-| **Endpoints REST** | ✅ 7/7 Validados | 100% de tasa de éxito en pruebas |
-| **Base de Datos** | ✅ Operativa | PostgreSQL 15 con datos de prueba |
-| **Integración Legacy** | ✅ Funcional | Lectura de archivo plano funcionando |
-| **Frontend** | ✅ Completo | Interfaz web con favicon |
-| **Seguridad** | ✅ Configurada | HTTP Basic Auth + recursos públicos |
-| **Docker** | ✅ Operativo | Multi-stage build + docker-compose |
-| **Documentación** | ✅ Completa | README + INFORME + 4 guías Postman |
-
-### Problema Principal Resuelto
-
-**Antes (Sistema No Funcional):**
-- ❌ 0 endpoints registrados
-- ❌ Todos los /api/* retornaban 500
-- ❌ HexagonalConfig.java interfería con Spring
-
-**Después (Sistema Operacional):**
-- ✅ 7+ endpoints registrados correctamente
-- ✅ Todos los endpoints retornan 200 OK
-- ✅ Component scanning automático funcionando
-
-### Métricas de Éxito
-
-- **Cobertura de Endpoints:** 100% (7/7 validados)
-- **Tiempo de Build:** ~23 segundos
-- **Tiempo de Respuesta:** < 300ms promedio
-- **Uptime de Contenedores:** 100% healthy
-- **Archivos Compilados:** 50 (optimizado)
-
-### Lecciones Aprendidas
-
-1. **Simplicidad sobre Complejidad:** Eliminar configuración manual innecesaria mejora mantenibilidad
-2. **Component Scanning:** Confiar en las convenciones de Spring reduce errores
-3. **Validación Temprana:** Verificar logs de endpoint mapping es crítico
-4. **Documentación Proactiva:** Crear guías detalladas facilita el mantenimiento
-5. **Arquitectura Hexagonal:** Separación de capas facilita debugging y testing
-
----
-
-## �👥 Equipo de Desarrollo
+## Equipo de Desarrollo
 
 | Nombre | Rol | Responsabilidades |
 |--------|-----|-------------------|
@@ -1113,57 +917,11 @@ La arquitectura hexagonal facilita descomponer en:
 
 ---
 
-**Universidad Autónoma de Occidente**  
-**Ingeniería de Software 2 - Octubre 2025**  
+**Universidad Autonoma de Occidente**  
+**Ingenieria de Software 2 - Octubre 2025**  
 **Proyecto: ServiCiudad Cali - Sistema de Consulta Unificada**
 
 ---
 
-## 📝 Conclusiones
-
-### Objetivos Cumplidos
-
-1. ✅ **Sistema Funcional:** API REST completamente operacional con 7+ endpoints validados
-2. ✅ **Patrones de Diseño:** 5 patrones implementados y funcionando correctamente
-3. ✅ **Arquitectura Hexagonal:** Separación clara entre dominio, aplicación e infraestructura
-4. ✅ **Integración Dual:** Lectura de archivo legacy + consulta a PostgreSQL
-5. ✅ **Documentación Completa:** README, INFORME y guías de Postman actualizadas
-6. ✅ **Containerización:** Docker multi-stage build con optimización de capas
-7. ✅ **Frontend Funcional:** Interfaz web moderna con todos los recursos
-
-### Desafíos Superados
-
-1. **Configuración Manual vs Automática:** Se identificó que `HexagonalConfig.java` interfería con Spring
-2. **Debugging de Arquitectura:** Análisis exhaustivo de logs para identificar falta de endpoint mapping
-3. **Reconstrucción Completa:** Múltiples rebuilds con `--no-cache` para validar solución
-4. **Documentación Exhaustiva:** Creación de 4 guías de Postman para facilitar mantenimiento
-
-### Valor Entregado
-
-**Para Desarrolladores:**
-- Sistema bien estructurado con separación de concerns
-- Fácil de extender agregando nuevos Use Cases
-- Documentación clara de decisiones de arquitectura
-
-**Para Operaciones:**
-- Despliegue simplificado con Docker Compose
-- Health checks configurados
-- Logs estructurados para debugging
-
-**Para Usuarios Finales:**
-- API unificada para consultar múltiples servicios
-- Respuestas rápidas (< 300ms)
-- Frontend intuitivo y responsive
-
-### Recomendaciones Finales
-
-1. **Mantener la Simplicidad:** No agregar configuración manual innecesaria
-2. **Confiar en Spring:** Usar component scanning automático siempre que sea posible
-3. **Validar con Logs:** Siempre verificar que los endpoints se registren correctamente
-4. **Actualizar Tests:** Mantener suite de tests sincronizada con cambios de arquitectura
-5. **Documentar Decisiones:** Registrar problemas y soluciones para referencia futura
-
----
-
-**Fecha de Finalización:** Enero 2025  
-**Versión:** 1.0.0 - Producción  
+**Fecha de Finalizacion:** Enero 2025  
+**Version:** 1.0.0 - Produccion  

@@ -14,13 +14,13 @@ $ErrorActionPreference = "Continue"
 
 # Banner
 Write-Host ""
-Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  🧪 SERVICIUDAD-CALI - Suite de Pruebas Exhaustivas      ║" -ForegroundColor Cyan
-Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host "================================================================" -ForegroundColor Cyan
+Write-Host " SERVICIUDAD-CALI - Suite de Pruebas Exhaustivas" -ForegroundColor Cyan
+Write-Host "================================================================" -ForegroundColor Cyan
 Write-Host ""
 
 # 1. Configurar entorno
-Write-Host "📋 PASO 1: Configuración del entorno" -ForegroundColor Yellow
+Write-Host "PASO 1: Configuracion del entorno" -ForegroundColor Yellow
 Write-Host ("─" * 60)
 
 if (Test-Path "setup-tests.ps1") {
@@ -38,25 +38,25 @@ Write-Host ""
 # 2. Definir grupos de tests
 $testGroups = @(
     @{ 
-        Name = "1️⃣  Mappers (Unit Tests)"; 
+        Name = "1. Mappers (Unit Tests)"; 
         Pattern = "*MapperTest"; 
         Time = 15;
-        Description = "Transformaciones Domain ↔ DTO ↔ JPA"
+        Description = "Transformaciones Domain - DTO - JPA"
     },
     @{ 
-        Name = "2️⃣  Use Cases (Business Logic)"; 
+        Name = "2. Use Cases (Business Logic)"; 
         Pattern = "*UseCaseImplTest"; 
         Time = 30;
-        Description = "Lógica de negocio y orquestación"
+        Description = "Logica de negocio y orquestacion"
     },
     @{ 
-        Name = "3️⃣  Adapters (Ports Implementation)"; 
+        Name = "3. Adapters (Ports Implementation)"; 
         Pattern = "*AdapterTest"; 
         Time = 20;
-        Description = "Implementación de puertos (Repository, Reader)"
+        Description = "Implementacion de puertos (Repository, Reader)"
     },
     @{ 
-        Name = "4️⃣  REST Controllers (API Layer)"; 
+        Name = "4. REST Controllers (API Layer)"; 
         Pattern = "*RestControllerTest"; 
         Time = 40;
         Description = "Endpoints HTTP, validaciones, error handling"
@@ -65,18 +65,18 @@ $testGroups = @(
 
 if (-not $SkipIntegration) {
     $testGroups += @{ 
-        Name = "5️⃣  Integration E2E (Testcontainers)"; 
+        Name = "5. Integration E2E (Testcontainers)"; 
         Pattern = "*IntegrationTest"; 
         Time = 90;
         Description = "Tests completos con PostgreSQL real en Docker"
     }
 } else {
-    Write-Host "⏭️  Tests de integración E2E omitidos (flag -SkipIntegration)" -ForegroundColor Yellow
+    Write-Host "Tests de integracion E2E omitidos (flag -SkipIntegration)" -ForegroundColor Yellow
     Write-Host ""
 }
 
 # 3. Ejecutar tests por grupos
-Write-Host "🧪 PASO 2: Ejecutando tests por categorías" -ForegroundColor Yellow
+Write-Host "PASO 2: Ejecutando tests por categorias" -ForegroundColor Yellow
 Write-Host ("─" * 60)
 Write-Host ""
 

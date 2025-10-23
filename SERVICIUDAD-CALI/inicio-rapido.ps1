@@ -12,7 +12,7 @@
 # ========================================
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "   ServiCiudad Cali - Inicio Rapido    " -ForegroundColor Cyan
+Write-Host " ServiCiudad Cali - Inicio Rapido" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -193,7 +193,7 @@ try {
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "       INICIADO EXITOSAMENTE!          " -ForegroundColor Green
+Write-Host " INICIADO EXITOSAMENTE" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "URLs importantes:" -ForegroundColor Yellow

@@ -1,0 +1,23 @@
+# Carpeta de Imágenes
+
+Esta carpeta está destinada para almacenar las imágenes del proyecto.
+
+## Convención de Nombres
+
+- Usar minúsculas con guiones: `logo-principal.svg`
+- Incluir descripción clara: `cliente-avatar.png`
+- Organizar por categorías si es necesario
+
+## Ejemplos:
+
+```
+images/
+├── logos/
+│   ├── logo-principal.svg
+│   └── logo-secundario.png
+├── icons/
+│   ├── icono-agua.svg
+│   └── icono-energia.svg
+└── banners/
+    └── hero-banner.jpg
+```

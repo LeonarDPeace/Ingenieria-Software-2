@@ -17,7 +17,6 @@
 - Arquitectura Hexagonal implementada correctamente  
 - 5 patrones de diseno funcionando perfectamente  
 - Docker y PostgreSQL operativos  
-- Frontend responsive con favicon  
 - Coleccion Postman completa y actualizada  
 - Documentacion tecnica exhaustiva
 
@@ -30,10 +29,9 @@ Los ciudadanos de Cali deben contactar **tres canales diferentes** para conocer 
 - **Consulta Unificada**: Un solo endpoint para consultar deuda de Energia y Acueducto  
 - **Integracion Legacy**: Lectura de archivo plano (Mainframe IBM Z) y base de datos PostgreSQL  
 - **API RESTful**: Endpoints documentados con OpenAPI/Swagger  
-- **Frontend Responsive**: Interfaz web moderna con HTML5, CSS3 y JavaScript vanilla  
 - **Docker Ready**: Despliegue completo con `docker-compose`  
 - **Patrones de Diseno**: Implementacion de 5 patrones (Adapter, Builder, DTO, Repository, IoC/DI)  
-- **Seguridad**: Autenticacion HTTP Basic con favicon y recursos publicos configurados  
+- **Seguridad**: Autenticacion HTTP Basic  
 - **Monitoreo**: Actuator endpoints para health checks y metricas  
 - **Arquitectura Hexagonal**: Separacion clara entre dominio, aplicacion e infraestructura
 
@@ -41,32 +39,9 @@ Los ciudadanos de Cali deben contactar **tres canales diferentes** para conocer 
 
 ## Arquitectura
 
-### Correcciones Implementadas
-
-Durante el desarrollo, se identifico y corrigio un **problema critico de arquitectura**:
-
-**Problema Original:**
-- El archivo `HexagonalConfig.java` creaba beans manualmente con `@Bean`
-- Esto impedia que Spring detectara las anotaciones `@Service` en los Use Cases
-- Los controladores no se registraban porque las dependencias no estaban disponibles
-- El sistema iniciaba pero sin endpoints operativos (0 endpoints registrados)
-
-**Solucion Implementada:**
-- Se **elimino** `HexagonalConfig.java`
-- Se utilizo **component scanning automatico** de Spring
-- Todos los Use Cases con `@Service` son detectados correctamente
-- Los controladores se registran con sus endpoints (`Mapped {[...]}`)
-- Sistema 100% operacional con todas las dependencias resueltas
-
 ### Diagrama de Arquitectura
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              FRONTEND (HTML/CSS/JS + favicon)               │
-│                  http://localhost:8080/                     │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ HTTP/JSON
-                           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              API REST (Spring Boot 3.2.12)                  │
 │              GET /api/deuda/cliente/{clienteId}             │
@@ -131,12 +106,6 @@ docker-compose up -d
 4. Ejecutar scripts de inicializacion (`schema.sql` y `data.sql`)
 5. Exponer la aplicacion en `http://localhost:8080`
 
-### Autenticacion
-
-**HTTP Basic Auth:**
-- Usuario: `serviciudad`
-- Contrasena: `dev2025`
-
 ### Paso 3: Verificar el Estado
 
 ```powershell
@@ -162,17 +131,13 @@ Mapped "{[/api/facturas/{id}],methods=[GET]}" onto ...
 Mapped "{[/api/consumos-energia/cliente/{clienteId}],methods=[GET]}" onto ...
 ```
 
-Si no ves estos mensajes, revisa que no exista `HexagonalConfig.java` (fue eliminado intencionalmente).
-
 ### Paso 4: Acceder a la Aplicación
 
 **Endpoints Públicos (sin autenticación):**
-- **Frontend Web**: [http://localhost:8080/](http://localhost:8080/)
-- **Favicon**: [http://localhost:8080/favicon.svg](http://localhost:8080/favicon.svg)
 - **Health Check**: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
 - **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
-**Endpoints Protegidos (requieren autenticación):**
+**Endpoints Protegidos (requieren autenticación HTTP Basic):**
 - **API Deuda Consolidada**: [http://localhost:8080/api/deuda/cliente/0001234567](http://localhost:8080/api/deuda/cliente/0001234567)
 - **API Facturas**: [http://localhost:8080/api/facturas/1](http://localhost:8080/api/facturas/1)
 - **API Consumos Energía**: [http://localhost:8080/api/consumos-energia/cliente/0001234567](http://localhost:8080/api/consumos-energia/cliente/0001234567)
@@ -182,8 +147,8 @@ Si no ves estos mensajes, revisa que no exista `HexagonalConfig.java` (fue elimi
 # Health check (sin auth)
 curl http://localhost:8080/actuator/health
 
-# Consulta con autenticación
-curl -u serviciudad:dev2025 http://localhost:8080/api/deuda/cliente/0001234567
+# Consulta con autenticación (usar credenciales configuradas)
+curl -u <username>:<password> http://localhost:8080/api/deuda/cliente/0001234567
 ```
 
 ### Paso 5: Detener la Aplicación
@@ -291,78 +256,182 @@ mvn spring-boot:run
 curl http://localhost:8080/actuator/health
 
 # Consultar deuda (con autenticación)
-curl -u serviciudad:dev2025 http://localhost:8080/api/deuda/cliente/0001234567
+curl -u admin:admin123 http://localhost:8080/api/deuda/cliente/0001234567
 ```
 
 ---
 
 ## Estructura del Proyecto
 
+El proyecto sigue **Arquitectura Hexagonal (Ports & Adapters)** con una clara separación de responsabilidades en capas:
+
 ```
-SERVICIUDAD-CALI/
+serviciudad-cali/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/serviciudad/
-│   │   │   ├── application/              # Capa de Aplicación
-│   │   │   │   ├── dto/                  # DTOs (Request/Response)
-│   │   │   │   ├── mapper/               # Mappers de entidades
-│   │   │   │   └── usecase/              # Casos de uso (@Service)
-│   │   │   ├── config/                   # Configuraciones Spring
-│   │   │   ├── domain/                   # Capa de Dominio
-│   │   │   │   ├── model/                # Entidades de negocio
-│   │   │   │   ├── port/                 # Puertos (interfaces)
-│   │   │   │   └── valueobject/          # Value Objects
-│   │   │   ├── exception/                # Manejo de excepciones
-│   │   │   └── infrastructure/           # Capa de Infraestructura
-│   │   │       ├── adapter/
-│   │   │       │   ├── input/            # REST Controllers (@RestController)
-│   │   │       │   └── output/           # Adaptadores (JPA, File) (@Component)
-│   │   │       └── config/               # Configuración
+│   │   │   ├── DeudaConsolidadaApplication.java          # 🚀 Clase principal Spring Boot
+│   │   │   │
+│   │   │   ├── domain/                                   # 🎯 DOMINIO (Core Business Logic)
+│   │   │   │   ├── model/                                # Entidades de negocio
+│   │   │   │   │   ├── DeudaConsolidada.java
+│   │   │   │   │   ├── FacturaAcueducto.java
+│   │   │   │   │   ├── ConsumoEnergiaModel.java
+│   │   │   │   │   ├── EstadisticasDeuda.java
+│   │   │   │   │   └── EstadoFactura.java                # Enum estados
+│   │   │   │   ├── port/                                 # Puertos (interfaces)
+│   │   │   │   │   ├── input/                            # Use Cases (entrada)
+│   │   │   │   │   │   ├── ConsultarDeudaUseCase.java
+│   │   │   │   │   │   ├── GestionarFacturaUseCase.java
+│   │   │   │   │   │   └── ConsultarConsumoEnergiaUseCase.java
+│   │   │   │   │   └── output/                           # Repositorios (salida)
+│   │   │   │   │       ├── FacturaRepositoryPort.java
+│   │   │   │   │       └── ConsumoEnergiaReaderPort.java
+│   │   │   │   ├── valueobject/                          # Value Objects (DDD)
+│   │   │   │   │   ├── ClienteId.java                    # 🔒 Validación ID cliente
+│   │   │   │   │   ├── Periodo.java                      # 🔒 Validación formato período
+│   │   │   │   │   ├── Dinero.java                       # 🔒 Manejo de moneda
+│   │   │   │   │   ├── ConsumoAgua.java
+│   │   │   │   │   ├── ConsumoEnergia.java
+│   │   │   │   │   └── FacturaId.java
+│   │   │   │   └── exception/                            # Excepciones de dominio
+│   │   │   │       ├── FacturaNoEncontradaException.java
+│   │   │   │       └── FacturaDuplicadaException.java
+│   │   │   │
+│   │   │   ├── application/                              # 📋 APLICACIÓN (Use Cases)
+│   │   │   │   ├── usecase/                              # Implementaciones de Use Cases
+│   │   │   │   │   ├── ConsultarDeudaUseCaseImpl.java   # @Service - Orquesta lógica
+│   │   │   │   │   ├── GestionarFacturaUseCaseImpl.java
+│   │   │   │   │   └── ConsultarConsumoEnergiaUseCaseImpl.java
+│   │   │   │   ├── dto/                                  # 📦 DTOs (Data Transfer Objects)
+│   │   │   │   │   ├── request/                          # DTOs de entrada
+│   │   │   │   │   │   ├── ConsultarDeudaRequest.java
+│   │   │   │   │   │   └── RegistrarPagoRequest.java
+│   │   │   │   │   └── response/                         # DTOs de salida
+│   │   │   │   │       ├── DeudaConsolidadaResponse.java # 🏗️ @Builder pattern
+│   │   │   │   │       ├── FacturaResponse.java
+│   │   │   │   │       ├── ConsumoEnergiaResponse.java
+│   │   │   │   │       └── EstadisticasResponse.java
+│   │   │   │   └── mapper/                               # Mappers (entidad ↔ DTO)
+│   │   │   │       └── DeudaMapper.java                  # @Component
+│   │   │   │
+│   │   │   ├── infrastructure/                           # 🔧 INFRAESTRUCTURA (Adaptadores)
+│   │   │   │   ├── adapter/
+│   │   │   │   │   ├── input/                            # Adaptadores de entrada
+│   │   │   │   │   │   └── rest/                         # REST Controllers
+│   │   │   │   │   │       ├── DeudaRestController.java       # @RestController
+│   │   │   │   │   │       ├── FacturaRestController.java     # @RestController
+│   │   │   │   │   │       └── ConsumoEnergiaRestController.java
+│   │   │   │   │   └── output/                           # Adaptadores de salida
+│   │   │   │   │       └── persistence/                  # Persistencia
+│   │   │   │   │           ├── FacturaRepositoryAdapter.java  # @Component - Implementa Port
+│   │   │   │   │           ├── ConsumoEnergiaReaderAdapter.java # 🔌 ADAPTER Pattern
+│   │   │   │   │           └── jpa/                      # Capa JPA
+│   │   │   │   │               ├── entity/               # Entidades JPA
+│   │   │   │   │               │   ├── FacturaJpaEntity.java
+│   │   │   │   │               │   ├── ConsumoEnergiaJpaEntity.java
+│   │   │   │   │               │   └── EstadoFacturaJpa.java
+│   │   │   │   │               ├── repository/           # 🗄️ REPOSITORY Pattern
+│   │   │   │   │               │   └── FacturaJpaRepository.java  # extends JpaRepository
+│   │   │   │   │               └── mapper/               # JPA Mappers
+│   │   │   │   │                   ├── FacturaJpaMapper.java
+│   │   │   │   │                   └── ConsumoEnergiaJpaMapper.java
+│   │   │   │   └── config/                               # Configuración Spring
+│   │   │   │       ├── SecurityConfig.java               # 🔐 Spring Security
+│   │   │   │       ├── WebConfig.java                    # CORS & Interceptors
+│   │   │   │       └── RateLimitInterceptor.java         # Rate limiting
+│   │   │   │
+│   │   │   ├── config/                                   # Configuración general
+│   │   │   │   ├── DatabaseConfig.java
+│   │   │   │   ├── OpenApiConfig.java                    # Swagger/OpenAPI
+│   │   │   │   └── CorsConfig.java
+│   │   │   │
+│   │   │   └── exception/                                # Manejo global de excepciones
+│   │   │       ├── GlobalExceptionHandler.java           # @RestControllerAdvice
+│   │   │       └── ErrorResponse.java
+│   │   │
 │   │   └── resources/
-│   │       ├── static/
-│   │       │   └── favicon.svg           # ✨ Favicon del sitio (NUEVO)
-│   │       ├── application.yml           # Configuración principal
-│   │       ├── application-dev.yml       # Perfil desarrollo
-│   │       ├── application-prod.yml      # Perfil producción
-│   │       ├── schema.sql                # DDL de base de datos
-│   │       └── data.sql                  # Datos de prueba
-│   └── test/                             # Tests unitarios e integración
-├── frontend/                             # Frontend Web
-│   ├── index.html                        # Página principal (con favicon)
-│   ├── styles.css                        # Estilos CSS
-│   └── app.js                            # Lógica JavaScript
-├── data/
-│   └── consumos_energia.txt              # Archivo legacy (ancho fijo)
-├── postman/                              # Colección Postman + Guías
+│   │       ├── application.yml                           # Configuración principal
+│   │       ├── application-dev.yml                       # Perfil desarrollo
+│   │       ├── application-prod.yml                      # Perfil producción
+│   │       ├── application-test.yml                      # Perfil testing
+│   │       ├── logback-spring.xml                        # Configuración logs
+│   │       ├── schema.sql                                # DDL inicial
+│   │       └── data.sql                                  # DML datos de prueba
+│   │
+│   └── test/                                             # 🧪 TESTS
+│       └── java/com/serviciudad/
+│           ├── application/
+│           │   ├── usecase/                              # Tests unitarios Use Cases
+│           │   │   ├── ConsultarDeudaUseCaseImplTest.java
+│           │   │   ├── GestionarFacturaUseCaseImplTest.java
+│           │   │   └── ConsultarConsumoEnergiaUseCaseImplTest.java
+│           │   └── mapper/
+│           │       └── DeudaMapperTest.java
+│           ├── infrastructure/
+│           │   └── adapter/
+│           │       ├── input/rest/                       # Tests controladores REST
+│           │       │   ├── DeudaRestControllerTest.java
+│           │       │   ├── FacturaRestControllerTest.java
+│           │       │   └── ConsumoEnergiaRestControllerTest.java
+│           │       └── output/persistence/               # Tests adaptadores
+│           │           ├── FacturaRepositoryAdapterTest.java
+│           │           └── ConsumoEnergiaReaderAdapterTest.java
+│           └── integration/                              # Tests de integración
+│               ├── DeudaConsolidadaIntegrationTest.java
+│               ├── FacturaAcueductoIntegrationTest.java
+│               └── AbstractIntegrationTest.java
+│
+├── data/                                                 # 📁 Datos externos
+│   └── consumos_energia.txt                             # Archivo legacy mainframe
+│
+├── diagrams/                                             # 📊 Diagramas del proyecto
+│   └── arquitectura_hexagonal_serviciudad.xml           # Diagrama Draw.io
+│
+├── postman/                                              # 📮 Colección Postman
 │   ├── ServiCiudad_API.postman_collection.json
-│   ├── ServiCiudad_Local.postman_environment.json
-│   ├── ServiCiudad_Docker.postman_environment.json
-│   ├── GUIA_ACTUALIZACION_POSTMAN.md     # ✨ Guía completa de actualización (NUEVO)
-│   ├── GUIA_RAPIDA.md                    # ✨ Referencia rápida (NUEVO)
-│   ├── RESUMEN_CORRECCIONES.md           # ✨ Explicación de problemas y soluciones (NUEVO)
-│   └── ESTADO_FINAL.md                   # ✨ Estado final del proyecto (NUEVO)
-├── docker-compose.yml                    # Orquestación Docker
-├── Dockerfile                            # Imagen de la aplicación
-├── pom.xml                               # Dependencias Maven
-├── README.md                             # Este archivo
-└── INFORME.md                            # Documentación técnica
-
-NOTA: El archivo HexagonalConfig.java fue ELIMINADO intencionalmente
-para permitir el component scanning automático de Spring.
+│   └── ServiCiudad_Docker.postman_environment.json
+│
+├── logs/                                                 # 📝 Directorio de logs (generado)
+│   ├── serviciudad.log                                  # Log aplicación
+│   └── serviciudad-error.log                            # Log errores
+│
+├── docker-compose.yml                                    # 🐳 Orquestación Docker
+├── Dockerfile                                            # 🐳 Imagen de aplicación
+├── pom.xml                                               # 📦 Maven dependencies
+├── README.md                                             # 📖 Documentación usuario
+├── INFORME.md                                            # 📋 Informe técnico
+└── inicio-rapido.ps1                                     # ⚡ Script inicio rápido
 ```
+
+### Patrones de Diseño Implementados (Ubicaciones)
+
+| Patrón | Archivo Principal | Ubicación | Línea Clave |
+|--------|-------------------|-----------|-------------|
+| **🔌 Adapter** | `ConsumoEnergiaReaderAdapter.java` | `infrastructure/adapter/output/persistence/` | Adapta archivo legacy a objetos Java |
+| **🏗️ Builder** | `DeudaConsolidadaResponse.java` | `application/dto/response/` | `@Builder` de Lombok |
+| **📦 DTO** | `*Response.java`, `*Request.java` | `application/dto/` | Separación dominio-API |
+| **🗄️ Repository** | `FacturaJpaRepository.java` | `infrastructure/adapter/output/persistence/jpa/repository/` | `extends JpaRepository` |
+| **💉 IoC/DI** | Toda la aplicación | Todas las capas | `@Autowired`, `@Service`, `@Component` |
+
+### Principios Arquitectónicos
+
+- **🎯 Hexagonal Architecture**: Dominio aislado de infraestructura
+- **📋 SOLID**: Principios aplicados en toda la arquitectura
+- **🔒 DDD**: Value Objects para validaciones de dominio
+- **🧪 Testeable**: Mocks e inyección de dependencias facilitan testing
+- **📦 Maven Multi-Module Ready**: Estructura preparada para escalabilidad
 
 ---
 
 ## API Endpoints
 
-### Estado de Validación: 7/7 Endpoints Testeados (100%)
+### Estado de Validación: 5/5 Endpoints Principales Testeados (100%)
 
-Todos los endpoints principales han sido validados exitosamente con respuestas correctas:
+Todos los endpoints de API han sido validados exitosamente con respuestas correctas:
 
 | Endpoint | Método | Auth | Estado | Observaciones |
 |----------|--------|------|--------|---------------|
-| `/` | GET | No | 200 OK | Frontend funcionando |
-| `/favicon.svg` | GET | No | 200 OK | Nuevo favicon agregado |
 | `/actuator/health` | GET | No | 200 OK | Health check operativo |
 | `/api/facturas/{id}` | GET | Sí | 200 OK | Retorna factura específica |
 | `/api/facturas/cliente/{id}` | GET | Sí | 200 OK | Lista facturas del cliente |
@@ -382,8 +451,7 @@ GET /api/deuda/cliente/{clienteId}
 
 **Autenticación:**
 ```
-Authorization: Basic c2VydmljaXVkYWQ6ZGV2MjAyNQ==
-(serviciudad:dev2025)
+Authorization: Basic <credenciales_configuradas>
 ```
 
 **Respuesta Exitosa (200 OK):**
@@ -483,12 +551,6 @@ GET /api/consumos-energia/cliente/{clienteId}
 # Health Check (sin autenticación)
 GET /actuator/health
 
-# Favicon (sin autenticación) - ✨ NUEVO
-GET /favicon.svg
-
-# Frontend (sin autenticación)
-GET /
-
 # Documentación Swagger
 GET /swagger-ui.html
 
@@ -499,118 +561,6 @@ GET /v3/api-docs
 ---
 
 ## Pruebas y Validación
-
-### Pruebas desde el Frontend Web
-
-El frontend web en `http://localhost:8080/` permite realizar pruebas completas del sistema de manera visual e intuitiva.
-
-#### Funcionalidades del Frontend
-
-**1. Consulta de Deuda Consolidada**
-- **Entrada**: Número de identificación (10 dígitos)
-- **Ejemplos válidos**: `1001234567`, `0001234567`
-- **Validación automática**: Solo acepta números, máximo 10 dígitos
-- **Autenticación**: Automática (credenciales embebidas en JavaScript)
-
-**2. Visualización de Resultados**
-
-El frontend muestra de manera organizada:
-
-| Sección | Información Mostrada | Fuente de Datos |
-|---------|---------------------|-----------------|
-| **Información del Cliente** | Nombre, ID, fecha de consulta | API `/api/deuda/cliente/{id}` |
-| **Estadísticas Consolidadas** | Total facturas, deuda acumulada, promedios de consumo | Campo `estadisticas` del response |
-| **Alertas** | Facturas próximas a vencer, facturas vencidas | Campo `alertas` del response |
-| **Facturas de Acueducto** | Lista detallada con periodo, consumo, valor, estado | Campo `facturasAcueducto` del response |
-| **Consumos de Energía** | Lista de consumos con kWh, valor, fecha de lectura | Campo `consumosEnergia` del response |
-| **Total a Pagar** | Suma consolidada de todas las deudas | Campo `totalGeneral` del response |
-
-**3. Manejo de Errores**
-
-El frontend detecta y muestra errores de manera clara:
-
-| Error | Mensaje al Usuario | Solución |
-|-------|-------------------|----------|
-| **Formato inválido** | "Formato inválido: ingrese 10 dígitos" | Corregir formato del ID |
-| **Cliente no encontrado (404)** | "No se encontraron datos para el cliente" | Verificar ID o usar cliente de prueba |
-| **Sin autenticación (401)** | "Error de autenticación" | Problema con credenciales (contactar soporte) |
-| **Timeout** | "Tiempo de espera agotado" | Verificar que Docker esté corriendo |
-| **Docker no conectado** | "Docker no conectado" | Ejecutar `docker-compose up -d` |
-
-**4. Verificación de Conexión Docker**
-
-- Al cargar la página, verifica automáticamente: `GET /actuator/health`
-- **Indicador verde**: Conectado a Docker (localhost:8080)
-- **Indicador rojo**: Docker no conectado
-
-#### Casos de Prueba desde el Frontend
-
-**Test 1: Cliente con Datos Completos**
-```
-ID: 1001234567
-Resultado esperado:
-Nombre del cliente
-1+ facturas de acueducto
-Consumos de energía (si están cargados)
-Total a pagar calculado
-Estadísticas completas
-```
-
-**Test 2: Cliente Sin Datos**
-```
-ID: 0001234567
-Resultado esperado:
-Response 200 OK
-Mensaje: "No hay facturas/consumos registrados"
-Total a pagar: $0
-```
-
-**Test 3: Validación de Formato**
-```
-ID: 123 (inválido)
-Resultado esperado:
-Error: "Debe tener exactamente 10 dígitos"
-```
-
-**Test 4: Timeout de Conexión**
-```
-Condición: Docker detenido
-Resultado esperado:
-Error: "Tiempo de espera agotado"
-Sugerencia: Verificar Docker
-```
-
-**Test 5: Visualización de Alertas**
-```
-ID: Cliente con factura próxima a vencer
-Resultado esperado:
-Alerta amarilla: "Factura #X próxima a vencer (N días)"
-```
-
-#### Datos de Prueba Disponibles
-
-Para probar el frontend, usa estos IDs con datos reales y variados:
-
-| Cliente ID | Nombre Cliente | Facturas Acueducto | Consumos Energía | Deuda Total Aprox. | Estado Cuenta | Descripción |
-|------------|----------------|-------------------|------------------|-------------------|---------------|-------------|
-| **`1001234567`** | Juan Pérez García | 1 factura pendiente | 150 kWh | $**255,000** | Al día | Cliente con consumo bajo, factura próxima a vencer |
-| **`1002345678`** | María López Castro | 1 factura pagada | 125 kWh | $**245,001** | Pagada | Cliente con historial de pagos puntuales |
-| **`1004567890`** | Carlos Rodríguez M. | 1 factura vencida | 200 kWh | $**390,000** | Mora | Cliente con factura vencida, consumo alto |
-| **`1006789012`** | Ana Martínez Silva | 1 factura pendiente | 165 kWh | $**312,502** | Por vencer | Cliente con consumo medio-alto |
-| **`1000123456`** | Roberto Gómez Díaz | 1 factura vencida | 143 kWh | $**340,801** | Mora crítica | Cliente con deuda acumulada, consumo medio |
-
-**Características de los Datos de Prueba:**
-
-- **Consumo Bajo** (90-150 kWh): Clientes 1001234567, 1002345678
-- **Consumo Medio** (140-180 kWh): Clientes 1000123456, 1006789012
-- 🔴 **Consumo Alto** (>190 kWh): Cliente 1004567890
-- **Diferentes rangos de deuda:** Desde $245K hasta $390K
-- 📅 **Estados variados:** Pendientes, Pagadas, Vencidas
-- **Ideal para testing:** Prueba alertas, visualización, cálculos
-
-**Tip:** La tabla de clientes de prueba también está visible directamente en el frontend para facilitar las pruebas.
-
----
 
 ### Pruebas con Postman
 
@@ -647,17 +597,6 @@ La colección de Postman incluida está **100% sincronizada** con el sistema act
    - Tests automáticos: 2 assertions
    - Retorna: detalles de una factura específica
 
-**FRONTEND Y RECURSOS PÚBLICOS (2 endpoints)**
-1. **Frontend Principal** - `GET /`
-   - Funcionando - 200 OK
-   - Sin autenticación
-   - Retorna: HTML del frontend
-
-2. **Favicon** - `GET /favicon.svg`
-   - Funcionando - 200 OK
-   - Sin autenticación
-   - Retorna: SVG del icono
-
 **🔍 MONITOREO Y HEALTH CHECKS (5 endpoints)**
 1. **Health Check Principal** - `GET /actuator/health`
 2. **Liveness Probe** - `GET /actuator/health/liveness`
@@ -687,9 +626,8 @@ La colección de Postman incluida está **100% sincronizada** con el sistema act
    "ServiCiudad Docker Environment"
 2. Verificar variables:
    - baseUrl: http://localhost:8080
-   - username: serviciudad
-   - password: dev2025
    - clienteId: 1001234567
+   - username/password: Configurar según SecurityConfig
 ```
 
 **Paso 3: Ejecutar Pruebas**
@@ -732,8 +670,8 @@ El environment incluye las siguientes variables configuradas:
 | `clienteId` | `1001234567` | ID de cliente de prueba | `/api/deuda/cliente/{{clienteId}}` |
 | `facturaId` | `1` | ID de factura de prueba | `/api/facturas/{{facturaId}}` |
 | `periodo` | `202510` | Periodo de consulta | Endpoints futuros |
-| `username` | `serviciudad` | Usuario HTTP Basic Auth | Autenticación automática |
-| `password` | `dev2025` | Contraseña HTTP Basic Auth | Autenticación automática |
+| `username` | `admin` | Usuario HTTP Basic Auth | Autenticación automática |
+| `password` | `admin123` | Contraseña HTTP Basic Auth | Autenticación automática |
 
 **Tip:** Puedes cambiar `clienteId` en el environment para probar con diferentes clientes sin modificar cada request.
 
@@ -793,6 +731,25 @@ El environment incluye las siguientes variables configuradas:
 4. Resultado: Todos accesibles sin credenciales
 ```
 
+**Tip:** Puedes cambiar `clienteId` en el environment para probar con diferentes clientes sin modificar cada request.
+
+#### Clientes de Prueba Disponibles
+
+| Cliente ID | Nombre | Facturas Acueducto | Consumos Energía | Total Aproximado | Resultado Esperado |
+|------------|--------|-------------------|------------------|------------------|--------------------|
+| `0001234567` | Cliente Sin Datos | ❌ No | ❌ No | $0.00 | Arrays vacíos, sin alertas |
+| `1001234567` | Juan Pérez García | ✅ Sí | ✅ 150 kWh | ~$180,000 | Deuda consolidada completa |
+| `1002345678` | María López Castro | ✅ Sí | ✅ 125 kWh | ~$135,000 | Consumo bajo, sin alertas |
+| `1004567890` | Carlos Rodríguez M. | ✅ Sí | ✅ 200 kWh | ~$240,000 | Consumo alto, posibles alertas |
+| `1006789012` | Ana Martínez Silva | ✅ Sí | ✅ 165 kWh | ~$187,500 | Consumo medio-alto |
+| `1000123456` | Roberto Gómez Díaz | ✅ Sí | ✅ 143 kWh | ~$165,800 | Consumo medio |
+
+**Casos de prueba sugeridos:**
+- **Cliente sin datos:** `0001234567` - Valida manejo de arrays vacíos
+- **Cliente con datos completos:** `1001234567` - Valida integración completa
+- **Cliente consumo bajo:** `1002345678` - Valida facturas sin alertas
+- **Cliente consumo alto:** `1004567890` - Valida generación de alertas de consumo
+
 #### Ejecución de Colección Completa
 
 Para ejecutar todos los tests de una vez:
@@ -804,8 +761,12 @@ Para ejecutar todos los tests de una vez:
    - Iterations: 1
    - Delay: 0ms
    - Environment: ServiCiudad Docker Environment
-4. Click "Run ServiCiudad Cali API"
-5. Resultado esperado: 13/13 passed ```
+4. **IMPORTANTE:** Verifica que las credenciales sean:
+   - Username: admin
+   - Password: admin123
+5. Click "Run ServiCiudad Cali API"
+6. Resultado esperado: 13/13 passed
+```
 
 **Métricas esperadas:**
 - Total requests: 13
@@ -814,83 +775,11 @@ Para ejecutar todos los tests de una vez:
 - Total tests: 25+ assertions
 - All tests passed: 25/25
 
-#### 🐛 Troubleshooting Postman
-
-**Problema: 401 Unauthorized en endpoints protegidos**
-```
-Solución:
-1. Verificar environment activo: "ServiCiudad Docker Environment"
-2. Verificar variables: username=serviciudad, password=dev2025
-3. Verificar herencia de auth en collection settings
-```
-
-**Problema: Connection Timeout**
-```
-Solución:
-1. Verificar Docker: docker-compose ps
-2. Verificar logs: docker-compose logs app
-3. Verificar puerto: netstat -ano | findstr :8080
-```
-
-**Problema: Tests fallan**
-```
-Solución:
-1. Verificar respuesta real vs esperada en Tests Results
-2. Verificar estructura de JSON en response
-3. Actualizar assertions si la estructura cambió
-```
-
-#### Comando de Prueba Rápida (PowerShell)
-
-```powershell
-# Prueba Health Check (sin autenticación)
-Invoke-WebRequest -Uri "http://localhost:8080/actuator/health" | Select-Object StatusCode, Content
-
-# Prueba Deuda Consolidada (con autenticación)
-$headers = @{Authorization="Basic c2VydmljaXVkYWQ6ZGV2MjAyNQ=="}
-$response = Invoke-WebRequest -Uri "http://localhost:8080/api/deuda/cliente/1001234567" -Headers $headers
-$response.Content | ConvertFrom-Json | ConvertTo-Json -Depth 10
-
-# Prueba Frontend (sin autenticación)
-Invoke-WebRequest -Uri "http://localhost:8080/" | Select-Object StatusCode, Headers
-```
-
----
-
-## Frontend Web
-
-### Características
-
-- **Interfaz Moderna**: Diseño responsive con gradientes y animaciones
-- **Validación en Tiempo Real**: Solo permite dígitos (máx 10)
-- **Detección de Docker**: Verifica conexión al cargar la página
-- **Visualización Rica**: Gráficas, badges de estado, alertas animadas
-- **Manejo de Errores**: Mensajes claros para cada tipo de error
-
-### Estructura del Frontend
-
-```
-frontend/
-├── index.html       # Estructura HTML5
-├── styles.css       # Estilos CSS3 separados
-└── app.js          # Lógica JavaScript vanilla
-```
-
-**Ventajas de la separación:**
-- Fácil mantenimiento
-- Caché independiente
-- Mejor organización
-- Reutilización de estilos
-
-### Capturas de Pantalla
-
-**Página Principal:**
-![Frontend Principal](docs/screenshots/frontend-main.png)
-
-**Resultado de Consulta:**
-![Resultado](docs/screenshots/frontend-result.png)
-
----
+**⚠️ Solución de Problemas:**
+Si todos los tests fallan con `401 Unauthorized`:
+1. Verifica las credenciales en el environment
+2. Asegúrate de que el Authorization type esté configurado como "Basic Auth"
+3. Username debe ser `admin` y password `admin123`
 
 ## Docker: Detalles Avanzados
 
@@ -935,69 +824,6 @@ docker stats serviciudad-app serviciudad-postgres
 # Reiniciar solo la app (conserva BD)
 docker-compose restart app
 ```
-
-### Solución de Problemas
-
-**Problema: Puerto 8080 ocupado**
-```powershell
-# Windows: Encontrar proceso
-netstat -ano | findstr :8080
-
-# Matar proceso
-taskkill /PID <PID> /F
-
-# O cambiar puerto en docker-compose.yml
-ports:
-  - "8081:8080"  # Cambia 8080 a 8081
-```
-
-**Problema: BD no inicializa**
-```powershell
-# Eliminar volúmenes y recrear
-docker-compose down -v
-docker-compose up -d
-
-# Verificar logs de PostgreSQL
-docker-compose logs postgres
-```
-
-**Problema: Cambios en código no se reflejan**
-```powershell
-# Reconstruir imagen
-docker-compose build --no-cache app
-docker-compose up -d app
-```
-
-**Problema: Endpoints no se registran (0 endpoints)**
-```
-Síntoma: La aplicación inicia pero los logs no muestran "Mapped {[...]}"
-Causa: Existencia de HexagonalConfig.java interfiriendo con component scanning
-Solución: Verificar que HexagonalConfig.java NO exista (fue eliminado)
-
-# Verificar archivos de configuración
-ls src/main/java/com/serviciudad/infrastructure/config/
-
-# Debe mostrar solo SecurityConfig.java, SwaggerConfig.java, etc.
-# NO debe existir HexagonalConfig.java
-```
-
-**Problema: Error 500 en todos los endpoints de la API**
-```
-Síntoma: Frontend funciona, pero /api/* retorna 500 Internal Server Error
-Causa: Use Cases no detectados como @Service beans
-Solución: Asegurar que HexagonalConfig.java fue eliminado y reconstruir
-
-# Reconstruir completamente
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
-
-# Verificar logs buscar "Mapped {["
-docker-compose logs app | Select-String "Mapped"
-```
-
----
-
 ## Tests Automatizados
 
 ### Ejecutar Tests
@@ -1168,17 +994,6 @@ Cobertura:             85%
 
 ---
 
-### Tabla Comparativa de Scripts
-
-| Script | Proposito | Tiempo | Docker Requerido | Uso Recomendado |
-|--------|-----------|--------|------------------|-----------------|
-| `inicio-rapido.ps1` | Iniciar sistema completo | ~30s | Si | Primera vez / Evaluadores |
-| `run-all-tests.ps1` | Suite completa de tests | ~2m | No | Validacion pre-commit |
-| `quick-test.ps1` | Tests rapidos | ~15s | No | Desarrollo continuo |
-| `rebuild-docker.ps1` | Rebuild completo | ~3m | Si | Problemas / Cambios Docker |
-
----
-
 ### Ejemplo de Flujo de Trabajo para Evaluadores
 
 ```powershell
@@ -1242,8 +1057,8 @@ logging:
 ### Autenticación
 
 **HTTP Basic Auth:**
-- Usuario: `serviciudad`
-- Contraseña: `dev2025`
+- Usuario: `admin`
+- Contraseña: `admin123`
 
 **Configuración Actualizada:**
 ```java
@@ -1270,27 +1085,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) {
 
 ### Rate Limiting
 
-**Nota:** Rate limiting NO esta actualmente implementado. Para agregarlo:
-
-```xml
-<!-- pom.xml -->
-<dependency>
-    <groupId>com.github.vladimir-bukhtoyarov</groupId>
-    <artifactId>bucket4j-core</artifactId>
-    <version>7.6.0</version>
-</dependency>
-```
-
-**Configuracion propuesta:**
-- **Limite**: 100 requests por minuto por IP
-- **Cabeceras de respuesta**:
-  ```http
-  X-RateLimit-Limit: 100
-  X-RateLimit-Remaining: 95
-  X-RateLimit-Reset: 1634657400
-  ```
-
----
+**Nota:** Rate limiting NO esta actualmente implementad.
 
 ## Documentacion Adicional
 

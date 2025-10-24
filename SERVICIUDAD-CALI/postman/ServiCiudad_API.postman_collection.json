@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ServiCiudad Cali API",
-    "description": "Colección completa de endpoints para ServiCiudad Cali - Sistema de Consulta Unificada de Servicios Públicos\n\n✅ ENDPOINTS PRINCIPALES FUNCIONANDO (100%)\n- Deuda Consolidada: /api/deuda/cliente/{id}\n- Facturas por Cliente: /api/facturas/cliente/{id}\n- Consumos por Cliente: /api/consumos-energia/cliente/{id}\n- Health Check: /actuator/health\n\n🔧 CONFIGURACIÓN:\n- Base URL: http://localhost:8080\n- Autenticación: HTTP Basic (serviciudad:dev2025)\n- Cliente de prueba: 1001234567 (con datos reales)\n\n📊 ARQUITECTURA:\n- Arquitectura Hexagonal implementada\n- 5 patrones de diseño aplicados\n- Docker + PostgreSQL operativo",
+    "description": "Colección completa de endpoints para ServiCiudad Cali - Sistema de Consulta Unificada de Servicios Públicos\n\n✅ ENDPOINTS PRINCIPALES FUNCIONANDO (100%)\n- Deuda Consolidada: /api/deuda/cliente/{id}\n- Facturas por Cliente: /api/facturas/cliente/{id}\n- Consumos por Cliente: /api/consumos-energia/cliente/{id}\n- Health Check: /actuator/health\n\n🔧 CONFIGURACIÓN:\n- Base URL: http://localhost:8080\n- Autenticación: HTTP Basic (admin:admin123)\n- Cliente de prueba: 1001234567 (con datos reales)\n\n📊 ARQUITECTURA:\n- Arquitectura Hexagonal implementada\n- 5 patrones de diseño aplicados\n- Docker + PostgreSQL operativo",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "serviciudad-cali",
     "version": "2.0.0"
@@ -44,12 +44,12 @@
     },
     {
       "key": "username",
-      "value": "serviciudad",
+      "value": "admin",
       "type": "string"
     },
     {
       "key": "password",
-      "value": "dev2025",
+      "value": "admin123",
       "type": "string"
     }
   ],

@@ -7,8 +7,6 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copiar archivos frontend a resources/static ANTES de compilar
-COPY frontend ./src/main/resources/static/
 COPY src ./src
 COPY data ./data
 

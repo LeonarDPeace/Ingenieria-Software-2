@@ -62,12 +62,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos (sin autenticación)
                 .requestMatchers(
-                    "/",                          // Página principal del frontend
-                    "/index.html",                // Frontend HTML
-                    "/styles.css",                // Frontend CSS
-                    "/app.js",                    // Frontend JavaScript
-                    "/favicon.svg",               // Favicon del sitio
-                    "/favicon.ico",               // Favicon alternativo
                     "/actuator/health",           // Health check para monitoreo
                     "/actuator/info",             // Información de la aplicación
                     "/swagger-ui/**",             // Swagger UI
@@ -99,11 +93,10 @@ public class SecurityConfig {
     /**
      * Configura el servicio de detalles de usuario en memoria.
      * 
-     * <p><strong>⚠️ SOLO PARA DESARROLLO:</strong></p>
+     * <p><strong>Configuración de autenticación HTTP Basic:</strong></p>
      * <ul>
-     *   <li>Usuario: serviciudad</li>
-     *   <li>Contraseña: dev2025 (prefijo {noop} = sin encriptación)</li>
-     *   <li>Rol: USER</li>
+     *   <li>Todos los endpoints de API requieren autenticación</li>
+     *   <li>Autenticación mediante cabecera Authorization: Basic</li>
      * </ul>
      * 
      * <p><strong>En producción, implementar:</strong></p>
@@ -119,17 +112,10 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
-            .username("serviciudad")
-            .password("{noop}dev2025")  // {noop} = no password encoder (SOLO DESARROLLO)
+            .username("admin")
+            .password("{noop}admin123")  // {noop} = no password encoder
             .roles("USER")
             .build();
-        
-        // Para agregar más usuarios en desarrollo:
-        // UserDetails admin = User.builder()
-        //     .username("admin")
-        //     .password("{noop}admin2025")
-        //     .roles("USER", "ADMIN")
-        //     .build();
         
         return new InMemoryUserDetailsManager(user);
     }

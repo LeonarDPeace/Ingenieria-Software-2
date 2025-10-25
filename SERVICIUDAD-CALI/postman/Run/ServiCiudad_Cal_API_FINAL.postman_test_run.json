@@ -1,418 +1,497 @@
 {
-  "id": "serviciudad-final-test-run",
-  "name": "ServiCiudad Cali API - Test Run Final",
-  "timestamp": "2025-10-20T06:45:00.000Z",
-  "collection_id": "serviciudad-cali-collection",
-  "folder_id": 0,
-  "environment_id": "serviciudad-docker-env",
-  "totalPass": 12,
-  "delay": 0,
-  "persist": true,
-  "status": "finished",
-  "startedAt": "2025-10-20T06:44:30.000Z",
-  "totalFail": 0,
-  "results": [
-    {
-      "id": "deuda-consolidada-test",
-      "name": "01 - Deuda Consolidada (PRINCIPAL)",
-      "url": "http://localhost:8080/api/deuda/cliente/1001234567",
-      "time": 95,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response has totalGeneral": true,
-        "Response has estadisticas": true,
-        "Response has facturasAcueducto": true,
-        "Response has consumosEnergia": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has totalGeneral": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has estadisticas": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has facturasAcueducto": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has consumosEnergia": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [95],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response has totalGeneral": true,
-        "Response has estadisticas": true,
-        "Response has facturasAcueducto": true,
-        "Response has consumosEnergia": true
-      }]
-    },
-    {
-      "id": "facturas-cliente-test",
-      "name": "02 - Facturas por Cliente",
-      "url": "http://localhost:8080/api/facturas/cliente/1001234567",
-      "time": 88,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response is array": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response is array": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [88],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response is array": true
-      }]
-    },
-    {
-      "id": "consumos-cliente-test",
-      "name": "03 - Consumos de Energía por Cliente",
-      "url": "http://localhost:8080/api/consumos-energia/cliente/1001234567",
-      "time": 92,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response is array": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response is array": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [92],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response is array": true
-      }]
-    },
-    {
-      "id": "factura-id-test",
-      "name": "04 - Factura por ID",
-      "url": "http://localhost:8080/api/facturas/1",
-      "time": 85,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response has id": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has id": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [85],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response has id": true
-      }]
-    },
-    {
-      "id": "frontend-test",
-      "name": "01 - Frontend Principal",
-      "url": "http://localhost:8080/",
-      "time": 78,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response is HTML": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response is HTML": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [78],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response is HTML": true
-      }]
-    },
-    {
-      "id": "favicon-test",
-      "name": "02 - Favicon",
-      "url": "http://localhost:8080/favicon.svg",
-      "time": 65,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response is SVG": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response is SVG": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [65],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response is SVG": true
-      }]
-    },
-    {
-      "id": "health-check-test",
-      "name": "01 - Health Check Principal",
-      "url": "http://localhost:8080/actuator/health",
-      "time": 82,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Application is UP": true,
-        "Response has groups": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Application is UP": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has groups": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [82],
-      "allTests": [{
-        "Status code is 200": true,
-        "Application is UP": true,
-        "Response has groups": true
-      }]
-    },
-    {
-      "id": "liveness-test",
-      "name": "02 - Liveness Probe",
-      "url": "http://localhost:8080/actuator/health/liveness",
-      "time": 75,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [75],
-      "allTests": [{
-        "Status code is 200": true
-      }]
-    },
-    {
-      "id": "readiness-test",
-      "name": "03 - Readiness Probe",
-      "url": "http://localhost:8080/actuator/health/readiness",
-      "time": 70,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [70],
-      "allTests": [{
-        "Status code is 200": true
-      }]
-    },
-    {
-      "id": "app-info-test",
-      "name": "04 - Application Info",
-      "url": "http://localhost:8080/actuator/info",
-      "time": 88,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [88],
-      "allTests": [{
-        "Status code is 200": true
-      }]
-    },
-    {
-      "id": "metrics-test",
-      "name": "05 - Metrics List",
-      "url": "http://localhost:8080/actuator/metrics",
-      "time": 90,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [90],
-      "allTests": [{
-        "Status code is 200": true
-      }]
-    },
-    {
-      "id": "cliente-sin-datos-test",
-      "name": "01 - Test con Cliente Sin Datos",
-      "url": "http://localhost:8080/api/deuda/cliente/0001234567",
-      "time": 95,
-      "responseCode": {
-        "code": 200,
-        "name": "OK"
-      },
-      "tests": {
-        "Status code is 200": true,
-        "Response has empty arrays": true
-      },
-      "testPassFailCounts": {
-        "Status code is 200": {
-          "pass": 1,
-          "fail": 0
-        },
-        "Response has empty arrays": {
-          "pass": 1,
-          "fail": 0
-        }
-      },
-      "times": [95],
-      "allTests": [{
-        "Status code is 200": true,
-        "Response has empty arrays": true
-      }]
-    }
-  ],
-  "count": 1,
-  "totalTime": 1083,
-  "collection": {
-    "requests": [
-      {
-        "id": "deuda-consolidada-test",
-        "method": "GET"
-      },
-      {
-        "id": "facturas-cliente-test",
-        "method": "GET"
-      },
-      {
-        "id": "consumos-cliente-test",
-        "method": "GET"
-      },
-      {
-        "id": "factura-id-test",
-        "method": "GET"
-      },
-      {
-        "id": "frontend-test",
-        "method": "GET"
-      },
-      {
-        "id": "favicon-test",
-        "method": "GET"
-      },
-      {
-        "id": "health-check-test",
-        "method": "GET"
-      },
-      {
-        "id": "liveness-test",
-        "method": "GET"
-      },
-      {
-        "id": "readiness-test",
-        "method": "GET"
-      },
-      {
-        "id": "app-info-test",
-        "method": "GET"
-      },
-      {
-        "id": "metrics-test",
-        "method": "GET"
-      },
-      {
-        "id": "cliente-sin-datos-test",
-        "method": "GET"
-      }
-    ]
-  }
+	"id": "072c8628-8370-450d-b52c-b5fb35850a33",
+	"name": "ServiCiudad Cali API",
+	"timestamp": "2025-10-24T05:51:08.763Z",
+	"collection_id": "35592995-6a6e099e-2deb-4a14-aeef-8d724b5618a2",
+	"folder_id": 0,
+	"environment_id": "35592995-e643d355-1c74-4afd-8b43-c423b642d9d7",
+	"totalPass": 1,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-10-24T05:51:06.035Z",
+	"totalFail": 24,
+	"results": [
+		{
+			"id": "afaf1726-9060-4976-a1b6-a096125d02f0",
+			"name": "01 - Deuda Consolidada (PRINCIPAL)",
+			"url": "http://localhost:8080/api/deuda/cliente/1001234567",
+			"time": 106,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response has totalGeneral": false,
+				"Response has estadisticas": false,
+				"Response has facturasAcueducto": false,
+				"Response has consumosEnergia": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has totalGeneral": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has estadisticas": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has facturasAcueducto": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has consumosEnergia": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				106
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response has totalGeneral": false,
+					"Response has estadisticas": false,
+					"Response has facturasAcueducto": false,
+					"Response has consumosEnergia": false
+				}
+			]
+		},
+		{
+			"id": "74b14a7a-dfe5-4782-b1d8-31945be242da",
+			"name": "02 - Facturas por Cliente",
+			"url": "http://localhost:8080/api/facturas/cliente/1001234567",
+			"time": 82,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response is array": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is array": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				82
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response is array": false
+				}
+			]
+		},
+		{
+			"id": "3ff826c6-37ba-4f5d-b2a9-fb5645f90c27",
+			"name": "03 - Consumos de Energía por Cliente",
+			"url": "http://localhost:8080/api/consumos-energia/cliente/1001234567",
+			"time": 80,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response is array": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is array": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response is array": false
+				}
+			]
+		},
+		{
+			"id": "b447bc59-6708-4118-9a2d-d66b4357f75a",
+			"name": "04 - Factura por ID",
+			"url": "http://localhost:8080/api/facturas/1",
+			"time": 77,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response has id": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has id": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				77
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response has id": false
+				}
+			]
+		},
+		{
+			"id": "c2c23359-e3c9-461c-bd0a-31c14410a149",
+			"name": "01 - Frontend Principal",
+			"url": "http://localhost:8080/",
+			"time": 85,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response is HTML": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is HTML": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				85
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response is HTML": false
+				}
+			]
+		},
+		{
+			"id": "f2c905ca-8d50-4e0a-a051-abf2ef1c8975",
+			"name": "02 - Favicon",
+			"url": "http://localhost:8080/favicon.svg",
+			"time": 83,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response is SVG": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is SVG": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				83
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response is SVG": false
+				}
+			]
+		},
+		{
+			"id": "4a75be6a-55fc-44aa-9a5d-42d3717b3234",
+			"name": "01 - Health Check Principal",
+			"url": "http://localhost:8080/actuator/health",
+			"time": 87,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Application is UP": false,
+				"Response has groups": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Application is UP": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has groups": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				87
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Application is UP": false,
+					"Response has groups": false
+				}
+			]
+		},
+		{
+			"id": "443c2a72-3f65-4046-a8c7-9feb20f4778d",
+			"name": "02 - Liveness Probe",
+			"url": "http://localhost:8080/actuator/health/liveness",
+			"time": 81,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				81
+			],
+			"allTests": [
+				{
+					"Status code is 200": false
+				}
+			]
+		},
+		{
+			"id": "afdea546-0c05-4bcb-8a8b-fac11f952490",
+			"name": "03 - Readiness Probe",
+			"url": "http://localhost:8080/actuator/health/readiness",
+			"time": 76,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				76
+			],
+			"allTests": [
+				{
+					"Status code is 200": false
+				}
+			]
+		},
+		{
+			"id": "0185c722-804c-47cc-a1ae-ef7f450edfb6",
+			"name": "04 - Application Info",
+			"url": "http://localhost:8080/actuator/info",
+			"time": 79,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				79
+			],
+			"allTests": [
+				{
+					"Status code is 200": false
+				}
+			]
+		},
+		{
+			"id": "67a5410d-a798-4c70-804d-eb5073049422",
+			"name": "05 - Metrics List",
+			"url": "http://localhost:8080/actuator/metrics",
+			"time": 78,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				78
+			],
+			"allTests": [
+				{
+					"Status code is 200": false
+				}
+			]
+		},
+		{
+			"id": "2e8aa561-2da0-4d6a-b0a0-02bc0e40736a",
+			"name": "01 - Test con Cliente Sin Datos",
+			"url": "http://localhost:8080/api/deuda/cliente/0001234567",
+			"time": 94,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 200": false,
+				"Response has empty arrays": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has empty arrays": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status code is 200": false,
+					"Response has empty arrays": false
+				}
+			]
+		},
+		{
+			"id": "53d36865-2da6-4da5-83b7-f6380d5fa9ba",
+			"name": "02 - Test de Autenticación (Sin Credenciales)",
+			"url": "http://localhost:8080/api/deuda/cliente/1001234567",
+			"time": 12,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status code is 401": true
+			},
+			"testPassFailCounts": {
+				"Status code is 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Status code is 401": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1020,
+	"collection": {
+		"requests": [
+			{
+				"id": "afaf1726-9060-4976-a1b6-a096125d02f0",
+				"method": "GET"
+			},
+			{
+				"id": "74b14a7a-dfe5-4782-b1d8-31945be242da",
+				"method": "GET"
+			},
+			{
+				"id": "3ff826c6-37ba-4f5d-b2a9-fb5645f90c27",
+				"method": "GET"
+			},
+			{
+				"id": "b447bc59-6708-4118-9a2d-d66b4357f75a",
+				"method": "GET"
+			},
+			{
+				"id": "c2c23359-e3c9-461c-bd0a-31c14410a149",
+				"method": "GET"
+			},
+			{
+				"id": "f2c905ca-8d50-4e0a-a051-abf2ef1c8975",
+				"method": "GET"
+			},
+			{
+				"id": "4a75be6a-55fc-44aa-9a5d-42d3717b3234",
+				"method": "GET"
+			},
+			{
+				"id": "443c2a72-3f65-4046-a8c7-9feb20f4778d",
+				"method": "GET"
+			},
+			{
+				"id": "afdea546-0c05-4bcb-8a8b-fac11f952490",
+				"method": "GET"
+			},
+			{
+				"id": "0185c722-804c-47cc-a1ae-ef7f450edfb6",
+				"method": "GET"
+			},
+			{
+				"id": "67a5410d-a798-4c70-804d-eb5073049422",
+				"method": "GET"
+			},
+			{
+				"id": "2e8aa561-2da0-4d6a-b0a0-02bc0e40736a",
+				"method": "GET"
+			},
+			{
+				"id": "53d36865-2da6-4da5-83b7-f6380d5fa9ba",
+				"method": "GET"
+			}
+		]
+	}
 }

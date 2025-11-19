@@ -45,12 +45,15 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
+        working-directory: ./SERVICIUDAD-CALI
         run: mvn clean compile -DskipTests
 
       - name: Run unit tests
+        working-directory: ./SERVICIUDAD-CALI
         run: mvn test
 
       - name: Run integration tests
+        working-directory: ./SERVICIUDAD-CALI
         run: mvn verify -DskipUnitTests
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/serviciudad_test
@@ -58,16 +61,18 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: test
 
       - name: Generate JaCoCo coverage report
+        working-directory: ./SERVICIUDAD-CALI
         run: mvn jacoco:report
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./target/site/jacoco/jacoco.xml
+          file: ./SERVICIUDAD-CALI/target/site/jacoco/jacoco.xml
           flags: unittests
           name: codecov-umbrella
 
       - name: Check coverage thresholds
+        working-directory: ./SERVICIUDAD-CALI
         run: mvn jacoco:check
 
       - name: Upload test results
@@ -75,14 +80,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: target/surefire-reports/
+          path: SERVICIUDAD-CALI/target/surefire-reports/
 
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
-          path: target/site/jacoco/
+          path: SERVICIUDAD-CALI/target/site/jacoco/
 
   code-quality:
     name: Code Quality Analysis
@@ -116,6 +121,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze
+        working-directory: ./SERVICIUDAD-CALI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -159,8 +165,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./SERVICIUDAD-CALI
+          file: ./SERVICIUDAD-CALI/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

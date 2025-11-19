@@ -55,10 +55,6 @@ jobs:
       - name: Run integration tests
         working-directory: ./SERVICIUDAD-CALI
         run: mvn verify -DskipUnitTests
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/serviciudad_test
-          SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test
 
       - name: Generate JaCoCo coverage report
         working-directory: ./SERVICIUDAD-CALI

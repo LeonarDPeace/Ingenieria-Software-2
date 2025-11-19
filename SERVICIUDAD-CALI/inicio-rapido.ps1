@@ -1,52 +1,47 @@
-# ============================================================================
-# ServiCiudad Cali - Script de Inicio Rápido
-# ============================================================================
+# ========================================
+# ServiCiudad Cali - Script de Inicio Rapido
+# ========================================
 # 
 # Este script automatiza:
-# 1. Verificar Docker Desktop
-# 2. Levantar contenedores (app + PostgreSQL)
-# 3. Verificar que la API esté respondiendo
-# 4. Abrir el frontend en el navegador
-#
-# Uso: .\inicio-rapido.ps1
+# 1. Levantar Docker (app + PostgreSQL)
+# 2. Verificar que la API este respondiendo
+# 3. Abrir el frontend en el navegador
 #
 # Autor: Equipo ServiCiudad Cali
-# Fecha: Noviembre 2025
-# Versión: 2.0
-# ============================================================================
+# Fecha: Octubre 2025
+# ========================================
 
-
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "  ServiCiudad Cali - Inicio Rápido v2.0" -ForegroundColor Cyan
-Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host " ServiCiudad Cali - Inicio Rapido" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# ============================================================================
-# 1. VERIFICAR DOCKER DESKTOP
-# ============================================================================
+# ========================================
+# 1. VERIFICAR DOCKER
+# ========================================
 
-Write-Host "[1/5] 🐳 Verificando Docker Desktop..." -ForegroundColor Yellow
+Write-Host "[1/5] Verificando Docker Desktop..." -ForegroundColor Yellow
 
 try {
     $dockerVersion = docker --version
-    Write-Host "   ✅ Docker encontrado: $dockerVersion" -ForegroundColor Green
+    Write-Host "OK Docker encontrado: $dockerVersion" -ForegroundColor Green
 } catch {
-    Write-Host "   ❌ ERROR: Docker no está instalado o no está en el PATH" -ForegroundColor Red
+    Write-Host "ERROR: Docker no esta instalado o no esta en el PATH" -ForegroundColor Red
     Write-Host ""
-    Write-Host "💡 Solución:" -ForegroundColor Yellow
-    Write-Host "   1. Descargar Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor White
-    Write-Host "   2. Instalar y reiniciar el equipo" -ForegroundColor White
-    Write-Host "   3. Ejecutar este script nuevamente" -ForegroundColor White
+    Write-Host "Solucion:" -ForegroundColor Yellow
+    Write-Host "1. Descargar Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor White
+    Write-Host "2. Instalar y reiniciar el equipo" -ForegroundColor White
+    Write-Host "3. Ejecutar este script nuevamente" -ForegroundColor White
     pause
     exit 1
 }
 
-# ============================================================================
+# ========================================
 # 2. NAVEGAR AL DIRECTORIO DEL PROYECTO
-# ============================================================================
+# ========================================
 
 Write-Host ""
-Write-Host "[2/5] 📂 Navegando al directorio del proyecto..." -ForegroundColor Yellow
+Write-Host "[2/5] Navegando al directorio del proyecto..." -ForegroundColor Yellow
 
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $scriptPath

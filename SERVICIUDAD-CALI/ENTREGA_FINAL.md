@@ -100,18 +100,20 @@ PS> mvn jacoco:report
 
 ### 2.1 Pipeline Configurado
 
-**Archivo:** `.github/workflows/ci-cd.yml`
+**Archivo:** `.github/workflows/ci-cd.yml` *(raíz del repositorio)*
 
 **Disparadores automáticos:**
 ```yaml
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, temp-config ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 ```
 
-✅ Ejecución automática en cada commit/push
+✅ Ejecución automática en cada commit/push  
+✅ Pipeline ubicado en raíz del repositorio para detección automática por GitHub Actions  
+✅ Working directory configurado: `./SERVICIUDAD-CALI`
 
 ### 2.2 Jobs del Pipeline
 

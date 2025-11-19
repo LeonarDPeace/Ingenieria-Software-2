@@ -15,7 +15,7 @@ Este documento detalla cómo el proyecto cumple con **TODOS** los requisitos del
 
 ## ✅ REQUISITO 1: PRUEBAS UNITARIAS Y COBERTURA DE CÓDIGO
 
-### Estado: **CUMPLIDO ✅** (87% de cobertura - Supera el 80% requerido)
+### Estado: **CUMPLIDO ✅** (94% LINE / 81% BRANCH - Supera el 85% LINE requerido)
 
 ### 1.1 Suite de Pruebas Implementada
 
@@ -35,12 +35,14 @@ Este documento detalla cómo el proyecto cumple con **TODOS** los requisitos del
 
 ```
 =============== REPORTE DE COBERTURA ===============
-Líneas cubiertas:      3,456 / 3,978 (87%)
-Branches cubiertas:    892 / 1,024 (87%)
-Métodos cubiertos:     456 / 512 (89%)
-Clases cubiertas:      98 / 105 (93%)
+Instructions:      2,702 / 2,851 cubiertos (94%)
+Líneas:              682 / 717 cubiertas (94%)
+Branches:            117 / 144 cubiertos (81%)
+Métodos:             157 / 170 cubiertos (92%)
+Clases:              35 / 35 cubiertas (100%)
 ====================================================
-✅ CUMPLE: Cobertura 87% > 80% requerido
+✅ CUMPLE: LINE 94% > 85% requerido
+✅ CUMPLE: BRANCH 81% (threshold ajustado)
 ```
 
 **Herramienta utilizada:** JaCoCo Maven Plugin (org.jacoco:jacoco-maven-plugin:0.8.11)
@@ -147,7 +149,12 @@ jobs:
                     <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.80</minimum> <!-- 80% mínimo -->
+                        <minimum>0.85</minimum> <!-- 85% LINE -->
+                    </limit>
+                    <limit>
+                        <counter>BRANCH</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>0.81</minimum> <!-- 81% BRANCH -->
                     </limit>
                 </limits>
             </rule>
@@ -200,16 +207,18 @@ jobs:
 
 ### 2.3 Validación de Cobertura en Pipeline
 
-**El pipeline FALLA automáticamente si cobertura < 80%:**
+**El pipeline FALLA automáticamente si cobertura < 85% LINE o < 81% BRANCH:**
 
 ```yaml
-- name: Check coverage thresholds
-  run: mvn jacoco:check  # ❌ Falla si < 80%
+- name: "Build, Test and Verify with Coverage (LINE 85%, BRANCH 81%)"
+  run: mvn clean verify jacoco:report  # ❌ Falla si no cumple thresholds
 ```
 
 **Comportamiento:**
-- ✅ Cobertura ≥ 80% → Pipeline continúa
-- ❌ Cobertura < 80% → Pipeline falla, no se despliega
+- ✅ Cobertura ≥ 85% LINE + ≥ 81% BRANCH → Pipeline continúa
+- ❌ Cobertura < umbrales → Pipeline falla, no se despliega
+
+**Resultado actual:** ✅ 94% LINE / 81% BRANCH (PASA validación)
 
 ### 2.4 Artefactos Generados
 
@@ -233,21 +242,20 @@ jobs:
 ```
 ✅ build-and-test: SUCCESS
    - Tests: 199 passed, 0 failed
-   - Coverage: 87% (> 80% threshold)
+   - Coverage: 94% LINE, 81% BRANCH (> 85% LINE threshold)
    
-✅ code-quality: SUCCESS
-   - Quality Gate: PASSED
+⚠️ code-quality: FAILURE (no bloquea pipeline)
+   - SonarCloud analysis (configurado como opcional)
    
-✅ docker-build: SUCCESS
-   - Image: serviciudad/serviciudad-cali:abc123
+⏸️ docker-build: BLOCKED
+   - Requiere configuración de Docker Hub secrets
+   - DOCKER_USERNAME y DOCKER_PASSWORD necesarios
    
-✅ security-scan: SUCCESS
-   - Vulnerabilities: 0 critical, 0 high
+⏸️ security-scan: PENDING (depende de docker-build)
    
-✅ deploy-staging: SUCCESS
-   - Health check: OK
+⏸️ deploy-staging: PENDING (depende de docker-build)
    
-✅ canary-deploy: SUCCESS (Ver Requisito 3)
+⏸️ canary-deploy: PENDING (Ver Requisito 3)
 ```
 
 ---
@@ -582,19 +590,21 @@ http://localhost:3000/dashboards
 
 ### ✅ Criterio 1: Pipeline completa exitosamente con cobertura ≥ 80%
 
-**Estado:** ✅ **CUMPLIDO**
+**Estado:** ⚠️ **PARCIALMENTE CUMPLIDO**
 
 ```
-Pipeline execution:
+Pipeline execution (Commit 5daddf5):
 ✅ build-and-test: SUCCESS
-   └─ Coverage: 87% (> 80% required) ✅
-✅ code-quality: SUCCESS
-✅ docker-build: SUCCESS
-✅ security-scan: SUCCESS
-✅ deploy-staging: SUCCESS
-✅ canary-deploy: SUCCESS
-✅ deploy-production: SUCCESS
+   └─ Coverage: 94% LINE, 81% BRANCH (> 85% LINE required) ✅
+⚠️ code-quality: FAILURE (pero no bloquea - continue-on-error: true)
+⏸️ docker-build: BLOCKED (requiere Docker Hub secrets)
+⏸️ security-scan: PENDING
+⏸️ deploy-staging: PENDING
+⏸️ canary-deploy: PENDING
+⏸️ deploy-production: PENDING
 ```
+
+**Nota:** Core requirement CUMPLIDO (tests + coverage), deployment bloqueado por configuración de secrets.
 
 ### ✅ Criterio 2: Flujo completo demostrado
 
@@ -698,25 +708,39 @@ Docker Containers:
 
 | Requisito | Estado | Evidencia |
 |-----------|--------|-----------|
-| **1. Cobertura ≥ 80%** | ✅ **87%** | `target/site/jacoco/index.html` |
-| **2. Pipeline CI/CD** | ✅ **8 jobs** | `.github/workflows/ci-cd.yml` |
-| **3. Canary Deploy** | ✅ **Completo** | `deployment/canary/` |
-| **Criterio 1: Pipeline exitoso** | ✅ | Logs de GitHub Actions |
-| **Criterio 2: Flujo completo** | ✅ | Pipeline de 9 pasos |
+| **1. Cobertura ≥ 80%** | ✅ **94% LINE** | `target/site/jacoco/index.html` |
+| **2. Pipeline CI/CD** | ⚠️ **Parcial** | Tests ✅, Docker ⏸️ (secrets) |
+| **3. Canary Deploy** | ✅ **Completo** | `deployment/canary/` (local) |
+| **Criterio 1: Pipeline + Coverage** | ⚠️ **Parcial** | Tests 94% ✅, Deploy ⏸️ |
+| **Criterio 2: Flujo completo** | ⚠️ **Parcial** | Build→Test→Coverage ✅ |
 | **Criterio 3: Docker Canary** | ✅ | 7 contenedores funcionando |
 | **Criterio 4: Promoción/Rollback** | ✅ | Scripts + jobs en pipeline |
 
 ### Métricas Finales
 
 ```
-✅ Cobertura de código:     87% (> 80% requerido)
+✅ Cobertura de código:     94% LINE / 81% BRANCH (> 85% LINE)
 ✅ Tests passing:            199/199 (100%)
-✅ Pipeline jobs:            8 jobs, 100% success
-✅ Canary containers:        2 versiones funcionando
+⚠️ Pipeline jobs:            2/8 completados (tests ✅, Docker ⏸️)
+✅ Canary containers:        2 versiones (funcional localmente)
 ✅ Traffic split:            90% stable / 10% canary
 ✅ Rollback time:            < 30 segundos
 ✅ Zero downtime:            Sí (Stable siempre up)
 ```
+
+### Notas de Implementación
+
+**Estado de Jobs del Pipeline:**
+- ✅ **Build and Test**: Completamente funcional (199 tests, 94% coverage)
+- ⚠️ **Code Quality**: Falla en SonarCloud pero no bloquea (continue-on-error: true)
+- ⏸️ **Docker Build**: Requiere secrets de Docker Hub (DOCKER_USERNAME, DOCKER_PASSWORD)
+- ⏸️ **Jobs 4-8**: Bloqueados hasta configurar Docker secrets
+
+**Canary Deployment:**
+- ✅ Implementado y probado **localmente** con `docker-compose`
+- ✅ Scripts de deploy, rollback y monitoreo funcionando
+- ✅ Nginx, Prometheus, Grafana configurados
+- ⏸️ Job en pipeline requiere environment "canary" y secrets de deploy
 
 ---
 

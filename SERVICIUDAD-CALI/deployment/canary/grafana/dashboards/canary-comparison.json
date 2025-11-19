@@ -1,0 +1,244 @@
+{
+  "dashboard": {
+    "title": "ServiCiudad - Canary Deployment Comparison",
+    "tags": ["canary", "deployment", "serviciudad"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 1,
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Rate (Stable vs Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"stable\"}[5m]))",
+            "legendFormat": "Stable",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"canary\"}[5m]))",
+            "legendFormat": "Canary",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps", "label": "Requests/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Error Rate (5xx) - Stable vs Canary",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"stable\",status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{deployment=\"stable\"}[5m])) * 100",
+            "legendFormat": "Stable Error %",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"canary\",status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{deployment=\"canary\"}[5m])) * 100",
+            "legendFormat": "Canary Error %",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "Error Rate" },
+          { "format": "short" }
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": { "type": "gt", "params": [2] },
+              "operator": { "type": "and" },
+              "query": { "params": ["B", "5m", "now"] },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Canary Error Rate alert",
+          "noDataState": "no_data",
+          "notifications": []
+        }
+      },
+      {
+        "id": 3,
+        "title": "Response Time P95 (Stable vs Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{deployment=\"stable\"}[5m])) by (le))",
+            "legendFormat": "Stable P95",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{deployment=\"canary\"}[5m])) by (le))",
+            "legendFormat": "Canary P95",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "label": "Latency" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Memory Usage (Stable vs Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{name=~\".*stable.*\"} / 1024 / 1024",
+            "legendFormat": "Stable (MB)",
+            "refId": "A"
+          },
+          {
+            "expr": "container_memory_usage_bytes{name=~\".*canary.*\"} / 1024 / 1024",
+            "legendFormat": "Canary (MB)",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "decmbytes", "label": "Memory" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "CPU Usage (Stable vs Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{name=~\".*stable.*\"}[5m]) * 100",
+            "legendFormat": "Stable CPU %",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{name=~\".*canary.*\"}[5m]) * 100",
+            "legendFormat": "Canary CPU %",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "CPU %" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Traffic Distribution",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"stable\"}[5m]))",
+            "legendFormat": "Stable",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{deployment=\"canary\"}[5m]))",
+            "legendFormat": "Canary",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "HTTP Status Codes (Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+        "targets": [
+          {
+            "expr": "sum by(status) (rate(http_server_requests_seconds_count{deployment=\"canary\"}[5m]))",
+            "legendFormat": "{{ status }}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps", "label": "Requests/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Database Connection Pool (Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+        "targets": [
+          {
+            "expr": "hikaricp_connections_active{deployment=\"canary\"}",
+            "legendFormat": "Active Connections",
+            "refId": "A"
+          },
+          {
+            "expr": "hikaricp_connections_idle{deployment=\"canary\"}",
+            "legendFormat": "Idle Connections",
+            "refId": "B"
+          },
+          {
+            "expr": "hikaricp_connections_pending{deployment=\"canary\"}",
+            "legendFormat": "Pending Connections",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "label": "Connections" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "JVM Heap Memory (Canary)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{deployment=\"canary\",area=\"heap\"} / 1024 / 1024",
+            "legendFormat": "Used Heap (MB)",
+            "refId": "A"
+          },
+          {
+            "expr": "jvm_memory_max_bytes{deployment=\"canary\",area=\"heap\"} / 1024 / 1024",
+            "legendFormat": "Max Heap (MB)",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "decmbytes", "label": "Memory" },
+          { "format": "short" }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+    },
+    "annotations": {
+      "list": [
+        {
+          "datasource": "Prometheus",
+          "enable": true,
+          "expr": "ALERTS{alertname!=\"\",severity=\"critical\"}",
+          "iconColor": "red",
+          "name": "Critical Alerts",
+          "step": "60s",
+          "tagKeys": "alertname",
+          "textFormat": "{{ alertname }}",
+          "titleFormat": "Alert"
+        }
+      ]
+    }
+  }
+}

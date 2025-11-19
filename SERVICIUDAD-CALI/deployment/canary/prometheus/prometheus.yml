@@ -1,0 +1,95 @@
+# ==========================================
+# PROMETHEUS CONFIGURATION
+# ServiCiudad Cali - Canary Deployment Monitoring
+# ==========================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'serviciudad-cali'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "/etc/prometheus/alerts/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # ==========================================
+  # PROMETHEUS SELF-MONITORING
+  # ==========================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # ==========================================
+  # SERVICIUDAD STABLE VERSION
+  # ==========================================
+  - job_name: 'serviciudad-stable'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['serviciudad-stable:8080']
+        labels:
+          app: 'serviciudad'
+          version: 'stable'
+          deployment: 'stable'
+
+  # ==========================================
+  # SERVICIUDAD CANARY VERSION
+  # ==========================================
+  - job_name: 'serviciudad-canary'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['serviciudad-canary:8080']
+        labels:
+          app: 'serviciudad'
+          version: 'canary'
+          deployment: 'canary'
+
+  # ==========================================
+  # NGINX LOAD BALANCER
+  # ==========================================
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx-lb:9113']
+        labels:
+          app: 'nginx'
+          component: 'loadbalancer'
+
+  # ==========================================
+  # POSTGRES DATABASE
+  # ==========================================
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          app: 'postgres'
+          component: 'database'
+
+  # ==========================================
+  # NODE EXPORTER (HOST METRICS)
+  # ==========================================
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          component: 'host'
+
+  # ==========================================
+  # DOCKER METRICS
+  # ==========================================
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          component: 'docker'

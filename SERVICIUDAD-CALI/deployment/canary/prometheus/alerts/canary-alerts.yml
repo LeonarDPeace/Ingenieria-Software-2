@@ -1,0 +1,190 @@
+# ==========================================
+# PROMETHEUS ALERT RULES
+# ServiCiudad Cali - Canary Deployment
+# ==========================================
+
+groups:
+  # ==========================================
+  # CANARY DEPLOYMENT ALERTS
+  # ==========================================
+  - name: canary_deployment
+    interval: 30s
+    rules:
+      # Alta tasa de errores en canary vs stable
+      - alert: CanaryHighErrorRate
+        expr: |
+          (
+            sum(rate(http_server_requests_seconds_count{deployment="canary",status=~"5.."}[5m]))
+            /
+            sum(rate(http_server_requests_seconds_count{deployment="canary"}[5m]))
+          )
+          >
+          (
+            sum(rate(http_server_requests_seconds_count{deployment="stable",status=~"5.."}[5m]))
+            /
+            sum(rate(http_server_requests_seconds_count{deployment="stable"}[5m]))
+          ) * 1.5
+        for: 5m
+        labels:
+          severity: critical
+          component: canary
+        annotations:
+          summary: "Canary tiene 50% más errores que stable"
+          description: "La versión canary está generando significativamente más errores 5xx que la versión stable. Considere hacer rollback."
+          dashboard: "http://localhost:3000/d/canary-comparison"
+
+      # Latencia alta en canary
+      - alert: CanaryHighLatency
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(http_server_requests_seconds_bucket{deployment="canary"}[5m])) by (le)
+          ) > 2.0
+        for: 5m
+        labels:
+          severity: warning
+          component: canary
+        annotations:
+          summary: "Latencia p95 > 2s en canary"
+          description: "El percentil 95 de latencia en canary es mayor a 2 segundos durante los últimos 5 minutos."
+
+      # Uso excesivo de memoria en canary
+      - alert: CanaryHighMemory
+        expr: |
+          (
+            container_memory_usage_bytes{name=~".*canary.*"}
+            /
+            container_spec_memory_limit_bytes{name=~".*canary.*"}
+          ) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          component: canary
+        annotations:
+          summary: "Canary usando > 85% de memoria"
+          description: "La versión canary está utilizando más del 85% de su límite de memoria."
+
+      # Comparación de throughput canary vs stable
+      - alert: CanaryLowThroughput
+        expr: |
+          sum(rate(http_server_requests_seconds_count{deployment="canary"}[5m]))
+          <
+          sum(rate(http_server_requests_seconds_count{deployment="stable"}[5m])) * 0.05
+        for: 10m
+        labels:
+          severity: warning
+          component: canary
+        annotations:
+          summary: "Canary recibiendo menos tráfico del esperado"
+          description: "El canary está recibiendo menos del 5% del tráfico total. Verificar configuración del load balancer."
+
+  # ==========================================
+  # APPLICATION HEALTH ALERTS
+  # ==========================================
+  - name: application_health
+    interval: 30s
+    rules:
+      # Servicio caído
+      - alert: ServiceDown
+        expr: up{job=~"serviciudad.*"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Servicio {{ $labels.job }} está down"
+          description: "El servicio {{ $labels.job }} ({{ $labels.deployment }}) no responde hace más de 1 minuto."
+
+      # Health check fallando
+      - alert: HealthCheckFailing
+        expr: health_status{job=~"serviciudad.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Health check fallando en {{ $labels.job }}"
+          description: "El health check de {{ $labels.job }} está fallando consistentemente."
+
+  # ==========================================
+  # PERFORMANCE ALERTS
+  # ==========================================
+  - name: performance
+    interval: 30s
+    rules:
+      # Latencia global alta
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(http_server_requests_seconds_bucket[5m])) by (le, deployment)
+          ) > 3.0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latencia p95 > 3s en {{ $labels.deployment }}"
+          description: "La latencia del percentil 95 está por encima de 3 segundos."
+
+      # CPU alto
+      - alert: HighCPU
+        expr: |
+          rate(container_cpu_usage_seconds_total{name=~".*serviciudad.*"}[5m]) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso de CPU > 80% en {{ $labels.name }}"
+          description: "El contenedor {{ $labels.name }} está usando más del 80% de CPU."
+
+  # ==========================================
+  # DATABASE ALERTS
+  # ==========================================
+  - name: database
+    interval: 30s
+    rules:
+      # Conexiones altas
+      - alert: PostgresHighConnections
+        expr: |
+          pg_stat_activity_count > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Número alto de conexiones a PostgreSQL"
+          description: "PostgreSQL tiene {{ $value }} conexiones activas."
+
+      # Transacciones lentas
+      - alert: PostgresSlowQueries
+        expr: |
+          rate(pg_stat_statements_mean_exec_time[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Queries lentas detectadas en PostgreSQL"
+          description: "Tiempo promedio de ejecución de queries > 1 segundo."
+
+  # ==========================================
+  # BUSINESS METRICS ALERTS
+  # ==========================================
+  - name: business_metrics
+    interval: 1m
+    rules:
+      # Tasa de consultas de deuda baja
+      - alert: LowDeudaConsultaRate
+        expr: |
+          sum(rate(http_server_requests_seconds_count{uri="/api/deuda/consultar"}[5m])) < 0.1
+        for: 15m
+        labels:
+          severity: info
+        annotations:
+          summary: "Tasa baja de consultas de deuda"
+          description: "Las consultas de deuda están por debajo del promedio esperado."
+
+      # Tasa alta de pagos
+      - alert: HighPaymentRate
+        expr: |
+          sum(rate(http_server_requests_seconds_count{uri="/api/facturas/pagar"}[5m])) > 10
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "Tasa alta de pagos detectada"
+          description: "Se está procesando un volumen inusualmente alto de pagos."

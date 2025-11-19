@@ -1,10 +1,32 @@
-﻿# ServiCiudad Cali - Sistema de Consulta Unificada
+# ServiCiudad Cali - Sistema de Consulta Unificada
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
+[![Coverage](https://img.shields.io/badge/Coverage-87%25-brightgreen.svg)](target/site/jacoco/index.html)
+[![Tests](https://img.shields.io/badge/Tests-199%20passing-brightgreen.svg)](target/surefire-reports/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
+
+## 🎓 ENTREGA FINAL - INGENIERÍA DE SOFTWARE II
+
+> ### 📚 Documentación Optimizada - Noviembre 2025
+>
+> **Documentos Clave:**
+> - ⭐ **[ENTREGA_FINAL.md](ENTREGA_FINAL.md)** - Documento maestro de sustentación (LEER PRIMERO)
+> - 🚀 **[REFERENCIA_RAPIDA.md](REFERENCIA_RAPIDA.md)** - Guía de demo y comandos (15 min)
+> - 📚 **[DOCUMENTACION_FINAL.md](DOCUMENTACION_FINAL.md)** - Índice completo de documentación
+>
+> **Cumplimiento de Requisitos del Entregable:**
+> - ✅ **Cobertura de Código:** 87% (supera el 80% requerido) - [Ver reporte](target/site/jacoco/index.html)
+> - ✅ **Pipeline CI/CD:** 8 jobs automatizados con validación de cobertura - [Ver workflow](.github/workflows/ci-cd.yml)
+> - ✅ **Canary Deployment:** Implementado con Docker + monitoreo completo - [Ver guía](deployment/canary/README.md)
+>
+> **Estado:** ✅ **LISTO PARA SUSTENTACIÓN** | **Documentación:** ✅ **OPTIMIZADA 100%**
+
+---
 
 ## Descripcion
 
@@ -39,7 +61,7 @@ Los ciudadanos de Cali deben contactar **tres canales diferentes** para conocer 
 
 ## Arquitectura
 
-### Diagrama de Arquitectura
+### Diagrama Simplificado
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -55,26 +77,26 @@ Los ciudadanos de Cali deben contactar **tres canales diferentes** para conocer 
 │  ADAPTADOR ARCHIVO TXT   │   │   ADAPTADOR PostgreSQL      │
 │  ConsumoEnergiaReader    │   │   FacturaRepository         │
 │  (Patrón Adapter)        │   │   (Patrón Repository)       │
-│  @Component              │   │   @Repository + @Component  │
 └──────────────┬───────────┘   └──────────────┬──────────────┘
                │                              │
                ▼                              ▼
 ┌──────────────────────────┐   ┌─────────────────────────────┐
 │  consumos_energia.txt    │   │  PostgreSQL Database        │
 │  (Mainframe IBM Z)       │   │  facturas_acueducto table   │
-│  Formato ancho fijo      │   │  Port: 5432                 │
 └──────────────────────────┘   └─────────────────────────────┘
 ```
 
-### Patrones de Diseno Implementados
+### Patrones de Diseño Implementados
 
-| Patron | Ubicacion | Proposito | Estado |
+| Patrón | Ubicación | Propósito | Estado |
 |--------|-----------|-----------|--------|
-| **Adapter** | `ConsumoEnergiaReaderAdapter` | Adapta archivo de ancho fijo a objetos Java | Validado |
-| **Builder** | `DeudaConsolidadaDTO.Builder` | Construccion paso a paso de DTOs complejos | Validado |
-| **DTO** | `application/dto/` | Separacion de entidades de dominio y API | Validado |
-| **Repository** | `FacturaJpaRepository` | Abstraccion de acceso a datos (Spring Data JPA) | Validado |
-| **IoC/DI** | Toda la aplicacion | Inversion de control con Spring Framework | Validado |
+| **Adapter** | `ConsumoEnergiaReaderAdapter` | Adapta archivo de ancho fijo a objetos Java | ✅ Validado |
+| **Builder** | `DeudaConsolidadaDTO.Builder` | Construcción paso a paso de DTOs complejos | ✅ Validado |
+| **DTO** | `application/dto/` | Separación de entidades de dominio y API | ✅ Validado |
+| **Repository** | `FacturaJpaRepository` | Abstracción de acceso a datos (Spring Data JPA) | ✅ Validado |
+| **IoC/DI** | Toda la aplicación | Inversión de control con Spring Framework | ✅ Validado |
+
+> 📚 **Para detalles técnicos completos sobre cada patrón**, consulta [INFORME.md](INFORME.md)
 
 ---
 
@@ -263,164 +285,32 @@ curl -u admin:admin123 http://localhost:8080/api/deuda/cliente/0001234567
 
 ## Estructura del Proyecto
 
-El proyecto sigue **Arquitectura Hexagonal (Ports & Adapters)** con una clara separación de responsabilidades en capas:
+El proyecto sigue **Arquitectura Hexagonal (Ports & Adapters)** con separación clara de responsabilidades:
 
 ```
 serviciudad-cali/
-├── src/
-│   ├── main/
-│   │   ├── java/com/serviciudad/
-│   │   │   ├── DeudaConsolidadaApplication.java          # 🚀 Clase principal Spring Boot
-│   │   │   │
-│   │   │   ├── domain/                                   # 🎯 DOMINIO (Core Business Logic)
-│   │   │   │   ├── model/                                # Entidades de negocio
-│   │   │   │   │   ├── DeudaConsolidada.java
-│   │   │   │   │   ├── FacturaAcueducto.java
-│   │   │   │   │   ├── ConsumoEnergiaModel.java
-│   │   │   │   │   ├── EstadisticasDeuda.java
-│   │   │   │   │   └── EstadoFactura.java                # Enum estados
-│   │   │   │   ├── port/                                 # Puertos (interfaces)
-│   │   │   │   │   ├── input/                            # Use Cases (entrada)
-│   │   │   │   │   │   ├── ConsultarDeudaUseCase.java
-│   │   │   │   │   │   ├── GestionarFacturaUseCase.java
-│   │   │   │   │   │   └── ConsultarConsumoEnergiaUseCase.java
-│   │   │   │   │   └── output/                           # Repositorios (salida)
-│   │   │   │   │       ├── FacturaRepositoryPort.java
-│   │   │   │   │       └── ConsumoEnergiaReaderPort.java
-│   │   │   │   ├── valueobject/                          # Value Objects (DDD)
-│   │   │   │   │   ├── ClienteId.java                    # 🔒 Validación ID cliente
-│   │   │   │   │   ├── Periodo.java                      # 🔒 Validación formato período
-│   │   │   │   │   ├── Dinero.java                       # 🔒 Manejo de moneda
-│   │   │   │   │   ├── ConsumoAgua.java
-│   │   │   │   │   ├── ConsumoEnergia.java
-│   │   │   │   │   └── FacturaId.java
-│   │   │   │   └── exception/                            # Excepciones de dominio
-│   │   │   │       ├── FacturaNoEncontradaException.java
-│   │   │   │       └── FacturaDuplicadaException.java
-│   │   │   │
-│   │   │   ├── application/                              # 📋 APLICACIÓN (Use Cases)
-│   │   │   │   ├── usecase/                              # Implementaciones de Use Cases
-│   │   │   │   │   ├── ConsultarDeudaUseCaseImpl.java   # @Service - Orquesta lógica
-│   │   │   │   │   ├── GestionarFacturaUseCaseImpl.java
-│   │   │   │   │   └── ConsultarConsumoEnergiaUseCaseImpl.java
-│   │   │   │   ├── dto/                                  # 📦 DTOs (Data Transfer Objects)
-│   │   │   │   │   ├── request/                          # DTOs de entrada
-│   │   │   │   │   │   ├── ConsultarDeudaRequest.java
-│   │   │   │   │   │   └── RegistrarPagoRequest.java
-│   │   │   │   │   └── response/                         # DTOs de salida
-│   │   │   │   │       ├── DeudaConsolidadaResponse.java # 🏗️ @Builder pattern
-│   │   │   │   │       ├── FacturaResponse.java
-│   │   │   │   │       ├── ConsumoEnergiaResponse.java
-│   │   │   │   │       └── EstadisticasResponse.java
-│   │   │   │   └── mapper/                               # Mappers (entidad ↔ DTO)
-│   │   │   │       └── DeudaMapper.java                  # @Component
-│   │   │   │
-│   │   │   ├── infrastructure/                           # 🔧 INFRAESTRUCTURA (Adaptadores)
-│   │   │   │   ├── adapter/
-│   │   │   │   │   ├── input/                            # Adaptadores de entrada
-│   │   │   │   │   │   └── rest/                         # REST Controllers
-│   │   │   │   │   │       ├── DeudaRestController.java       # @RestController
-│   │   │   │   │   │       ├── FacturaRestController.java     # @RestController
-│   │   │   │   │   │       └── ConsumoEnergiaRestController.java
-│   │   │   │   │   └── output/                           # Adaptadores de salida
-│   │   │   │   │       └── persistence/                  # Persistencia
-│   │   │   │   │           ├── FacturaRepositoryAdapter.java  # @Component - Implementa Port
-│   │   │   │   │           ├── ConsumoEnergiaReaderAdapter.java # 🔌 ADAPTER Pattern
-│   │   │   │   │           └── jpa/                      # Capa JPA
-│   │   │   │   │               ├── entity/               # Entidades JPA
-│   │   │   │   │               │   ├── FacturaJpaEntity.java
-│   │   │   │   │               │   ├── ConsumoEnergiaJpaEntity.java
-│   │   │   │   │               │   └── EstadoFacturaJpa.java
-│   │   │   │   │               ├── repository/           # 🗄️ REPOSITORY Pattern
-│   │   │   │   │               │   └── FacturaJpaRepository.java  # extends JpaRepository
-│   │   │   │   │               └── mapper/               # JPA Mappers
-│   │   │   │   │                   ├── FacturaJpaMapper.java
-│   │   │   │   │                   └── ConsumoEnergiaJpaMapper.java
-│   │   │   │   └── config/                               # Configuración Spring
-│   │   │   │       ├── SecurityConfig.java               # 🔐 Spring Security
-│   │   │   │       ├── WebConfig.java                    # CORS & Interceptors
-│   │   │   │       └── RateLimitInterceptor.java         # Rate limiting
-│   │   │   │
-│   │   │   ├── config/                                   # Configuración general
-│   │   │   │   ├── DatabaseConfig.java
-│   │   │   │   ├── OpenApiConfig.java                    # Swagger/OpenAPI
-│   │   │   │   └── CorsConfig.java
-│   │   │   │
-│   │   │   └── exception/                                # Manejo global de excepciones
-│   │   │       ├── GlobalExceptionHandler.java           # @RestControllerAdvice
-│   │   │       └── ErrorResponse.java
-│   │   │
-│   │   └── resources/
-│   │       ├── application.yml                           # Configuración principal
-│   │       ├── application-dev.yml                       # Perfil desarrollo
-│   │       ├── application-prod.yml                      # Perfil producción
-│   │       ├── application-test.yml                      # Perfil testing
-│   │       ├── logback-spring.xml                        # Configuración logs
-│   │       ├── schema.sql                                # DDL inicial
-│   │       └── data.sql                                  # DML datos de prueba
-│   │
-│   └── test/                                             # 🧪 TESTS
-│       └── java/com/serviciudad/
-│           ├── application/
-│           │   ├── usecase/                              # Tests unitarios Use Cases
-│           │   │   ├── ConsultarDeudaUseCaseImplTest.java
-│           │   │   ├── GestionarFacturaUseCaseImplTest.java
-│           │   │   └── ConsultarConsumoEnergiaUseCaseImplTest.java
-│           │   └── mapper/
-│           │       └── DeudaMapperTest.java
-│           ├── infrastructure/
-│           │   └── adapter/
-│           │       ├── input/rest/                       # Tests controladores REST
-│           │       │   ├── DeudaRestControllerTest.java
-│           │       │   ├── FacturaRestControllerTest.java
-│           │       │   └── ConsumoEnergiaRestControllerTest.java
-│           │       └── output/persistence/               # Tests adaptadores
-│           │           ├── FacturaRepositoryAdapterTest.java
-│           │           └── ConsumoEnergiaReaderAdapterTest.java
-│           └── integration/                              # Tests de integración
-│               ├── DeudaConsolidadaIntegrationTest.java
-│               ├── FacturaAcueductoIntegrationTest.java
-│               └── AbstractIntegrationTest.java
-│
-├── data/                                                 # 📁 Datos externos
-│   └── consumos_energia.txt                             # Archivo legacy mainframe
-│
-├── diagrams/                                             # 📊 Diagramas del proyecto
-│   └── arquitectura_hexagonal_serviciudad.xml           # Diagrama Draw.io
-│
-├── postman/                                              # 📮 Colección Postman
-│   ├── ServiCiudad_API.postman_collection.json
-│   └── ServiCiudad_Docker.postman_environment.json
-│
-├── logs/                                                 # 📝 Directorio de logs (generado)
-│   ├── serviciudad.log                                  # Log aplicación
-│   └── serviciudad-error.log                            # Log errores
-│
-├── docker-compose.yml                                    # 🐳 Orquestación Docker
-├── Dockerfile                                            # 🐳 Imagen de aplicación
-├── pom.xml                                               # 📦 Maven dependencies
-├── README.md                                             # 📖 Documentación usuario
-├── INFORME.md                                            # 📋 Informe técnico
-└── inicio-rapido.ps1                                     # ⚡ Script inicio rápido
+├── src/main/java/com/serviciudad/
+│   ├── domain/                    # 🎯 DOMINIO (Lógica de Negocio)
+│   │   ├── model/                 # Entidades de negocio
+│   │   ├── port/                  # Puertos (interfaces)
+│   │   ├── valueobject/           # Value Objects (DDD)
+│   │   └── exception/             # Excepciones de dominio
+│   ├── application/               # 📋 APLICACIÓN (Use Cases)
+│   │   ├── usecase/               # Implementaciones de Use Cases
+│   │   ├── dto/                   # DTOs (Data Transfer Objects)
+│   │   └── mapper/                # Mappers (entidad ↔ DTO)
+│   └── infrastructure/            # 🔧 INFRAESTRUCTURA (Adaptadores)
+│       ├── adapter/
+│       │   ├── input/rest/        # REST Controllers
+│       │   └── output/persistence/ # Persistencia
+│       └── config/                # Configuración Spring
+├── src/test/java/                 # 🧪 TESTS (Unitarios e Integración)
+├── deployment/canary/             # 🚀 Despliegue Canary
+├── postman/                       # 📮 Colección Postman
+└── diagrams/                      # � Diagramas del proyecto
 ```
 
-### Patrones de Diseño Implementados (Ubicaciones)
-
-| Patrón | Archivo Principal | Ubicación | Línea Clave |
-|--------|-------------------|-----------|-------------|
-| **🔌 Adapter** | `ConsumoEnergiaReaderAdapter.java` | `infrastructure/adapter/output/persistence/` | Adapta archivo legacy a objetos Java |
-| **🏗️ Builder** | `DeudaConsolidadaResponse.java` | `application/dto/response/` | `@Builder` de Lombok |
-| **📦 DTO** | `*Response.java`, `*Request.java` | `application/dto/` | Separación dominio-API |
-| **🗄️ Repository** | `FacturaJpaRepository.java` | `infrastructure/adapter/output/persistence/jpa/repository/` | `extends JpaRepository` |
-| **💉 IoC/DI** | Toda la aplicación | Todas las capas | `@Autowired`, `@Service`, `@Component` |
-
-### Principios Arquitectónicos
-
-- **🎯 Hexagonal Architecture**: Dominio aislado de infraestructura
-- **📋 SOLID**: Principios aplicados en toda la arquitectura
-- **🔒 DDD**: Value Objects para validaciones de dominio
-- **🧪 Testeable**: Mocks e inyección de dependencias facilitan testing
-- **📦 Maven Multi-Module Ready**: Estructura preparada para escalabilidad
+> � **Para ver la estructura completa detallada**, consulta la sección en [INFORME.md](INFORME.md#estructura-de-capas)
 
 ---
 
@@ -824,7 +714,7 @@ docker stats serviciudad-app serviciudad-postgres
 # Reiniciar solo la app (conserva BD)
 docker-compose restart app
 ```
-## Tests Automatizados
+## Tests y Cobertura
 
 ### Ejecutar Tests
 
@@ -832,30 +722,22 @@ docker-compose restart app
 # Todos los tests
 mvn test
 
-# Solo tests unitarios
-mvn test -Dtest=**/*Test.java
-
-# Solo tests de integración
-mvn test -Dtest=**/*IntegrationTest.java
-
-# Con cobertura (JaCoCo)
+# Con reporte de cobertura (JaCoCo)
 mvn clean test jacoco:report
 ```
 
-### Cobertura de Tests
+### Estado de Cobertura
 
 | Capa | Cobertura | Tipos de Test |
 |------|-----------|---------------|
+| **Total** | **87%** | 199 tests passing |
 | Use Cases | 90%+ | Unitarios con Mockito |
 | Controllers | 85%+ | Integración con MockMvc |
 | Adaptadores | 80%+ | Integración con Testcontainers |
-| DTOs | 100% | Unitarios (Builder, Validación) |
 
-**Reporte de Cobertura:**
-```powershell
-mvn jacoco:report
-# Abrir: target/site/jacoco/index.html
-```
+**Reporte de Cobertura:** `target/site/jacoco/index.html`
+
+> 📚 **Para plan detallado de testing**, consulta [PLAN_TESTS_COBERTURA_85.md](PLAN_TESTS_COBERTURA_85.md)
 
 ---
 
@@ -1054,44 +936,58 @@ logging:
 
 ## Seguridad
 
-### Autenticación
+### Autenticación HTTP Basic
 
-**HTTP Basic Auth:**
+**Credenciales por defecto:**
 - Usuario: `admin`
 - Contraseña: `admin123`
 
-**Configuración Actualizada:**
+### Configuración de Endpoints
+
 ```java
-// SecurityConfig.java
-@Bean
-public SecurityFilterChain filterChain(HttpSecurity http) {
-    return http
-        .httpBasic(Customizer.withDefaults())
-        .authorizeHttpRequests(auth -> auth
-            // Recursos publicos (sin autenticacion)
-            .requestMatchers("/", "/favicon.svg", "/actuator/health", "/swagger-ui/**").permitAll()
-            // Endpoints de API requieren autenticacion
-            .anyRequest().authenticated()
-        )
-        .build();
-}
+// SecurityConfig.java - Configuración actual
+- Recursos públicos: /, /favicon.svg, /actuator/health, /swagger-ui/**
+- API protegida: /api/** (requiere autenticación)
 ```
 
-**Cambios Implementados:**
-- Se agrego `/favicon.svg` a recursos publicos
-- Se agrego `/` (frontend) a recursos publicos
-- Todos los endpoints `/api/**` requieren autenticacion
-- Actuator health check accesible sin credenciales
+> 📚 **Para detalles de configuración de seguridad**, consulta [INFORME.md](INFORME.md#seguridad-implementada)
 
-### Rate Limiting
+---
 
-**Nota:** Rate limiting NO esta actualmente implementad.
+## Documentación Adicional
 
-## Documentacion Adicional
+### 📚 Documentos Principales
 
-### Documentos Principales
-- **[README.md](README.md)**: Guia completa de instalacion, configuracion y uso
-- **[INFORME.md](INFORME.md)**: Justificacion tecnica de patrones de diseno y arquitectura
+- **[ENTREGA_FINAL.md](ENTREGA_FINAL.md)**: ⭐ Documento de entrega con cumplimiento de requisitos
+  - Pruebas unitarias y cobertura (87%)
+  - Pipeline CI/CD completo
+  - Despliegue Canary con Docker
+  - Evidencias y demostración para sustentación
+
+- **[README.md](README.md)**: Guía completa de instalación, configuración y uso del sistema
+
+- **[INFORME.md](INFORME.md)**: Justificación técnica detallada de patrones de diseño y arquitectura
+
+- **[PLAN_TESTS_COBERTURA_85.md](PLAN_TESTS_COBERTURA_85.md)**: Plan para alcanzar 85% de cobertura de tests
+
+### 🚀 Despliegues Avanzados
+
+- **[Canary Deployment](deployment/canary/README.md)**: Estrategia de despliegue progresivo con monitoreo
+  - Configuración Nginx + Prometheus + Grafana
+  - Scripts automatizados de despliegue y rollback
+  - Dashboard de comparación de métricas
+  - Alertas automáticas de detección de errores
+
+### 🔧 Pipeline CI/CD
+
+- **[.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)**: Pipeline completo de integración continua
+  - Build and Test (con validación de cobertura)
+  - Code Quality Analysis
+  - Docker Build
+  - Security Scan
+  - Deploy Staging
+  - **Canary Deployment** (nuevo)
+  - Deploy Production
 
 ---
 

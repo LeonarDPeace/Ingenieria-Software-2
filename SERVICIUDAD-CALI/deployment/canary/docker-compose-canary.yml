@@ -1,0 +1,210 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # VERSIÓN ESTABLE (STABLE/PRODUCTION)
+  # ==========================================
+  serviciudad-stable:
+    image: serviciudad:${STABLE_VERSION:-1.0.0}
+    container_name: serviciudad-stable-${STABLE_VERSION:-1.0.0}
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+      - VERSION_TAG=stable-${STABLE_VERSION:-1.0.0}
+      - DEPLOYMENT_TYPE=stable
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - serviciudad-net
+    labels:
+      - "com.serviciudad.deployment=stable"
+      - "com.serviciudad.version=${STABLE_VERSION:-1.0.0}"
+      - "prometheus.scrape=true"
+      - "prometheus.port=8080"
+      - "prometheus.path=/actuator/prometheus"
+    restart: unless-stopped
+    deploy:
+      replicas: 9  # 90% de capacidad inicial
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==========================================
+  # VERSIÓN CANARY (NUEVA/TESTING)
+  # ==========================================
+  serviciudad-canary:
+    image: serviciudad:${CANARY_VERSION:-2.0.0}
+    container_name: serviciudad-canary-${CANARY_VERSION:-2.0.0}
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+      - VERSION_TAG=canary-${CANARY_VERSION:-2.0.0}
+      - DEPLOYMENT_TYPE=canary
+      - CANARY_ENABLED=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 15s  # Más frecuente para canary
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    networks:
+      - serviciudad-net
+    labels:
+      - "com.serviciudad.deployment=canary"
+      - "com.serviciudad.version=${CANARY_VERSION:-2.0.0}"
+      - "prometheus.scrape=true"
+      - "prometheus.port=8080"
+      - "prometheus.path=/actuator/prometheus"
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # 10% de capacidad inicial
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==========================================
+  # NGINX LOAD BALANCER
+  # ==========================================
+  nginx-lb:
+    image: nginx:alpine
+    container_name: serviciudad-nginx-lb
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/logs:/var/log/nginx
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - serviciudad-stable
+      - serviciudad-canary
+    networks:
+      - serviciudad-net
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.serviciudad.component=loadbalancer"
+
+  # ==========================================
+  # BASE DE DATOS (COMPARTIDA)
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: serviciudad-postgres
+    environment:
+      - POSTGRES_DB=serviciudad
+      - POSTGRES_USER=serviciudad_user
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secret123}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    networks:
+      - serviciudad-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U serviciudad_user -d serviciudad"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ==========================================
+  # PROMETHEUS (MONITORING)
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: serviciudad-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts:/etc/prometheus/alerts:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - serviciudad-net
+    restart: unless-stopped
+    labels:
+      - "com.serviciudad.component=monitoring"
+
+  # ==========================================
+  # GRAFANA (VISUALIZATION)
+  # ==========================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: serviciudad-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - serviciudad-net
+    restart: unless-stopped
+    labels:
+      - "com.serviciudad.component=monitoring"
+
+  # ==========================================
+  # ALERTMANAGER (ALERTS)
+  # ==========================================
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: serviciudad-alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    networks:
+      - serviciudad-net
+    restart: unless-stopped
+    labels:
+      - "com.serviciudad.component=monitoring"
+
+networks:
+  serviciudad-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  postgres-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  alertmanager-data:
+    driver: local

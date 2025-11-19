@@ -9,5 +9,6 @@
     ],
     "java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.8.9-hotspot",
     "maven.terminal.useJavaHome": true,
-    "maven.executable.path": "mvn"
+    "maven.executable.path": "mvn",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

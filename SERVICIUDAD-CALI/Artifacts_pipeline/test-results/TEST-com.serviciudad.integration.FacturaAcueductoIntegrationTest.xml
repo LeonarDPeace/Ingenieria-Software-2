@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.308" tests="6" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/test-classes:/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/classes:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.2.12/spring-boot-starter-web-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter/3.2.12/spring-boot-starter-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.2.12/spring-boot-starter-logging-3.2.12.jar:/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/home/runner/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/home/runner/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar:/home/runner/.m2/repository/org/apache/logging/log4j/log4j-api/2.21.1/log4j-api-2.21.1.jar:/home/runner/.m2/repository/org/slf4j/jul-to-slf4j/2.0.16/jul-to-slf4j-2.0.16.jar:/home/runner/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/runner/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.2.12/spring-boot-starter-json-3.2.12.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.2.12/spring-boot-starter-tomcat-3.2.12.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.33/tomcat-embed-core-10.1.33.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.33/tomcat-embed-websocket-10.1.33.jar:/home/runner/.m2/repository/org/springframework/spring-web/6.1.15/spring-web-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-beans/6.1.15/spring-beans-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-webmvc/6.1.15/spring-webmvc-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-context/6.1.15/spring-context-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-expression/6.1.15/spring-expression-6.1.15.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.2.12/spring-boot-starter-data-jpa-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-aop/3.2.12/spring-boot-starter-aop-3.2.12.jar:/home/runner/.m2/repository/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.2.12/spring-boot-starter-jdbc-3.2.12.jar:/home/runner/.m2/repository/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar:/home/runner/.m2/repository/org/springframework/spring-jdbc/6.1.15/spring-jdbc-6.1.15.jar:/home/runner/.m2/repository/org/hibernate/orm/hibernate-core/6.4.10.Final/hibernate-core-6.4.10.Final.jar:/home/runner/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/home/runner/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/home/runner/.m2/repository/org/jboss/logging/jboss-logging/3.5.3.Final/jboss-logging-3.5.3.Final.jar:/home/runner/.m2/repository/org/hibernate/common/hibernate-commons-annotations/6.0.6.Final/hibernate-commons-annotations-6.0.6.Final.jar:/home/runner/.m2/repository/io/smallrye/jandex/3.1.2/jandex-3.1.2.jar:/home/runner/.m2/repository/com/fasterxml/classmate/1.6.0/classmate-1.6.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy/1.14.19/byte-buddy-1.14.19.jar:/home/runner/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar:/home/runner/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar:/home/runner/.m2/repository/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar:/home/runner/.m2/repository/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar:/home/runner/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/home/runner/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/home/runner/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/home/runner/.m2/repository/org/springframework/data/spring-data-jpa/3.2.12/spring-data-jpa-3.2.12.jar:/home/runner/.m2/repository/org/springframework/data/spring-data-commons/3.2.12/spring-data-commons-3.2.12.jar:/home/runner/.m2/repository/org/springframework/spring-orm/6.1.15/spring-orm-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-tx/6.1.15/spring-tx-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-aspects/6.1.15/spring-aspects-6.1.15.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.2.12/spring-boot-starter-validation-3.2.12.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.33/tomcat-embed-el-10.1.33.jar:/home/runner/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/home/runner/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.2.12/spring-boot-starter-actuator-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.2.12/spring-boot-actuator-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-actuator/3.2.12/spring-boot-actuator-3.2.12.jar:/home/runner/.m2/repository/io/micrometer/micrometer-observation/1.12.13/micrometer-observation-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-commons/1.12.13/micrometer-commons-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-jakarta9/1.12.13/micrometer-jakarta9-1.12.13.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-security/3.2.12/spring-boot-starter-security-3.2.12.jar:/home/runner/.m2/repository/org/springframework/spring-aop/6.1.15/spring-aop-6.1.15.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-config/6.2.8/spring-security-config-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-core/6.2.8/spring-security-core-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-crypto/6.2.8/spring-security-crypto-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-web/6.2.8/spring-security-web-6.2.8.jar:/home/runner/.m2/repository/com/bucket4j/bucket4j-core/8.7.0/bucket4j-core-8.7.0.jar:/home/runner/.m2/repository/org/postgresql/postgresql/42.6.2/postgresql-42.6.2.jar:/home/runner/.m2/repository/org/checkerframework/checker-qual/3.31.0/checker-qual-3.31.0.jar:/home/runner/.m2/repository/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-ui/2.2.0/springdoc-openapi-starter-webmvc-ui-2.2.0.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-api/2.2.0/springdoc-openapi-starter-webmvc-api-2.2.0.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-common/2.2.0/springdoc-openapi-starter-common-2.2.0.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-core-jakarta/2.2.15/swagger-core-jakarta-2.2.15.jar:/home/runner/.m2/repository/org/apache/commons/commons-lang3/3.13.0/commons-lang3-3.13.0.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-annotations-jakarta/2.2.15/swagger-annotations-jakarta-2.2.15.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-models-jakarta/2.2.15/swagger-models-jakarta-2.2.15.jar:/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.4/jackson-dataformat-yaml-2.15.4.jar:/home/runner/.m2/repository/org/webjars/swagger-ui/5.2.0/swagger-ui-5.2.0.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-devtools/3.2.12/spring-boot-devtools-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot/3.2.12/spring-boot-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.2.12/spring-boot-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.2.12/spring-boot-starter-test-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-test/3.2.12/spring-boot-test-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.2.12/spring-boot-test-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/home/runner/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.2/jakarta.xml.bind-api-4.0.2.jar:/home/runner/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar:/home/runner/.m2/repository/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar:/home/runner/.m2/repository/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar:/home/runner/.m2/repository/org/ow2/asm/asm/9.6/asm-9.6.jar:/home/runner/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/runner/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.5/junit-jupiter-5.10.5.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.5/junit-jupiter-api-5.10.5.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.5/junit-platform-commons-1.10.5.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.5/junit-jupiter-params-5.10.5.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.5/junit-jupiter-engine-5.10.5.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.5/junit-platform-engine-1.10.5.jar:/home/runner/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.19/byte-buddy-agent-1.14.19.jar:/home/runner/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/runner/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/home/runner/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/home/runner/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/home/runner/.m2/repository/org/springframework/spring-core/6.1.15/spring-core-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-jcl/6.1.15/spring-jcl-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-test/6.1.15/spring-test-6.1.15.jar:/home/runner/.m2/repository/org/xmlunit/xmlunit-core/2.9.1/xmlunit-core-2.9.1.jar:/home/runner/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:/home/runner/.m2/repository/org/testcontainers/testcontainers/1.19.3/testcontainers-1.19.3.jar:/home/runner/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/home/runner/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/home/runner/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/runner/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-api/3.3.4/docker-java-api-3.3.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.3.4/docker-java-transport-zerodep-3.3.4.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-transport/3.3.4/docker-java-transport-3.3.4.jar:/home/runner/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/home/runner/.m2/repository/org/testcontainers/postgresql/1.19.3/postgresql-1.19.3.jar:/home/runner/.m2/repository/org/testcontainers/jdbc/1.19.8/jdbc-1.19.8.jar:/home/runner/.m2/repository/org/testcontainers/database-commons/1.19.8/database-commons-1.19.8.jar:/home/runner/.m2/repository/org/testcontainers/junit-jupiter/1.19.3/junit-jupiter-1.19.3.jar:/home/runner/.m2/repository/io/micrometer/micrometer-registry-prometheus/1.12.13/micrometer-registry-prometheus-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-core/1.12.13/micrometer-core-1.12.13.jar:/home/runner/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/runner/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_common/0.16.0/simpleclient_common-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient/0.16.0/simpleclient-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_otel/0.16.0/simpleclient_tracer_otel-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_common/0.16.0/simpleclient_tracer_common-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_otel_agent/0.16.0/simpleclient_tracer_otel_agent-0.16.0.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="catalina.useNaming" value="false"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/temurin-17-jdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/surefire/surefirebooter-20251119230741240_3.jar /home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/surefire 2025-11-19T23-07-40_536-jvmRun1 surefire-20251119230741240_1tmp surefire_0-20251119230741240_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/test-classes:/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/classes:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.2.12/spring-boot-starter-web-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter/3.2.12/spring-boot-starter-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.2.12/spring-boot-starter-logging-3.2.12.jar:/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/home/runner/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/home/runner/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar:/home/runner/.m2/repository/org/apache/logging/log4j/log4j-api/2.21.1/log4j-api-2.21.1.jar:/home/runner/.m2/repository/org/slf4j/jul-to-slf4j/2.0.16/jul-to-slf4j-2.0.16.jar:/home/runner/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/runner/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.2.12/spring-boot-starter-json-3.2.12.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.2.12/spring-boot-starter-tomcat-3.2.12.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.33/tomcat-embed-core-10.1.33.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.33/tomcat-embed-websocket-10.1.33.jar:/home/runner/.m2/repository/org/springframework/spring-web/6.1.15/spring-web-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-beans/6.1.15/spring-beans-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-webmvc/6.1.15/spring-webmvc-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-context/6.1.15/spring-context-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-expression/6.1.15/spring-expression-6.1.15.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.2.12/spring-boot-starter-data-jpa-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-aop/3.2.12/spring-boot-starter-aop-3.2.12.jar:/home/runner/.m2/repository/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.2.12/spring-boot-starter-jdbc-3.2.12.jar:/home/runner/.m2/repository/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar:/home/runner/.m2/repository/org/springframework/spring-jdbc/6.1.15/spring-jdbc-6.1.15.jar:/home/runner/.m2/repository/org/hibernate/orm/hibernate-core/6.4.10.Final/hibernate-core-6.4.10.Final.jar:/home/runner/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/home/runner/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/home/runner/.m2/repository/org/jboss/logging/jboss-logging/3.5.3.Final/jboss-logging-3.5.3.Final.jar:/home/runner/.m2/repository/org/hibernate/common/hibernate-commons-annotations/6.0.6.Final/hibernate-commons-annotations-6.0.6.Final.jar:/home/runner/.m2/repository/io/smallrye/jandex/3.1.2/jandex-3.1.2.jar:/home/runner/.m2/repository/com/fasterxml/classmate/1.6.0/classmate-1.6.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy/1.14.19/byte-buddy-1.14.19.jar:/home/runner/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar:/home/runner/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar:/home/runner/.m2/repository/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar:/home/runner/.m2/repository/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar:/home/runner/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/home/runner/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/home/runner/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/home/runner/.m2/repository/org/springframework/data/spring-data-jpa/3.2.12/spring-data-jpa-3.2.12.jar:/home/runner/.m2/repository/org/springframework/data/spring-data-commons/3.2.12/spring-data-commons-3.2.12.jar:/home/runner/.m2/repository/org/springframework/spring-orm/6.1.15/spring-orm-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-tx/6.1.15/spring-tx-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-aspects/6.1.15/spring-aspects-6.1.15.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.2.12/spring-boot-starter-validation-3.2.12.jar:/home/runner/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.33/tomcat-embed-el-10.1.33.jar:/home/runner/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/home/runner/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.2.12/spring-boot-starter-actuator-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.2.12/spring-boot-actuator-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-actuator/3.2.12/spring-boot-actuator-3.2.12.jar:/home/runner/.m2/repository/io/micrometer/micrometer-observation/1.12.13/micrometer-observation-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-commons/1.12.13/micrometer-commons-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-jakarta9/1.12.13/micrometer-jakarta9-1.12.13.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-security/3.2.12/spring-boot-starter-security-3.2.12.jar:/home/runner/.m2/repository/org/springframework/spring-aop/6.1.15/spring-aop-6.1.15.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-config/6.2.8/spring-security-config-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-core/6.2.8/spring-security-core-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-crypto/6.2.8/spring-security-crypto-6.2.8.jar:/home/runner/.m2/repository/org/springframework/security/spring-security-web/6.2.8/spring-security-web-6.2.8.jar:/home/runner/.m2/repository/com/bucket4j/bucket4j-core/8.7.0/bucket4j-core-8.7.0.jar:/home/runner/.m2/repository/org/postgresql/postgresql/42.6.2/postgresql-42.6.2.jar:/home/runner/.m2/repository/org/checkerframework/checker-qual/3.31.0/checker-qual-3.31.0.jar:/home/runner/.m2/repository/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-ui/2.2.0/springdoc-openapi-starter-webmvc-ui-2.2.0.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-api/2.2.0/springdoc-openapi-starter-webmvc-api-2.2.0.jar:/home/runner/.m2/repository/org/springdoc/springdoc-openapi-starter-common/2.2.0/springdoc-openapi-starter-common-2.2.0.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-core-jakarta/2.2.15/swagger-core-jakarta-2.2.15.jar:/home/runner/.m2/repository/org/apache/commons/commons-lang3/3.13.0/commons-lang3-3.13.0.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-annotations-jakarta/2.2.15/swagger-annotations-jakarta-2.2.15.jar:/home/runner/.m2/repository/io/swagger/core/v3/swagger-models-jakarta/2.2.15/swagger-models-jakarta-2.2.15.jar:/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.4/jackson-dataformat-yaml-2.15.4.jar:/home/runner/.m2/repository/org/webjars/swagger-ui/5.2.0/swagger-ui-5.2.0.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-devtools/3.2.12/spring-boot-devtools-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot/3.2.12/spring-boot-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.2.12/spring-boot-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.2.12/spring-boot-starter-test-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-test/3.2.12/spring-boot-test-3.2.12.jar:/home/runner/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.2.12/spring-boot-test-autoconfigure-3.2.12.jar:/home/runner/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/home/runner/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.2/jakarta.xml.bind-api-4.0.2.jar:/home/runner/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar:/home/runner/.m2/repository/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar:/home/runner/.m2/repository/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar:/home/runner/.m2/repository/org/ow2/asm/asm/9.6/asm-9.6.jar:/home/runner/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/runner/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.5/junit-jupiter-5.10.5.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.5/junit-jupiter-api-5.10.5.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.5/junit-platform-commons-1.10.5.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.5/junit-jupiter-params-5.10.5.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.5/junit-jupiter-engine-5.10.5.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.5/junit-platform-engine-1.10.5.jar:/home/runner/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.19/byte-buddy-agent-1.14.19.jar:/home/runner/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/runner/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/home/runner/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/home/runner/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/home/runner/.m2/repository/org/springframework/spring-core/6.1.15/spring-core-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-jcl/6.1.15/spring-jcl-6.1.15.jar:/home/runner/.m2/repository/org/springframework/spring-test/6.1.15/spring-test-6.1.15.jar:/home/runner/.m2/repository/org/xmlunit/xmlunit-core/2.9.1/xmlunit-core-2.9.1.jar:/home/runner/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:/home/runner/.m2/repository/org/testcontainers/testcontainers/1.19.3/testcontainers-1.19.3.jar:/home/runner/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/home/runner/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/home/runner/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/runner/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-api/3.3.4/docker-java-api-3.3.4.jar:/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.3.4/docker-java-transport-zerodep-3.3.4.jar:/home/runner/.m2/repository/com/github/docker-java/docker-java-transport/3.3.4/docker-java-transport-3.3.4.jar:/home/runner/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/home/runner/.m2/repository/org/testcontainers/postgresql/1.19.3/postgresql-1.19.3.jar:/home/runner/.m2/repository/org/testcontainers/jdbc/1.19.8/jdbc-1.19.8.jar:/home/runner/.m2/repository/org/testcontainers/database-commons/1.19.8/database-commons-1.19.8.jar:/home/runner/.m2/repository/org/testcontainers/junit-jupiter/1.19.3/junit-jupiter-1.19.3.jar:/home/runner/.m2/repository/io/micrometer/micrometer-registry-prometheus/1.12.13/micrometer-registry-prometheus-1.12.13.jar:/home/runner/.m2/repository/io/micrometer/micrometer-core/1.12.13/micrometer-core-1.12.13.jar:/home/runner/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/runner/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_common/0.16.0/simpleclient_common-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient/0.16.0/simpleclient-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_otel/0.16.0/simpleclient_tracer_otel-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_common/0.16.0/simpleclient_tracer_common-0.16.0.jar:/home/runner/.m2/repository/io/prometheus/simpleclient_tracer_otel_agent/0.16.0/simpleclient_tracer_otel_agent-0.16.0.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/runner"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-10-21"/>
+    <property name="java.home" value="/usr/lib/jvm/temurin-17-jdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <property name="java.awt.headless" value="true"/>
+    <property name="surefire.real.class.path" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI/target/surefire/surefirebooter-20251119230741240_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17.0.17+10"/>
+    <property name="user.name" value="runner"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.11.0-1018-azure"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="jnidispatch.path" value="/home/runner/.cache/JNA/temp/jna15700192605470464893.tmp"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="jna.platform.library.path" value="/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:/usr/lib64:/lib64:/usr/lib:/lib:/lib32:/usr/local/lib:/usr/lib/x86_64-linux-gnu/libfakeroot"/>
+    <property name="java.vendor.version" value="Temurin-17.0.17+10"/>
+    <property name="localRepository" value="/home/runner/.m2/repository"/>
+    <property name="jna.loaded" value="true"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="catalina.home" value="/tmp/tomcat.0.4543069348728813040"/>
+    <property name="java.version" value="17.0.17"/>
+    <property name="user.dir" value="/home/runner/work/Ingenieria-Software-2/Ingenieria-Software-2/SERVICIUDAD-CALI"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="2717"/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="catalina.base" value="/tmp/tomcat.0.4543069348728813040"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="17.0.17+10"/>
+    <property name="java.specification.maintenance.version" value="1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+    <property name="LOGGED_APPLICATION_NAME" value="[serviciudad-cali] "/>
+  </properties>
+  <testcase name="debeMarcarFacturasVencidas" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.099">
+    <system-out><![CDATA[2025-11-19 23:07:57.992 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:57.997 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.001 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.014 [main] DEBUG o.s.web.client.RestTemplate - HTTP POST http://localhost:46785/api/facturas/marcar-vencidas
+2025-11-19 23:07:58.017 [main] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/*+json]
+2025-11-19 23:07:58.022 [http-nio-auto-1-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/facturas/marcar-vencidas", parameters={masked}
+2025-11-19 23:07:58.023 [http-nio-auto-1-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#marcarFacturasVencidas()
+2025-11-19 23:07:58.023 [http-nio-auto-1-exec-5] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 95
+2025-11-19 23:07:58.031 [http-nio-auto-1-exec-5] INFO  c.s.a.u.GestionarFacturaUseCaseImpl - Iniciando proceso de marcado de facturas vencidas con paginación (tamaño de lote: 100)
+2025-11-19 23:07:58.031 [http-nio-auto-1-exec-5] DEBUG c.s.a.u.GestionarFacturaUseCaseImpl - Procesando lote 1, facturas procesadas hasta ahora: 0
+2025-11-19 23:07:58.043 [http-nio-auto-1-exec-5] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.estado=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.estado=? 
+    fetch
+        first ? rows only
+2025-11-19 23:07:58.052 [http-nio-auto-1-exec-5] DEBUG c.s.a.u.GestionarFacturaUseCaseImpl - Factura 27 está vencida, marcando como vencida
+2025-11-19 23:07:58.062 [http-nio-auto-1-exec-5] DEBUG org.hibernate.SQL - 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+Hibernate: 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+2025-11-19 23:07:58.066 [http-nio-auto-1-exec-5] DEBUG c.s.a.u.GestionarFacturaUseCaseImpl - Lote 1: 1 facturas marcadas como vencidas de 1 procesadas
+2025-11-19 23:07:58.069 [http-nio-auto-1-exec-5] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.estado=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.estado=? 
+    fetch
+        first ? rows only
+2025-11-19 23:07:58.071 [http-nio-auto-1-exec-5] INFO  c.s.a.u.GestionarFacturaUseCaseImpl - Proceso finalizado. Total facturas procesadas: 1, Total facturas marcadas como vencidas: 1
+2025-11-19 23:07:58.073 [http-nio-auto-1-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.074 [http-nio-auto-1-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Nothing to write: null body
+2025-11-19 23:07:58.074 [http-nio-auto-1-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.076 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.079 [main] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+]]></system-out>
+  </testcase>
+  <testcase name="debeConsultarFacturasPorCliente" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.043">
+    <system-out><![CDATA[2025-11-19 23:07:58.094 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:58.097 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.099 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.101 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.104 [main] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:46785/api/facturas/cliente/1234567890
+2025-11-19 23:07:58.105 [main] DEBUG o.s.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+2025-11-19 23:07:58.109 [http-nio-auto-1-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/facturas/cliente/1234567890", parameters={}
+2025-11-19 23:07:58.110 [http-nio-auto-1-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#consultarFacturasPorCliente(String)
+2025-11-19 23:07:58.110 [http-nio-auto-1-exec-6] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 94
+2025-11-19 23:07:58.120 [http-nio-auto-1-exec-6] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id_cliente=?
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id_cliente=?
+2025-11-19 23:07:58.124 [http-nio-auto-1-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [text/plain, application/json, application/*+json, */*] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.125 [http-nio-auto-1-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [[FacturaResponse(id=28, clienteId=1234567890, periodo=202501, consumo=15, valorPagar=95000.00, estad (truncated)...]
+2025-11-19 23:07:58.127 [http-nio-auto-1-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.127 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.128 [main] DEBUG o.s.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+]]></system-out>
+  </testcase>
+  <testcase name="debeAnularFacturaYPersistir" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.035">
+    <system-out><![CDATA[2025-11-19 23:07:58.137 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:58.142 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.142 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.146 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.149 [main] DEBUG o.s.web.client.RestTemplate - HTTP POST http://localhost:46785/api/facturas/30/anular
+2025-11-19 23:07:58.150 [main] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/*+json]
+2025-11-19 23:07:58.155 [http-nio-auto-1-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/facturas/30/anular", parameters={masked}
+2025-11-19 23:07:58.155 [http-nio-auto-1-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#anularFactura(Long)
+2025-11-19 23:07:58.155 [http-nio-auto-1-exec-7] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 93
+2025-11-19 23:07:58.157 [http-nio-auto-1-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+2025-11-19 23:07:58.159 [http-nio-auto-1-exec-7] DEBUG org.hibernate.SQL - 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+Hibernate: 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+2025-11-19 23:07:58.161 [http-nio-auto-1-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.161 [http-nio-auto-1-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Nothing to write: null body
+2025-11-19 23:07:58.162 [http-nio-auto-1-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.163 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.164 [main] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+]]></system-out>
+  </testcase>
+  <testcase name="debeRetornar404CuandoFacturaNoExiste" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.035">
+    <system-out><![CDATA[2025-11-19 23:07:58.173 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:58.174 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.176 [main] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:46785/api/facturas/99999
+2025-11-19 23:07:58.177 [main] DEBUG o.s.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+2025-11-19 23:07:58.181 [http-nio-auto-1-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/facturas/99999", parameters={}
+2025-11-19 23:07:58.182 [http-nio-auto-1-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#consultarFactura(Long)
+2025-11-19 23:07:58.182 [http-nio-auto-1-exec-8] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 92
+2025-11-19 23:07:58.186 [http-nio-auto-1-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+2025-11-19 23:07:58.191 [http-nio-auto-1-exec-8] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.serviciudad.exception.GlobalExceptionHandler#handleIllegalArgument(IllegalArgumentException, WebRequest)
+2025-11-19 23:07:58.191 [http-nio-auto-1-exec-8] ERROR c.s.exception.GlobalExceptionHandler - Argumento ilegal: Factura no encontrada: 99999
+2025-11-19 23:07:58.196 [http-nio-auto-1-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [text/plain, application/json, application/*+json, */*] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.197 [http-nio-auto-1-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [ErrorResponse(timestamp=2025-11-19T23:07:58.192580964, status=400, error=Argumento invalido, message (truncated)...]
+2025-11-19 23:07:58.198 [http-nio-auto-1-exec-8] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.IllegalArgumentException: Factura no encontrada: 99999]
+2025-11-19 23:07:58.198 [http-nio-auto-1-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 400 BAD_REQUEST
+2025-11-19 23:07:58.200 [main] DEBUG o.s.web.client.RestTemplate - Response 400 BAD_REQUEST
+2025-11-19 23:07:58.201 [main] DEBUG o.s.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+]]></system-out>
+  </testcase>
+  <testcase name="workflowCompletoRegistrarConsultarPagar" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.053">
+    <system-out><![CDATA[2025-11-19 23:07:58.210 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:58.212 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.215 [main] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:46785/api/facturas/31
+2025-11-19 23:07:58.215 [main] DEBUG o.s.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+2025-11-19 23:07:58.219 [http-nio-auto-1-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/facturas/31", parameters={}
+2025-11-19 23:07:58.220 [http-nio-auto-1-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#consultarFactura(Long)
+2025-11-19 23:07:58.220 [http-nio-auto-1-exec-9] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 91
+2025-11-19 23:07:58.221 [http-nio-auto-1-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+2025-11-19 23:07:58.227 [http-nio-auto-1-exec-9] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [text/plain, application/json, application/*+json, */*] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.227 [http-nio-auto-1-exec-9] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [FacturaResponse(id=31, clienteId=1234567890, periodo=202501, consumo=15, valorPagar=95000.00, estado (truncated)...]
+2025-11-19 23:07:58.228 [http-nio-auto-1-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.229 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.229 [main] DEBUG o.s.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+2025-11-19 23:07:58.231 [main] DEBUG o.s.web.client.RestTemplate - HTTP POST http://localhost:46785/api/facturas/pagar
+2025-11-19 23:07:58.231 [main] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/*+json]
+2025-11-19 23:07:58.232 [main] DEBUG o.s.web.client.RestTemplate - Writing [{"facturaId": 31}] as "application/json"
+2025-11-19 23:07:58.236 [http-nio-auto-1-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/facturas/pagar", parameters={}
+2025-11-19 23:07:58.237 [http-nio-auto-1-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#registrarPago(RegistrarPagoRequest)
+2025-11-19 23:07:58.237 [http-nio-auto-1-exec-10] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 90
+2025-11-19 23:07:58.241 [http-nio-auto-1-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [RegistrarPagoRequest(facturaId=31)]
+2025-11-19 23:07:58.245 [http-nio-auto-1-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+2025-11-19 23:07:58.248 [http-nio-auto-1-exec-10] DEBUG org.hibernate.SQL - 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+Hibernate: 
+    /* update
+        for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */update facturas_acueducto 
+    set
+        id_cliente=?,
+        consumo_m3=?,
+        estado=?,
+        fecha_actualizacion=?,
+        fecha_creacion=?,
+        fecha_vencimiento=?,
+        periodo=?,
+        valor_pagar=? 
+    where
+        id=?
+2025-11-19 23:07:58.251 [http-nio-auto-1-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.251 [http-nio-auto-1-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Nothing to write: null body
+2025-11-19 23:07:58.251 [http-nio-auto-1-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.253 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.254 [main] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+]]></system-out>
+  </testcase>
+  <testcase name="debeConsultarFacturaPorId" classname="com.serviciudad.integration.FacturaAcueductoIntegrationTest" time="0.023">
+    <system-out><![CDATA[2025-11-19 23:07:58.263 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+Hibernate: 
+    /* <criteria> */ select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0
+2025-11-19 23:07:58.265 [main] DEBUG org.hibernate.SQL - 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+Hibernate: 
+    /* delete for com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */delete 
+    from
+        facturas_acueducto 
+    where
+        id=?
+2025-11-19 23:07:58.267 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    /* insert for
+        com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity */insert 
+    into
+        facturas_acueducto (id_cliente, consumo_m3, estado, fecha_actualizacion, fecha_creacion, fecha_vencimiento, periodo, valor_pagar) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-19 23:07:58.270 [main] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:46785/api/facturas/32
+2025-11-19 23:07:58.270 [main] DEBUG o.s.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+2025-11-19 23:07:58.273 [http-nio-auto-1-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/facturas/32", parameters={}
+2025-11-19 23:07:58.274 [http-nio-auto-1-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.serviciudad.infrastructure.adapter.input.rest.FacturaRestController#consultarFactura(Long)
+2025-11-19 23:07:58.274 [http-nio-auto-1-exec-1] DEBUG c.s.i.config.RateLimitInterceptor - Request permitido desde IP: 127.0.0.1 - Tokens restantes: 89
+2025-11-19 23:07:58.275 [http-nio-auto-1-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+Hibernate: 
+    select
+        fje1_0.id,
+        fje1_0.id_cliente,
+        fje1_0.consumo_m3,
+        fje1_0.estado,
+        fje1_0.fecha_actualizacion,
+        fje1_0.fecha_creacion,
+        fje1_0.fecha_vencimiento,
+        fje1_0.periodo,
+        fje1_0.valor_pagar 
+    from
+        facturas_acueducto fje1_0 
+    where
+        fje1_0.id=?
+2025-11-19 23:07:58.277 [http-nio-auto-1-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [text/plain, application/json, application/*+json, */*] and supported [application/json, application/*+json]
+2025-11-19 23:07:58.277 [http-nio-auto-1-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [FacturaResponse(id=32, clienteId=1234567890, periodo=202501, consumo=15, valorPagar=95000.00, estado (truncated)...]
+2025-11-19 23:07:58.279 [http-nio-auto-1-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-19 23:07:58.279 [main] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2025-11-19 23:07:58.279 [main] DEBUG o.s.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+]]></system-out>
+  </testcase>
+</testsuite>

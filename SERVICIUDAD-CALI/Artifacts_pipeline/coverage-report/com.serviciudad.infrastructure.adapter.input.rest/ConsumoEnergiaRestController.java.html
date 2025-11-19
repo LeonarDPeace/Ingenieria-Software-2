@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsumoEnergiaRestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.input.rest</a> &gt; <span class="el_source">ConsumoEnergiaRestController.java</span></div><h1>ConsumoEnergiaRestController.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.input.rest;
+
+import com.serviciudad.application.dto.response.ConsumoEnergiaResponse;
+import com.serviciudad.domain.model.ConsumoEnergiaModel;
+import com.serviciudad.domain.port.input.ConsultarConsumoEnergiaUseCase;
+import com.serviciudad.domain.valueobject.ClienteId;
+import com.serviciudad.domain.valueobject.Periodo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping(&quot;/api/consumos-energia&quot;)
+@RequiredArgsConstructor
+@Validated
+public class ConsumoEnergiaRestController {
+
+    private final ConsultarConsumoEnergiaUseCase consultarConsumoEnergiaUseCase;
+
+    @GetMapping(&quot;/cliente/{clienteId}&quot;)
+    public ResponseEntity&lt;List&lt;ConsumoEnergiaResponse&gt;&gt; consultarConsumosPorCliente(
+        @PathVariable
+        @jakarta.validation.constraints.Pattern(
+            regexp = &quot;^\\d{10}$&quot;,
+            message = &quot;El ClienteId debe ser un número de 10 dígitos&quot;
+        )
+        @jakarta.validation.constraints.NotBlank(message = &quot;El ClienteId es obligatorio&quot;)
+        String clienteId
+    ) {
+<span class="fc" id="L34">        ClienteId id = ClienteId.of(clienteId);</span>
+<span class="fc" id="L35">        List&lt;ConsumoEnergiaModel&gt; consumos = consultarConsumoEnergiaUseCase.consultarConsumosPorCliente(id);</span>
+        
+<span class="fc" id="L37">        List&lt;ConsumoEnergiaResponse&gt; responses = consumos.stream()</span>
+<span class="fc" id="L38">            .map(c -&gt; ConsumoEnergiaResponse.builder()</span>
+<span class="fc" id="L39">                .clienteId(c.getClienteId().getValor())</span>
+<span class="fc" id="L40">                .periodo(c.getPeriodo().getValor())</span>
+<span class="fc" id="L41">                .consumo(java.math.BigDecimal.valueOf(c.getConsumo().getKilovatiosHora()))</span>
+<span class="fc" id="L42">                .valorPagar(c.getValorPagar().getMonto())</span>
+<span class="fc" id="L43">                .fechaLectura(c.getFechaLectura())</span>
+<span class="fc" id="L44">                .estrato(c.getEstrato())</span>
+<span class="fc" id="L45">                .consumoAlto(c.tieneConsumoAlto())</span>
+<span class="fc" id="L46">                .consumoBajo(c.tieneConsumoBajo())</span>
+<span class="fc" id="L47">                .build())</span>
+<span class="fc" id="L48">            .collect(Collectors.toList());</span>
+        
+<span class="fc" id="L50">        return ResponseEntity.ok(responses);</span>
+    }
+
+    @GetMapping(&quot;/cliente/{clienteId}/periodo/{periodo}&quot;)
+    public ResponseEntity&lt;List&lt;ConsumoEnergiaResponse&gt;&gt; consultarConsumosPorPeriodo(
+        @PathVariable
+        @jakarta.validation.constraints.Pattern(
+            regexp = &quot;^\\d{10}$&quot;,
+            message = &quot;El ClienteId debe ser un número de 10 dígitos&quot;
+        )
+        @jakarta.validation.constraints.NotBlank(message = &quot;El ClienteId es obligatorio&quot;)
+        String clienteId,
+        @PathVariable
+        @jakarta.validation.constraints.Pattern(
+            regexp = &quot;^\\d{6}$&quot;,
+            message = &quot;El período debe tener formato YYYYMM (6 dígitos)&quot;
+        )
+        @jakarta.validation.constraints.NotBlank(message = &quot;El período es obligatorio&quot;)
+        String periodo
+    ) {
+<span class="fc" id="L70">        ClienteId id = ClienteId.of(clienteId);</span>
+<span class="fc" id="L71">        Periodo p = Periodo.of(periodo);</span>
+<span class="fc" id="L72">        List&lt;ConsumoEnergiaModel&gt; consumos = consultarConsumoEnergiaUseCase.consultarConsumosPorPeriodo(id, p);</span>
+        
+<span class="fc" id="L74">        List&lt;ConsumoEnergiaResponse&gt; responses = consumos.stream()</span>
+<span class="fc" id="L75">            .map(c -&gt; ConsumoEnergiaResponse.builder()</span>
+<span class="fc" id="L76">                .clienteId(c.getClienteId().getValor())</span>
+<span class="fc" id="L77">                .periodo(c.getPeriodo().getValor())</span>
+<span class="fc" id="L78">                .consumo(java.math.BigDecimal.valueOf(c.getConsumo().getKilovatiosHora()))</span>
+<span class="fc" id="L79">                .valorPagar(c.getValorPagar().getMonto())</span>
+<span class="fc" id="L80">                .fechaLectura(c.getFechaLectura())</span>
+<span class="fc" id="L81">                .estrato(c.getEstrato())</span>
+<span class="fc" id="L82">                .consumoAlto(c.tieneConsumoAlto())</span>
+<span class="fc" id="L83">                .consumoBajo(c.tieneConsumoBajo())</span>
+<span class="fc" id="L84">                .build())</span>
+<span class="fc" id="L85">            .collect(Collectors.toList());</span>
+        
+<span class="fc" id="L87">        return ResponseEntity.ok(responses);</span>
+    }
+
+    @GetMapping(&quot;/cliente/{clienteId}/elevados&quot;)
+    public ResponseEntity&lt;List&lt;ConsumoEnergiaResponse&gt;&gt; consultarConsumosElevados(
+        @PathVariable
+        @jakarta.validation.constraints.Pattern(
+            regexp = &quot;^\\d{10}$&quot;,
+            message = &quot;El ClienteId debe ser un número de 10 dígitos&quot;
+        )
+        @jakarta.validation.constraints.NotBlank(message = &quot;El ClienteId es obligatorio&quot;)
+        String clienteId
+    ) {
+<span class="fc" id="L100">        ClienteId id = ClienteId.of(clienteId);</span>
+<span class="fc" id="L101">        List&lt;ConsumoEnergiaModel&gt; consumos = consultarConsumoEnergiaUseCase.consultarConsumosElevados(id);</span>
+        
+<span class="fc" id="L103">        List&lt;ConsumoEnergiaResponse&gt; responses = consumos.stream()</span>
+<span class="fc" id="L104">            .map(c -&gt; ConsumoEnergiaResponse.builder()</span>
+<span class="fc" id="L105">                .clienteId(c.getClienteId().getValor())</span>
+<span class="fc" id="L106">                .periodo(c.getPeriodo().getValor())</span>
+<span class="fc" id="L107">                .consumo(java.math.BigDecimal.valueOf(c.getConsumo().getKilovatiosHora()))</span>
+<span class="fc" id="L108">                .valorPagar(c.getValorPagar().getMonto())</span>
+<span class="fc" id="L109">                .fechaLectura(c.getFechaLectura())</span>
+<span class="fc" id="L110">                .estrato(c.getEstrato())</span>
+<span class="fc" id="L111">                .consumoAlto(c.tieneConsumoAlto())</span>
+<span class="fc" id="L112">                .consumoBajo(c.tieneConsumoBajo())</span>
+<span class="fc" id="L113">                .build())</span>
+<span class="fc" id="L114">            .collect(Collectors.toList());</span>
+        
+<span class="fc" id="L116">        return ResponseEntity.ok(responses);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

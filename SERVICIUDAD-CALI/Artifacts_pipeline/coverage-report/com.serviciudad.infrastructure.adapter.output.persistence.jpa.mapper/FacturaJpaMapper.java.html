@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacturaJpaMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.output.persistence.jpa.mapper</a> &gt; <span class="el_source">FacturaJpaMapper.java</span></div><h1>FacturaJpaMapper.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.output.persistence.jpa.mapper;
+
+import com.serviciudad.domain.model.EstadoFactura;
+import com.serviciudad.domain.model.FacturaAcueducto;
+import com.serviciudad.domain.valueobject.*;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.EstadoFacturaJpa;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity;
+
+<span class="nc" id="L9">public class FacturaJpaMapper {</span>
+
+    public static FacturaAcueducto toDomain(FacturaJpaEntity entity) {
+<span class="fc" id="L12">        return FacturaAcueducto.builder()</span>
+<span class="fc" id="L13">            .id(FacturaId.of(entity.getId()))</span>
+<span class="fc" id="L14">            .clienteId(ClienteId.of(entity.getClienteId()))</span>
+<span class="fc" id="L15">            .periodo(Periodo.of(entity.getPeriodo()))</span>
+<span class="fc" id="L16">            .consumo(ConsumoAgua.of(entity.getConsumo().intValue()))</span>
+<span class="fc" id="L17">            .valorPagar(Dinero.of(entity.getValorPagar()))</span>
+<span class="fc" id="L18">            .estado(toEstadoFacturaDomain(entity.getEstado()))</span>
+<span class="fc" id="L19">            .fechaVencimiento(entity.getFechaVencimiento())</span>
+<span class="fc" id="L20">            .fechaCreacion(entity.getFechaCreacion())</span>
+<span class="fc" id="L21">            .fechaActualizacion(entity.getFechaActualizacion())</span>
+<span class="fc" id="L22">            .build();</span>
+    }
+
+    public static FacturaJpaEntity toJpaEntity(FacturaAcueducto factura) {
+<span class="fc" id="L26">        return FacturaJpaEntity.builder()</span>
+<span class="fc" id="L27">            .id(factura.getId().getValor())</span>
+<span class="fc" id="L28">            .clienteId(factura.getClienteId().getValor())</span>
+<span class="fc" id="L29">            .periodo(factura.getPeriodo().getValor())</span>
+<span class="fc" id="L30">            .consumo(factura.getConsumo().getMetrosCubicos())</span>
+<span class="fc" id="L31">            .valorPagar(factura.getValorPagar().getMonto())</span>
+<span class="fc" id="L32">            .estado(toEstadoFacturaJpa(factura.getEstado()))</span>
+<span class="fc" id="L33">            .fechaVencimiento(factura.getFechaVencimiento())</span>
+<span class="fc" id="L34">            .fechaCreacion(factura.getFechaCreacion())</span>
+<span class="fc" id="L35">            .fechaActualizacion(factura.getFechaActualizacion())</span>
+<span class="fc" id="L36">            .build();</span>
+    }
+
+    private static EstadoFactura toEstadoFacturaDomain(EstadoFacturaJpa estadoJpa) {
+<span class="fc" id="L40">        return EstadoFactura.valueOf(estadoJpa.name());</span>
+    }
+
+    private static EstadoFacturaJpa toEstadoFacturaJpa(EstadoFactura estado) {
+<span class="fc" id="L44">        return EstadoFacturaJpa.valueOf(estado.name());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

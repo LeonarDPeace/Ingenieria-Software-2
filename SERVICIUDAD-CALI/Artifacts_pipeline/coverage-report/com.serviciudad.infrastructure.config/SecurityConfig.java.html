@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+/**
+ * Configuración de seguridad de Spring Security.
+ * 
+ * Implementa autenticación básica HTTP con usuario en memoria.
+ * En producción, se recomienda usar un UserDetailsService con base de datos
+ * y autenticación basada en tokens (JWT).
+ * 
+ * &lt;p&gt;Características de seguridad implementadas:&lt;/p&gt;
+ * &lt;ul&gt;
+ *   &lt;li&gt;Autenticación HTTP Basic&lt;/li&gt;
+ *   &lt;li&gt;Sesiones Stateless (sin estado) - apropiado para API REST&lt;/li&gt;
+ *   &lt;li&gt;CSRF deshabilitado (API REST stateless)&lt;/li&gt;
+ *   &lt;li&gt;Endpoints públicos: /actuator/health, Swagger UI, API Docs&lt;/li&gt;
+ *   &lt;li&gt;Todos los demás endpoints requieren autenticación&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * &lt;p&gt;&lt;strong&gt;⚠️ ADVERTENCIA DE SEGURIDAD:&lt;/strong&gt;&lt;/p&gt;
+ * &lt;ul&gt;
+ *   &lt;li&gt;Usuario en memoria solo para desarrollo/testing&lt;/li&gt;
+ *   &lt;li&gt;Contraseña en texto plano (usar {bcrypt} en producción)&lt;/li&gt;
+ *   &lt;li&gt;Cambiar credenciales antes de desplegar a producción&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * @author ServiCiudad Team
+ * @version 1.0
+ * @since 2025-10-17
+ */
+@Configuration
+@EnableWebSecurity
+<span class="fc" id="L46">public class SecurityConfig {</span>
+
+    /**
+     * Configura la cadena de filtros de seguridad.
+     * 
+     * Define las reglas de autorización, mecanismos de autenticación
+     * y políticas de sesión para la aplicación.
+     * 
+     * @param http Objeto HttpSecurity para configurar seguridad web
+     * @return SecurityFilterChain configurado
+     * @throws Exception Si ocurre un error en la configuración
+     */
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L60">        http</span>
+            // Configuración de autorización
+<span class="fc" id="L62">            .authorizeHttpRequests(auth -&gt; auth</span>
+                // Endpoints públicos (sin autenticación)
+<span class="fc" id="L64">                .requestMatchers(</span>
+                    &quot;/actuator/health&quot;,           // Health check para monitoreo
+                    &quot;/actuator/info&quot;,             // Información de la aplicación
+                    &quot;/swagger-ui/**&quot;,             // Swagger UI
+                    &quot;/swagger-ui.html&quot;,           // Swagger UI página principal
+                    &quot;/v3/api-docs/**&quot;,            // OpenAPI 3.0 specification
+                    &quot;/api-docs/**&quot;                // API documentation
+<span class="fc" id="L71">                ).permitAll()</span>
+                
+                // Todos los demás endpoints requieren autenticación
+<span class="fc" id="L74">                .anyRequest().authenticated()</span>
+            )
+            
+            // Autenticación HTTP Basic
+<span class="fc" id="L78">            .httpBasic(withDefaults())</span>
+            
+            // Deshabilitar CSRF (Cross-Site Request Forgery)
+            // Seguro para APIs REST stateless que no usan cookies de sesión
+<span class="fc" id="L82">            .csrf(AbstractHttpConfigurer::disable)</span>
+            
+            // Política de sesión STATELESS
+            // No se crean sesiones HTTP - cada request debe incluir credenciales
+<span class="fc" id="L86">            .sessionManagement(session -&gt; session</span>
+<span class="fc" id="L87">                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</span>
+            );
+        
+<span class="fc" id="L90">        return http.build();</span>
+    }
+
+    /**
+     * Configura el servicio de detalles de usuario en memoria.
+     * 
+     * &lt;p&gt;&lt;strong&gt;Configuración de autenticación HTTP Basic:&lt;/strong&gt;&lt;/p&gt;
+     * &lt;ul&gt;
+     *   &lt;li&gt;Todos los endpoints de API requieren autenticación&lt;/li&gt;
+     *   &lt;li&gt;Autenticación mediante cabecera Authorization: Basic&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * &lt;p&gt;&lt;strong&gt;En producción, implementar:&lt;/strong&gt;&lt;/p&gt;
+     * &lt;ul&gt;
+     *   &lt;li&gt;UserDetailsService con base de datos&lt;/li&gt;
+     *   &lt;li&gt;Contraseñas encriptadas con BCrypt: {bcrypt}$2a$...&lt;/li&gt;
+     *   &lt;li&gt;Roles y permisos granulares&lt;/li&gt;
+     *   &lt;li&gt;Autenticación basada en JWT&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * @return UserDetailsService con usuario en memoria
+     */
+    @Bean
+    public UserDetailsService userDetailsService() {
+<span class="fc" id="L114">        UserDetails user = User.builder()</span>
+<span class="fc" id="L115">            .username(&quot;admin&quot;)</span>
+<span class="fc" id="L116">            .password(&quot;{noop}admin123&quot;)  // {noop} = no password encoder</span>
+<span class="fc" id="L117">            .roles(&quot;USER&quot;)</span>
+<span class="fc" id="L118">            .build();</span>
+        
+<span class="fc" id="L120">        return new InMemoryUserDetailsManager(user);</span>
+    }
+    
+    /**
+     * NOTA DE MIGRACIÓN A PRODUCCIÓN:
+     * 
+     * Para producción, reemplazar userDetailsService() con:
+     * 
+     * @Bean
+     * public PasswordEncoder passwordEncoder() {
+     *     return new BCryptPasswordEncoder();
+     * }
+     * 
+     * @Bean
+     * public UserDetailsService userDetailsService(UserRepository userRepository) {
+     *     return username -&gt; userRepository.findByUsername(username)
+     *         .map(user -&gt; User.builder()
+     *             .username(user.getUsername())
+     *             .password(user.getPassword())  // Ya encriptada con BCrypt
+     *             .roles(user.getRoles().toArray(new String[0]))
+     *             .build())
+     *         .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;Usuario no encontrado&quot;));
+     * }
+     */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

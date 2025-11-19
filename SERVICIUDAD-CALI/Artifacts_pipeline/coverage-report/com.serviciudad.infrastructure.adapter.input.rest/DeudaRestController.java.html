@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeudaRestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.input.rest</a> &gt; <span class="el_source">DeudaRestController.java</span></div><h1>DeudaRestController.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.input.rest;
+
+import com.serviciudad.application.dto.request.ConsultarDeudaRequest;
+import com.serviciudad.application.dto.response.DeudaConsolidadaResponse;
+import com.serviciudad.application.mapper.DeudaMapper;
+import com.serviciudad.domain.model.DeudaConsolidada;
+import com.serviciudad.domain.port.input.ConsultarDeudaUseCase;
+import com.serviciudad.domain.valueobject.ClienteId;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(&quot;/api/deuda&quot;)
+@RequiredArgsConstructor
+@Validated
+public class DeudaRestController {
+
+    private final ConsultarDeudaUseCase consultarDeudaUseCase;
+
+    @PostMapping(&quot;/consultar&quot;)
+    public ResponseEntity&lt;DeudaConsolidadaResponse&gt; consultarDeuda(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = &quot;Datos del cliente a consultar&quot;,
+            required = true
+        )
+        @Valid @RequestBody ConsultarDeudaRequest request
+    ) {
+<span class="fc" id="L31">        ClienteId clienteId = ClienteId.of(request.getClienteId());</span>
+<span class="fc" id="L32">        DeudaConsolidada deuda = consultarDeudaUseCase.consultarDeudaConsolidada(clienteId);</span>
+<span class="fc" id="L33">        DeudaConsolidadaResponse response = DeudaMapper.toResponse(deuda);</span>
+<span class="fc" id="L34">        return ResponseEntity.ok(response);</span>
+    }
+
+    @GetMapping(&quot;/cliente/{clienteId}&quot;)
+    public ResponseEntity&lt;DeudaConsolidadaResponse&gt; consultarDeudaPorCliente(
+        @PathVariable
+        @jakarta.validation.constraints.Pattern(
+            regexp = &quot;^\\d{10}$&quot;,
+            message = &quot;El ClienteId debe ser un número de 10 dígitos&quot;
+        )
+        @jakarta.validation.constraints.NotBlank(
+            message = &quot;El ClienteId es obligatorio&quot;
+        )
+        String clienteId
+    ) {
+<span class="fc" id="L49">        ClienteId id = ClienteId.of(clienteId);</span>
+<span class="fc" id="L50">        DeudaConsolidada deuda = consultarDeudaUseCase.consultarDeudaConsolidada(id);</span>
+<span class="fc" id="L51">        DeudaConsolidadaResponse response = DeudaMapper.toResponse(deuda);</span>
+<span class="fc" id="L52">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.serviciudad.integration.DeudaConsolidadaIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.358 s - in com.serviciudad.integration.DeudaConsolidadaIntegrationTest

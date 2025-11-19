@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsumoEnergiaJpaMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.output.persistence.jpa.mapper</a> &gt; <span class="el_source">ConsumoEnergiaJpaMapper.java</span></div><h1>ConsumoEnergiaJpaMapper.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.output.persistence.jpa.mapper;
+
+import com.serviciudad.domain.model.ConsumoEnergiaModel;
+import com.serviciudad.domain.valueobject.ClienteId;
+import com.serviciudad.domain.valueobject.ConsumoEnergia;
+import com.serviciudad.domain.valueobject.Dinero;
+import com.serviciudad.domain.valueobject.Periodo;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.ConsumoEnergiaJpaEntity;
+
+<span class="nc" id="L10">public class ConsumoEnergiaJpaMapper {</span>
+
+    public static ConsumoEnergiaModel toDomain(ConsumoEnergiaJpaEntity entity) {
+<span class="fc" id="L13">        return ConsumoEnergiaModel.builder()</span>
+<span class="fc" id="L14">            .clienteId(ClienteId.of(entity.getClienteId()))</span>
+<span class="fc" id="L15">            .periodo(Periodo.of(entity.getPeriodo()))</span>
+<span class="fc" id="L16">            .consumo(ConsumoEnergia.of(entity.getConsumo().intValue()))</span>
+<span class="fc" id="L17">            .valorPagar(Dinero.of(entity.getValorPagar()))</span>
+<span class="fc" id="L18">            .fechaLectura(entity.getFechaLectura())</span>
+<span class="fc" id="L19">            .estrato(entity.getEstrato())</span>
+<span class="fc" id="L20">            .build();</span>
+    }
+
+    public static ConsumoEnergiaJpaEntity toJpaEntity(ConsumoEnergiaModel consumo) {
+<span class="fc" id="L24">        return ConsumoEnergiaJpaEntity.builder()</span>
+<span class="fc" id="L25">            .clienteId(consumo.getClienteId().getValor())</span>
+<span class="fc" id="L26">            .periodo(consumo.getPeriodo().getValor())</span>
+<span class="fc" id="L27">            .consumo(new java.math.BigDecimal(consumo.getConsumo().getKilovatiosHora()))</span>
+<span class="fc" id="L28">            .valorPagar(consumo.getValorPagar().getMonto())</span>
+<span class="fc" id="L29">            .fechaLectura(consumo.getFechaLectura())</span>
+<span class="fc" id="L30">            .estrato(consumo.getEstrato())</span>
+<span class="fc" id="L31">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

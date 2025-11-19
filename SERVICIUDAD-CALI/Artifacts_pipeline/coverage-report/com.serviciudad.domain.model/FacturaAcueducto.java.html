@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacturaAcueducto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.domain.model</a> &gt; <span class="el_source">FacturaAcueducto.java</span></div><h1>FacturaAcueducto.java</h1><pre class="source lang-java linenums">package com.serviciudad.domain.model;
+
+import com.serviciudad.domain.valueobject.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class FacturaAcueducto {
+    
+    private FacturaId id;
+    private ClienteId clienteId;
+    private Periodo periodo;
+    private ConsumoAgua consumo;
+    private Dinero valorPagar;
+    private EstadoFactura estado;
+    private LocalDate fechaVencimiento;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaActualizacion;
+
+    public boolean estaVencida() {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (fechaVencimiento == null) {</span>
+<span class="fc" id="L28">            return false;</span>
+        }
+<span class="fc bfc" id="L30" title="All 4 branches covered.">        return fechaVencimiento.isBefore(LocalDate.now()) </span>
+            &amp;&amp; estado != EstadoFactura.PAGADA;
+    }
+
+    public void registrarPago() {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (estado == EstadoFactura.ANULADA) {</span>
+<span class="fc" id="L36">            throw new IllegalStateException(&quot;No se puede pagar una factura anulada&quot;);</span>
+        }
+<span class="fc" id="L38">        this.estado = EstadoFactura.PAGADA;</span>
+<span class="fc" id="L39">        this.fechaActualizacion = LocalDateTime.now();</span>
+<span class="fc" id="L40">    }</span>
+
+    public void anular() {
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (estado == EstadoFactura.PAGADA) {</span>
+<span class="fc" id="L44">            throw new IllegalStateException(&quot;No se puede anular una factura pagada&quot;);</span>
+        }
+<span class="fc" id="L46">        this.estado = EstadoFactura.ANULADA;</span>
+<span class="fc" id="L47">        this.fechaActualizacion = LocalDateTime.now();</span>
+<span class="fc" id="L48">    }</span>
+
+    public void actualizarValor(Dinero nuevoValor) {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (estado == EstadoFactura.PAGADA) {</span>
+<span class="fc" id="L52">            throw new IllegalStateException(&quot;No se puede modificar una factura pagada&quot;);</span>
+        }
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (nuevoValor.esNegativo()) {</span>
+<span class="fc" id="L55">            throw new IllegalArgumentException(&quot;El valor no puede ser negativo&quot;);</span>
+        }
+<span class="fc" id="L57">        this.valorPagar = nuevoValor;</span>
+<span class="fc" id="L58">        this.fechaActualizacion = LocalDateTime.now();</span>
+<span class="fc" id="L59">    }</span>
+
+    public long diasHastaVencimiento() {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (fechaVencimiento == null) {</span>
+<span class="fc" id="L63">            return 0;</span>
+        }
+<span class="fc" id="L65">        return LocalDate.now().until(fechaVencimiento, java.time.temporal.ChronoUnit.DAYS);</span>
+    }
+
+    public void marcarComoVencida() {
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">        if (estado == EstadoFactura.PENDIENTE &amp;&amp; estaVencida()) {</span>
+<span class="fc" id="L70">            this.estado = EstadoFactura.VENCIDA;</span>
+<span class="fc" id="L71">            this.fechaActualizacion = LocalDateTime.now();</span>
+        }
+<span class="fc" id="L73">    }</span>
+
+    public boolean isPagada() {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        return estado == EstadoFactura.PAGADA;</span>
+    }
+
+    public boolean isVencida() {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        return estado == EstadoFactura.VENCIDA;</span>
+    }
+
+    public boolean isPendiente() {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        return estado == EstadoFactura.PENDIENTE;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

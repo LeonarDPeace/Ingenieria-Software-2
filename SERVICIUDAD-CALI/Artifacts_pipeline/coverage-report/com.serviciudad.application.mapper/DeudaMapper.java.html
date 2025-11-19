@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeudaMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.application.mapper</a> &gt; <span class="el_source">DeudaMapper.java</span></div><h1>DeudaMapper.java</h1><pre class="source lang-java linenums">package com.serviciudad.application.mapper;
+
+import com.serviciudad.application.dto.response.ConsumoEnergiaResponse;
+import com.serviciudad.application.dto.response.DeudaConsolidadaResponse;
+import com.serviciudad.application.dto.response.EstadisticasResponse;
+import com.serviciudad.application.dto.response.FacturaResponse;
+import com.serviciudad.domain.model.ConsumoEnergiaModel;
+import com.serviciudad.domain.model.DeudaConsolidada;
+import com.serviciudad.domain.model.EstadisticasDeuda;
+import com.serviciudad.domain.model.FacturaAcueducto;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L16">public class DeudaMapper {</span>
+
+    public static DeudaConsolidadaResponse toResponse(DeudaConsolidada deuda) {
+<span class="fc" id="L19">        return DeudaConsolidadaResponse.builder()</span>
+<span class="fc" id="L20">            .clienteId(deuda.getClienteId().getValor())</span>
+<span class="fc" id="L21">            .fechaConsulta(deuda.getFechaConsulta())</span>
+<span class="fc" id="L22">            .deudaTotalAcueducto(deuda.getDeudaTotalAcueducto().getMonto())</span>
+<span class="fc" id="L23">            .deudaTotalEnergia(deuda.getDeudaTotalEnergia().getMonto())</span>
+<span class="fc" id="L24">            .totalGeneral(deuda.getTotalGeneral().getMonto())</span>
+<span class="fc" id="L25">            .facturasAcueducto(toFacturaResponseList(deuda.getFacturasAcueducto()))</span>
+<span class="fc" id="L26">            .consumosEnergia(toConsumoEnergiaResponseList(deuda.getConsumosEnergia()))</span>
+<span class="fc" id="L27">            .alertas(deuda.getAlertas())</span>
+<span class="fc" id="L28">            .estadisticas(toEstadisticasResponse(deuda.getEstadisticas()))</span>
+<span class="fc" id="L29">            .build();</span>
+    }
+
+    private static List&lt;FacturaResponse&gt; toFacturaResponseList(List&lt;FacturaAcueducto&gt; facturas) {
+<span class="fc" id="L33">        return facturas.stream()</span>
+<span class="fc" id="L34">            .map(DeudaMapper::toFacturaResponse)</span>
+<span class="fc" id="L35">            .collect(Collectors.toList());</span>
+    }
+
+    private static FacturaResponse toFacturaResponse(FacturaAcueducto factura) {
+<span class="fc" id="L39">        return FacturaResponse.builder()</span>
+<span class="fc" id="L40">            .id(factura.getId().getValor())</span>
+<span class="fc" id="L41">            .clienteId(factura.getClienteId().getValor())</span>
+<span class="fc" id="L42">            .periodo(factura.getPeriodo().getValor())</span>
+<span class="fc" id="L43">            .consumo(BigDecimal.valueOf(factura.getConsumo().getMetrosCubicos()))</span>
+<span class="fc" id="L44">            .valorPagar(factura.getValorPagar().getMonto())</span>
+<span class="fc" id="L45">            .estado(factura.getEstado().name())</span>
+<span class="fc" id="L46">            .fechaVencimiento(factura.getFechaVencimiento())</span>
+<span class="fc" id="L47">            .fechaCreacion(factura.getFechaCreacion())</span>
+<span class="fc" id="L48">            .fechaActualizacion(factura.getFechaActualizacion())</span>
+<span class="fc" id="L49">            .vencida(factura.isVencida())</span>
+<span class="fc" id="L50">            .diasHastaVencimiento(factura.diasHastaVencimiento())</span>
+<span class="fc" id="L51">            .build();</span>
+    }
+
+    private static List&lt;ConsumoEnergiaResponse&gt; toConsumoEnergiaResponseList(List&lt;ConsumoEnergiaModel&gt; consumos) {
+<span class="fc" id="L55">        return consumos.stream()</span>
+<span class="fc" id="L56">            .map(DeudaMapper::toConsumoEnergiaResponse)</span>
+<span class="fc" id="L57">            .collect(Collectors.toList());</span>
+    }
+
+    private static ConsumoEnergiaResponse toConsumoEnergiaResponse(ConsumoEnergiaModel consumo) {
+<span class="fc" id="L61">        return ConsumoEnergiaResponse.builder()</span>
+<span class="fc" id="L62">            .clienteId(consumo.getClienteId().getValor())</span>
+<span class="fc" id="L63">            .periodo(consumo.getPeriodo().getValor())</span>
+<span class="fc" id="L64">            .consumo(BigDecimal.valueOf(consumo.getConsumo().getKilovatiosHora()))</span>
+<span class="fc" id="L65">            .valorPagar(consumo.getValorPagar().getMonto())</span>
+<span class="fc" id="L66">            .fechaLectura(consumo.getFechaLectura())</span>
+<span class="fc" id="L67">            .estrato(consumo.getEstrato())</span>
+<span class="fc" id="L68">            .consumoAlto(consumo.tieneConsumoAlto())</span>
+<span class="fc" id="L69">            .consumoBajo(consumo.tieneConsumoBajo())</span>
+<span class="fc" id="L70">            .build();</span>
+    }
+
+    private static EstadisticasResponse toEstadisticasResponse(EstadisticasDeuda estadisticas) {
+<span class="fc" id="L74">        return EstadisticasResponse.builder()</span>
+<span class="fc" id="L75">            .totalFacturasAcueducto(estadisticas.getTotalFacturasAcueducto())</span>
+<span class="fc" id="L76">            .facturasVencidas(estadisticas.getFacturasVencidas())</span>
+<span class="fc" id="L77">            .facturasPendientes(estadisticas.getFacturasPendientes())</span>
+<span class="fc" id="L78">            .promedioConsumoAcueducto(estadisticas.getPromedioConsumoAcueducto())</span>
+<span class="fc" id="L79">            .deudaAcumuladaAcueducto(estadisticas.getDeudaAcumuladaAcueducto().getMonto())</span>
+<span class="fc" id="L80">            .totalConsumosEnergia(estadisticas.getTotalConsumosEnergia())</span>
+<span class="fc" id="L81">            .promedioConsumoEnergia(estadisticas.getPromedioConsumoEnergia())</span>
+<span class="fc" id="L82">            .deudaAcumuladaEnergia(estadisticas.getDeudaAcumuladaEnergia().getMonto())</span>
+<span class="fc" id="L83">            .porcentajeFacturasVencidas(estadisticas.porcentajeFacturasVencidas())</span>
+<span class="fc" id="L84">            .tieneDeudaSignificativa(estadisticas.tieneDeudaSignificativa())</span>
+<span class="fc" id="L85">            .tieneConsumoAcueductoElevado(estadisticas.tieneConsumoAcueductoElevado())</span>
+<span class="fc" id="L86">            .tieneConsumoEnergiaElevado(estadisticas.tieneConsumoEnergiaElevado())</span>
+<span class="fc" id="L87">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

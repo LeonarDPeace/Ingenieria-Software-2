@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsumoEnergiaModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.domain.model</a> &gt; <span class="el_source">ConsumoEnergiaModel.java</span></div><h1>ConsumoEnergiaModel.java</h1><pre class="source lang-java linenums">package com.serviciudad.domain.model;
+
+import com.serviciudad.domain.valueobject.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDate;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class ConsumoEnergiaModel {
+    
+    private ClienteId clienteId;
+    private Periodo periodo;
+    private ConsumoEnergia consumo;
+    private Dinero valorPagar;
+    private LocalDate fechaLectura;
+    private String estrato;
+
+    public boolean tieneConsumoAlto() {
+<span class="fc" id="L23">        return consumo.esAlto();</span>
+    }
+
+    public boolean tieneConsumoBajo() {
+<span class="fc" id="L27">        return consumo.esBajo();</span>
+    }
+
+    public boolean perteneceAEstrato(String estratoBuscado) {
+<span class="pc bpc" id="L31" title="1 of 4 branches missed.">        return this.estrato != null &amp;&amp; this.estrato.equalsIgnoreCase(estratoBuscado);</span>
+    }
+
+    public boolean esDelMismoPeriodoQue(ConsumoEnergiaModel otro) {
+<span class="fc" id="L35">        return this.periodo.equals(otro.periodo);</span>
+    }
+
+    public boolean esDelMismoClienteQue(ConsumoEnergiaModel otro) {
+<span class="fc" id="L39">        return this.clienteId.equals(otro.clienteId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

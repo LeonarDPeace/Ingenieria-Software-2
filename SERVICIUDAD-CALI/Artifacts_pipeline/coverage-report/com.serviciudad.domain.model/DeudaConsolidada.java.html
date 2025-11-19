@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeudaConsolidada.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.domain.model</a> &gt; <span class="el_source">DeudaConsolidada.java</span></div><h1>DeudaConsolidada.java</h1><pre class="source lang-java linenums">package com.serviciudad.domain.model;
+
+import com.serviciudad.domain.valueobject.ClienteId;
+import com.serviciudad.domain.valueobject.Dinero;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class DeudaConsolidada {
+    
+    private ClienteId clienteId;
+    private LocalDateTime fechaConsulta;
+    private List&lt;FacturaAcueducto&gt; facturasAcueducto;
+    private List&lt;ConsumoEnergiaModel&gt; consumosEnergia;
+    private Dinero deudaTotalAcueducto;
+    private Dinero deudaTotalEnergia;
+    private Dinero totalGeneral;
+    private List&lt;String&gt; alertas;
+    private EstadisticasDeuda estadisticas;
+
+    public static DeudaConsolidada construir(
+            ClienteId clienteId, 
+            List&lt;FacturaAcueducto&gt; facturasAcueducto,
+            List&lt;ConsumoEnergiaModel&gt; consumosEnergia) {
+        
+<span class="fc" id="L34">        Dinero deudaAcueducto = calcularDeudaAcueducto(facturasAcueducto);</span>
+<span class="fc" id="L35">        Dinero deudaEnergia = calcularDeudaEnergia(consumosEnergia);</span>
+<span class="fc" id="L36">        Dinero total = deudaAcueducto.sumar(deudaEnergia);</span>
+        
+<span class="fc" id="L38">        List&lt;String&gt; alertas = generarAlertas(facturasAcueducto);</span>
+<span class="fc" id="L39">        EstadisticasDeuda estadisticas = calcularEstadisticas(</span>
+            facturasAcueducto, 
+            consumosEnergia,
+            deudaAcueducto,
+            deudaEnergia
+        );
+
+<span class="fc" id="L46">        return DeudaConsolidada.builder()</span>
+<span class="fc" id="L47">                .clienteId(clienteId)</span>
+<span class="fc" id="L48">                .fechaConsulta(LocalDateTime.now())</span>
+<span class="fc" id="L49">                .facturasAcueducto(facturasAcueducto)</span>
+<span class="fc" id="L50">                .consumosEnergia(consumosEnergia)</span>
+<span class="fc" id="L51">                .deudaTotalAcueducto(deudaAcueducto)</span>
+<span class="fc" id="L52">                .deudaTotalEnergia(deudaEnergia)</span>
+<span class="fc" id="L53">                .totalGeneral(total)</span>
+<span class="fc" id="L54">                .alertas(alertas)</span>
+<span class="fc" id="L55">                .estadisticas(estadisticas)</span>
+<span class="fc" id="L56">                .build();</span>
+    }
+
+    private static Dinero calcularDeudaAcueducto(List&lt;FacturaAcueducto&gt; facturas) {
+<span class="fc" id="L60">        return facturas.stream()</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                .filter(f -&gt; !f.isPagada())</span>
+<span class="fc" id="L62">                .map(FacturaAcueducto::getValorPagar)</span>
+<span class="fc" id="L63">                .reduce(Dinero.cero(), Dinero::sumar);</span>
+    }
+
+    private static Dinero calcularDeudaEnergia(List&lt;ConsumoEnergiaModel&gt; consumos) {
+<span class="fc" id="L67">        return consumos.stream()</span>
+<span class="fc" id="L68">                .map(ConsumoEnergiaModel::getValorPagar)</span>
+<span class="fc" id="L69">                .reduce(Dinero.cero(), Dinero::sumar);</span>
+    }
+
+    private static List&lt;String&gt; generarAlertas(List&lt;FacturaAcueducto&gt; facturas) {
+<span class="fc" id="L73">        List&lt;String&gt; alertas = new ArrayList&lt;&gt;();</span>
+        
+<span class="fc" id="L75">        long facturasVencidas = facturas.stream()</span>
+<span class="fc" id="L76">                .filter(FacturaAcueducto::isVencida)</span>
+<span class="fc" id="L77">                .count();</span>
+        
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (facturasVencidas &gt; 0) {</span>
+<span class="fc" id="L80">            alertas.add(&quot;Tiene &quot; + facturasVencidas + &quot; factura(s) vencida(s)&quot;);</span>
+        }
+        
+<span class="fc" id="L83">        long facturasProximasVencer = facturas.stream()</span>
+<span class="pc bpc" id="L84" title="1 of 6 branches missed.">                .filter(f -&gt; f.isPendiente() &amp;&amp; f.diasHastaVencimiento() &lt;= 5 &amp;&amp; f.diasHastaVencimiento() &gt; 0)</span>
+<span class="fc" id="L85">                .count();</span>
+        
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (facturasProximasVencer &gt; 0) {</span>
+<span class="fc" id="L88">            alertas.add(&quot;Tiene &quot; + facturasProximasVencer + &quot; factura(s) proxima(s) a vencer&quot;);</span>
+        }
+        
+<span class="fc" id="L91">        return alertas;</span>
+    }
+
+    private static EstadisticasDeuda calcularEstadisticas(
+            List&lt;FacturaAcueducto&gt; facturasAcueducto,
+            List&lt;ConsumoEnergiaModel&gt; consumosEnergia,
+            Dinero deudaAcueducto,
+            Dinero deudaEnergia) {
+        
+<span class="fc" id="L100">        int totalFacturasAcueducto = facturasAcueducto.size();</span>
+<span class="fc" id="L101">        int facturasVencidas = (int) facturasAcueducto.stream()</span>
+<span class="fc" id="L102">                .filter(FacturaAcueducto::isVencida)</span>
+<span class="fc" id="L103">                .count();</span>
+<span class="fc" id="L104">        int facturasPendientes = (int) facturasAcueducto.stream()</span>
+<span class="fc" id="L105">                .filter(FacturaAcueducto::isPendiente)</span>
+<span class="fc" id="L106">                .count();</span>
+        
+<span class="fc" id="L108">        double promedioConsumoAcueducto = facturasAcueducto.stream()</span>
+<span class="fc" id="L109">                .mapToInt(f -&gt; f.getConsumo().getMetrosCubicos())</span>
+<span class="fc" id="L110">                .average()</span>
+<span class="fc" id="L111">                .orElse(0.0);</span>
+        
+<span class="fc" id="L113">        int totalConsumosEnergia = consumosEnergia.size();</span>
+<span class="fc" id="L114">        double promedioConsumoEnergia = consumosEnergia.stream()</span>
+<span class="fc" id="L115">                .mapToInt(c -&gt; c.getConsumo().getKilovatiosHora())</span>
+<span class="fc" id="L116">                .average()</span>
+<span class="fc" id="L117">                .orElse(0.0);</span>
+        
+<span class="fc" id="L119">        return EstadisticasDeuda.builder()</span>
+<span class="fc" id="L120">                .totalFacturasAcueducto(totalFacturasAcueducto)</span>
+<span class="fc" id="L121">                .facturasVencidas(facturasVencidas)</span>
+<span class="fc" id="L122">                .facturasPendientes(facturasPendientes)</span>
+<span class="fc" id="L123">                .promedioConsumoAcueducto(promedioConsumoAcueducto)</span>
+<span class="fc" id="L124">                .deudaAcumuladaAcueducto(deudaAcueducto)</span>
+<span class="fc" id="L125">                .totalConsumosEnergia(totalConsumosEnergia)</span>
+<span class="fc" id="L126">                .promedioConsumoEnergia(promedioConsumoEnergia)</span>
+<span class="fc" id="L127">                .deudaAcumuladaEnergia(deudaEnergia)</span>
+<span class="fc" id="L128">                .build();</span>
+    }
+
+    public boolean tieneDeuda() {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        return !totalGeneral.esCero();</span>
+    }
+
+    public boolean tieneFacturasVencidas() {
+<span class="fc" id="L136">        return facturasAcueducto.stream().anyMatch(FacturaAcueducto::isVencida);</span>
+    }
+
+    public List&lt;FacturaAcueducto&gt; getFacturasVencidas() {
+<span class="fc" id="L140">        return facturasAcueducto.stream()</span>
+<span class="fc" id="L141">                .filter(FacturaAcueducto::isVencida)</span>
+<span class="fc" id="L142">                .collect(Collectors.toList());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

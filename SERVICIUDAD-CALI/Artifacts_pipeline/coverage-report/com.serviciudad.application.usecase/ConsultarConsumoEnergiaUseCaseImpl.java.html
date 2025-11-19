@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsultarConsumoEnergiaUseCaseImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.application.usecase</a> &gt; <span class="el_source">ConsultarConsumoEnergiaUseCaseImpl.java</span></div><h1>ConsultarConsumoEnergiaUseCaseImpl.java</h1><pre class="source lang-java linenums">package com.serviciudad.application.usecase;
+
+import com.serviciudad.domain.model.ConsumoEnergiaModel;
+import com.serviciudad.domain.port.input.ConsultarConsumoEnergiaUseCase;
+import com.serviciudad.domain.port.output.ConsumoEnergiaReaderPort;
+import com.serviciudad.domain.valueobject.ClienteId;
+import com.serviciudad.domain.valueobject.Periodo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ConsultarConsumoEnergiaUseCaseImpl implements ConsultarConsumoEnergiaUseCase {
+
+    private final ConsumoEnergiaReaderPort consumoEnergiaReader;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;ConsumoEnergiaModel&gt; consultarConsumosPorCliente(ClienteId clienteId) {
+<span class="fc" id="L23">        return consumoEnergiaReader.findByClienteId(clienteId);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;ConsumoEnergiaModel&gt; consultarConsumosPorPeriodo(ClienteId clienteId, Periodo periodo) {
+<span class="fc" id="L29">        return consumoEnergiaReader.findByClienteIdAndPeriodo(clienteId, periodo);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;ConsumoEnergiaModel&gt; consultarConsumosElevados(ClienteId clienteId) {
+<span class="fc" id="L35">        return consumoEnergiaReader.findConsumosElevados(clienteId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

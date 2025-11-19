@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacturaRepositoryAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.output.persistence</a> &gt; <span class="el_source">FacturaRepositoryAdapter.java</span></div><h1>FacturaRepositoryAdapter.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.output.persistence;
+
+import com.serviciudad.domain.model.FacturaAcueducto;
+import com.serviciudad.domain.port.output.FacturaRepositoryPort;
+import com.serviciudad.domain.valueobject.ClienteId;
+import com.serviciudad.domain.valueobject.FacturaId;
+import com.serviciudad.domain.valueobject.Periodo;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.EstadoFacturaJpa;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity.FacturaJpaEntity;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.mapper.FacturaJpaMapper;
+import com.serviciudad.infrastructure.adapter.output.persistence.jpa.repository.FacturaJpaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Component
+@RequiredArgsConstructor
+public class FacturaRepositoryAdapter implements FacturaRepositoryPort {
+
+    private final FacturaJpaRepository jpaRepository;
+
+    @Override
+    public Optional&lt;FacturaAcueducto&gt; findById(FacturaId facturaId) {
+<span class="fc" id="L29">        return jpaRepository.findById(facturaId.getValor())</span>
+<span class="fc" id="L30">            .map(FacturaJpaMapper::toDomain);</span>
+    }
+
+    @Override
+    public List&lt;FacturaAcueducto&gt; findByClienteId(ClienteId clienteId) {
+<span class="fc" id="L35">        return jpaRepository.findByClienteId(clienteId.getValor())</span>
+<span class="fc" id="L36">            .stream()</span>
+<span class="fc" id="L37">            .map(FacturaJpaMapper::toDomain)</span>
+<span class="fc" id="L38">            .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public List&lt;FacturaAcueducto&gt; findByClienteIdAndPeriodo(ClienteId clienteId, Periodo periodo) {
+<span class="nc" id="L43">        return jpaRepository.findByClienteIdAndPeriodo(clienteId.getValor(), periodo.getValor())</span>
+<span class="nc" id="L44">            .stream()</span>
+<span class="nc" id="L45">            .map(FacturaJpaMapper::toDomain)</span>
+<span class="nc" id="L46">            .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public List&lt;FacturaAcueducto&gt; findFacturasPendientes() {
+<span class="nc" id="L51">        return jpaRepository.findByEstado(EstadoFacturaJpa.PENDIENTE)</span>
+<span class="nc" id="L52">            .stream()</span>
+<span class="nc" id="L53">            .map(FacturaJpaMapper::toDomain)</span>
+<span class="nc" id="L54">            .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public List&lt;FacturaAcueducto&gt; findFacturasPendientes(int pageNumber, int pageSize) {
+<span class="fc" id="L59">        Page&lt;FacturaJpaEntity&gt; page = jpaRepository.findByEstado(</span>
+            EstadoFacturaJpa.PENDIENTE, 
+<span class="fc" id="L61">            PageRequest.of(pageNumber, pageSize)</span>
+        );
+        
+<span class="fc" id="L64">        return page.getContent()</span>
+<span class="fc" id="L65">            .stream()</span>
+<span class="fc" id="L66">            .map(FacturaJpaMapper::toDomain)</span>
+<span class="fc" id="L67">            .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public boolean hasMoreFacturasPendientes(int pageNumber, int pageSize) {
+<span class="fc" id="L72">        Page&lt;FacturaJpaEntity&gt; page = jpaRepository.findByEstado(</span>
+            EstadoFacturaJpa.PENDIENTE, 
+<span class="fc" id="L74">            PageRequest.of(pageNumber, pageSize)</span>
+        );
+        
+<span class="fc" id="L77">        return page.hasNext();</span>
+    }
+
+    @Override
+    public List&lt;FacturaAcueducto&gt; findFacturasVencidas() {
+<span class="nc" id="L82">        return jpaRepository.findByEstado(EstadoFacturaJpa.VENCIDA)</span>
+<span class="nc" id="L83">            .stream()</span>
+<span class="nc" id="L84">            .map(FacturaJpaMapper::toDomain)</span>
+<span class="nc" id="L85">            .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public FacturaAcueducto save(FacturaAcueducto factura) {
+<span class="fc" id="L90">        FacturaJpaEntity entity = FacturaJpaMapper.toJpaEntity(factura);</span>
+<span class="fc" id="L91">        FacturaJpaEntity savedEntity = jpaRepository.save(entity);</span>
+<span class="fc" id="L92">        return FacturaJpaMapper.toDomain(savedEntity);</span>
+    }
+
+    @Override
+    public void saveAll(List&lt;FacturaAcueducto&gt; facturas) {
+<span class="fc" id="L97">        List&lt;FacturaJpaEntity&gt; entities = facturas.stream()</span>
+<span class="fc" id="L98">            .map(FacturaJpaMapper::toJpaEntity)</span>
+<span class="fc" id="L99">            .collect(Collectors.toList());</span>
+<span class="fc" id="L100">        jpaRepository.saveAll(entities);</span>
+<span class="fc" id="L101">    }</span>
+
+    @Override
+    public void flush() {
+<span class="fc" id="L105">        jpaRepository.flush();</span>
+<span class="fc" id="L106">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.config</a> &gt; <span class="el_source">WebConfig.java</span></div><h1>WebConfig.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * Configuración de Spring Web MVC.
+ * 
+ * Registra interceptores y configuraciones personalizadas
+ * para el procesamiento de requests HTTP.
+ * 
+ * Configuración adicional:
+ * - Servir archivos estáticos del frontend desde /frontend/**
+ * - Mapeo de recursos HTML, CSS, JS
+ * 
+ * @author ServiCiudad Team
+ * @version 1.0
+ * @since 2025-10-17
+ */
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+
+    private final RateLimitInterceptor rateLimitInterceptor;
+
+    /**
+     * Registra interceptores HTTP.
+     * 
+     * - RateLimitInterceptor: Aplica a /api/** (endpoints de negocio)
+     * - Excluye: /actuator/**, /swagger-ui/**, /v3/api-docs/**, /frontend/**
+     * 
+     * @param registry Registro de interceptores
+     */
+    @Override
+    public void addInterceptors(@NonNull InterceptorRegistry registry) {
+<span class="fc" id="L40">        registry.addInterceptor(rateLimitInterceptor)</span>
+<span class="fc" id="L41">            .addPathPatterns(&quot;/api/**&quot;)  // Aplicar solo a endpoints de la API</span>
+<span class="fc" id="L42">            .excludePathPatterns(</span>
+                &quot;/actuator/**&quot;,          // Excluir actuator (health checks)
+                &quot;/swagger-ui/**&quot;,        // Excluir Swagger UI
+                &quot;/swagger-ui.html&quot;,      // Excluir Swagger página principal
+                &quot;/v3/api-docs/**&quot;,       // Excluir OpenAPI docs
+                &quot;/api-docs/**&quot;,          // Excluir API documentation
+                &quot;/frontend/**&quot;,          // Excluir archivos estáticos del frontend
+                &quot;/&quot;,                     // Excluir página principal
+                &quot;/index.html&quot;            // Excluir index
+            );
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Configura el manejo de recursos estáticos.
+     * 
+     * Sirve los archivos del frontend (HTML, CSS, JS) desde:
+     * - classpath:/static/ (archivos empaquetados en el JAR)
+     * - file:./frontend/ (archivos en desarrollo)
+     * 
+     * Accesibles en: http://localhost:8080/**
+     * 
+     * IMPORTANTE: Esta configuración NO interfiere con los endpoints REST (/api/**)
+     * porque Spring MVC da prioridad a los @RequestMapping sobre los ResourceHandlers.
+     * 
+     * @param registry Registro de resource handlers
+     */
+    @Override
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
+        // Servir archivos estáticos desde el classpath y sistema de archivos
+<span class="fc" id="L71">        registry.addResourceHandler(&quot;/**&quot;)</span>
+<span class="fc" id="L72">            .addResourceLocations(</span>
+                &quot;classpath:/static/&quot;,
+                &quot;file:./frontend/&quot;
+            )
+<span class="fc" id="L76">            .setCachePeriod(3600); // Cache de 1 hora</span>
+<span class="fc" id="L77">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

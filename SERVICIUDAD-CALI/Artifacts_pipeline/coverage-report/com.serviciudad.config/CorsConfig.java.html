@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CorsConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.config</a> &gt; <span class="el_source">CorsConfig.java</span></div><h1>CorsConfig.java</h1><pre class="source lang-java linenums">package com.serviciudad.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * Configuracion de CORS para permitir peticiones cross-origin.
+ * 
+ * Esta clase configura las politicas CORS para permitir que aplicaciones
+ * frontend en diferentes dominios puedan consumir la API.
+ * 
+ * Configuracion aplicada:
+ * - Origenes permitidos: localhost:3000 (React), localhost:4200 (Angular)
+ * - Metodos permitidos: GET, POST, PUT, DELETE, PATCH, OPTIONS
+ * - Headers permitidos: Content-Type, Authorization, X-Requested-With
+ * - Credenciales: Habilitadas
+ * - Max Age: 3600 segundos (1 hora)
+ * 
+ * @author Equipo ServiCiudad Cali
+ * @version 1.0
+ * @since 2025-01-20
+ */
+@Configuration
+<span class="fc" id="L26">public class CorsConfig implements WebMvcConfigurer {</span>
+
+    /**
+     * Configura las reglas CORS para todos los endpoints de la API.
+     * 
+     * @param registry CorsRegistry para registrar configuraciones CORS
+     */
+    @Override
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+<span class="fc" id="L35">        registry.addMapping(&quot;/**&quot;)</span>
+<span class="fc" id="L36">                .allowedOrigins(</span>
+                        &quot;http://localhost:3000&quot;,
+                        &quot;http://localhost:4200&quot;,
+                        &quot;http://localhost:5173&quot;,
+                        &quot;http://localhost:5500&quot;,
+                        &quot;http://127.0.0.1:3000&quot;,
+                        &quot;http://127.0.0.1:4200&quot;,
+                        &quot;http://127.0.0.1:5173&quot;,
+                        &quot;http://127.0.0.1:5500&quot;
+                )
+<span class="fc" id="L46">                .allowedMethods(</span>
+                        &quot;GET&quot;,
+                        &quot;POST&quot;,
+                        &quot;PUT&quot;,
+                        &quot;DELETE&quot;,
+                        &quot;PATCH&quot;,
+                        &quot;OPTIONS&quot;
+                )
+<span class="fc" id="L54">                .allowedHeaders(</span>
+                        &quot;Content-Type&quot;,
+                        &quot;Authorization&quot;,
+                        &quot;X-Requested-With&quot;,
+                        &quot;Accept&quot;,
+                        &quot;Origin&quot;,
+                        &quot;Access-Control-Request-Method&quot;,
+                        &quot;Access-Control-Request-Headers&quot;
+                )
+<span class="fc" id="L63">                .exposedHeaders(</span>
+                        &quot;Access-Control-Allow-Origin&quot;,
+                        &quot;Access-Control-Allow-Credentials&quot;
+                )
+<span class="fc" id="L67">                .allowCredentials(true)</span>
+<span class="fc" id="L68">                .maxAge(3600);</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

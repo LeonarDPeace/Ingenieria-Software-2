@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacturaJpaEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity</a> &gt; <span class="el_source">FacturaJpaEntity.java</span></div><h1>FacturaJpaEntity.java</h1><pre class="source lang-java linenums">package com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;facturas_acueducto&quot;)
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FacturaJpaEntity {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = &quot;id_cliente&quot;, nullable = false, length = 10)
+    private String clienteId;
+    
+    @Column(name = &quot;periodo&quot;, nullable = false, length = 6)
+    private String periodo;
+    
+    @Column(name = &quot;consumo_m3&quot;, nullable = false)
+    private Integer consumo;
+    
+    @Column(name = &quot;valor_pagar&quot;, nullable = false, precision = 12, scale = 2)
+    private BigDecimal valorPagar;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;estado&quot;, nullable = false, length = 20)
+    private EstadoFacturaJpa estado;
+    
+    @Column(name = &quot;fecha_vencimiento&quot;, nullable = false)
+    private LocalDate fechaVencimiento;
+    
+    @Column(name = &quot;fecha_creacion&quot;, nullable = false)
+    private LocalDateTime fechaCreacion;
+    
+    @Column(name = &quot;fecha_actualizacion&quot;, nullable = false)
+    private LocalDateTime fechaActualizacion;
+    
+    @PrePersist
+    protected void onCreate() {
+<span class="fc" id="L52">        fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L53">        fechaActualizacion = LocalDateTime.now();</span>
+<span class="fc" id="L54">    }</span>
+    
+    @PreUpdate
+    protected void onUpdate() {
+<span class="fc" id="L58">        fechaActualizacion = LocalDateTime.now();</span>
+<span class="fc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

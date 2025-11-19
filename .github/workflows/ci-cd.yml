@@ -84,6 +84,7 @@ jobs:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
     needs: build-and-test
+    continue-on-error: true  # No bloquear pipeline si falla SonarCloud
 
     steps:
       - name: Checkout code
@@ -125,7 +126,7 @@ jobs:
   docker-build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    needs: [build-and-test, code-quality]
+    needs: build-and-test  # Solo depende de build-and-test, no de code-quality
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:

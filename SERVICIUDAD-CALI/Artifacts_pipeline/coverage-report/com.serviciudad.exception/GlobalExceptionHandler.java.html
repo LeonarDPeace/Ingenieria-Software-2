@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.serviciudad.exception;
+
+import com.serviciudad.domain.exception.FacturaDuplicadaException;
+import com.serviciudad.domain.exception.FacturaNoEncontradaException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Manejador global de excepciones para la API.
+ * 
+ * Captura y maneja todas las excepciones lanzadas por los controladores,
+ * transformandolas en respuestas HTTP apropiadas con mensajes de error
+ * estructurados.
+ */
+@RestControllerAdvice
+<span class="fc" id="L29">@Slf4j</span>
+<span class="fc" id="L30">public class GlobalExceptionHandler {</span>
+
+    @Autowired
+    private Environment environment;
+
+    /**
+     * Maneja excepciones cuando una factura no es encontrada.
+     * 
+     * @param ex Excepcion lanzada
+     * @param request Peticion web
+     * @return Respuesta con codigo 404
+     */
+    @ExceptionHandler(FacturaNoEncontradaException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleFacturaNoEncontrada(
+            FacturaNoEncontradaException ex, WebRequest request) {
+<span class="fc" id="L45">        log.error(&quot;Factura no encontrada: {}&quot;, ex.getMessage());</span>
+        
+<span class="fc" id="L47">        ErrorResponse error = ErrorResponse.builder()</span>
+<span class="fc" id="L48">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L49">                .status(HttpStatus.NOT_FOUND.value())</span>
+<span class="fc" id="L50">                .error(&quot;Factura no encontrada&quot;)</span>
+<span class="fc" id="L51">                .message(ex.getMessage())</span>
+<span class="fc" id="L52">                .path(request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;))</span>
+<span class="fc" id="L53">                .build();</span>
+        
+<span class="fc" id="L55">        return new ResponseEntity&lt;&gt;(error, HttpStatus.NOT_FOUND);</span>
+    }
+
+    /**
+     * Maneja excepciones cuando se intenta crear una factura duplicada.
+     * 
+     * @param ex Excepcion lanzada
+     * @param request Peticion web
+     * @return Respuesta con codigo 409
+     */
+    @ExceptionHandler(FacturaDuplicadaException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleFacturaDuplicada(
+            FacturaDuplicadaException ex, WebRequest request) {
+<span class="fc" id="L68">        log.error(&quot;Factura duplicada: {}&quot;, ex.getMessage());</span>
+        
+<span class="fc" id="L70">        ErrorResponse error = ErrorResponse.builder()</span>
+<span class="fc" id="L71">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L72">                .status(HttpStatus.CONFLICT.value())</span>
+<span class="fc" id="L73">                .error(&quot;Factura duplicada&quot;)</span>
+<span class="fc" id="L74">                .message(ex.getMessage())</span>
+<span class="fc" id="L75">                .path(request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;))</span>
+<span class="fc" id="L76">                .build();</span>
+        
+<span class="fc" id="L78">        return new ResponseEntity&lt;&gt;(error, HttpStatus.CONFLICT);</span>
+    }
+
+    /**
+     * Maneja excepciones de validacion de datos.
+     * 
+     * @param ex Excepcion de validacion
+     * @param request Peticion web
+     * @return Respuesta con codigo 400 y detalles de los errores
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleValidationErrors(
+            MethodArgumentNotValidException ex, WebRequest request) {
+<span class="fc" id="L91">        log.error(&quot;Error de validacion: {}&quot;, ex.getMessage());</span>
+        
+<span class="fc" id="L93">        Map&lt;String, String&gt; errores = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L94">        ex.getBindingResult().getAllErrors().forEach(error -&gt; {</span>
+<span class="fc" id="L95">            String campo = ((FieldError) error).getField();</span>
+<span class="fc" id="L96">            String mensaje = error.getDefaultMessage();</span>
+<span class="fc" id="L97">            errores.put(campo, mensaje);</span>
+<span class="fc" id="L98">        });</span>
+        
+<span class="fc" id="L100">        ErrorResponse error = ErrorResponse.builder()</span>
+<span class="fc" id="L101">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L102">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L103">                .error(&quot;Error de validacion&quot;)</span>
+<span class="fc" id="L104">                .message(&quot;Datos de entrada invalidos&quot;)</span>
+<span class="fc" id="L105">                .path(request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;))</span>
+<span class="fc" id="L106">                .detalles(errores)</span>
+<span class="fc" id="L107">                .build();</span>
+        
+<span class="fc" id="L109">        return new ResponseEntity&lt;&gt;(error, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    /**
+     * Maneja excepciones genericas no capturadas por otros handlers.
+     * 
+     * Implementa sanitización de logs según el entorno:
+     * - PRODUCCIÓN: Solo loguea el mensaje de error (sin stack trace completo)
+     * - DESARROLLO/TEST: Loguea stack trace completo para debugging
+     * 
+     * Esto previene la exposición de información sensible en logs de producción
+     * como rutas de archivos, configuraciones internas, etc.
+     * 
+     * @param ex Excepcion lanzada
+     * @param request Peticion web
+     * @return Respuesta con codigo 500
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleGlobalException(
+            Exception ex, WebRequest request) {
+        
+        // Verificar si estamos en producción
+<span class="fc" id="L131">        boolean isProduction = Arrays.asList(environment.getActiveProfiles())</span>
+<span class="fc" id="L132">            .contains(&quot;prod&quot;);</span>
+        
+        // Sanitizar logs según el entorno
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (isProduction) {</span>
+            // PRODUCCIÓN: Solo mensaje (sin stack trace)
+<span class="fc" id="L137">            log.error(&quot;Error inesperado: {} | Path: {} | Exception: {}&quot;,</span>
+<span class="fc" id="L138">                     ex.getMessage(),</span>
+<span class="fc" id="L139">                     request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;),</span>
+<span class="fc" id="L140">                     ex.getClass().getSimpleName());</span>
+        } else {
+            // DESARROLLO: Stack trace completo para debugging
+<span class="fc" id="L143">            log.error(&quot;Error inesperado: {} | Path: {}&quot;,</span>
+<span class="fc" id="L144">                     ex.getMessage(),</span>
+<span class="fc" id="L145">                     request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;),</span>
+                     ex);  // Incluye stack trace completo
+        }
+        
+<span class="fc" id="L149">        ErrorResponse error = ErrorResponse.builder()</span>
+<span class="fc" id="L150">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L151">                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())</span>
+<span class="fc" id="L152">                .error(&quot;Error interno del servidor&quot;)</span>
+<span class="fc" id="L153">                .message(&quot;Ha ocurrido un error inesperado. Por favor contacte al administrador.&quot;)</span>
+<span class="fc" id="L154">                .path(request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;))</span>
+<span class="fc" id="L155">                .build();</span>
+        
+<span class="fc" id="L157">        return new ResponseEntity&lt;&gt;(error, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+    }
+
+    /**
+     * Maneja excepciones de argumentos ilegales.
+     * 
+     * @param ex Excepcion lanzada
+     * @param request Peticion web
+     * @return Respuesta con codigo 400
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgument(
+            IllegalArgumentException ex, WebRequest request) {
+<span class="fc" id="L170">        log.error(&quot;Argumento ilegal: {}&quot;, ex.getMessage());</span>
+        
+<span class="fc" id="L172">        ErrorResponse error = ErrorResponse.builder()</span>
+<span class="fc" id="L173">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L174">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L175">                .error(&quot;Argumento invalido&quot;)</span>
+<span class="fc" id="L176">                .message(ex.getMessage())</span>
+<span class="fc" id="L177">                .path(request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;))</span>
+<span class="fc" id="L178">                .build();</span>
+        
+<span class="fc" id="L180">        return new ResponseEntity&lt;&gt;(error, HttpStatus.BAD_REQUEST);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

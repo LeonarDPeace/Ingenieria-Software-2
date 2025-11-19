@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DatabaseConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ServiCiudad Cali</a> &gt; <a href="index.source.html" class="el_package">com.serviciudad.config</a> &gt; <span class="el_source">DatabaseConfig.java</span></div><h1>DatabaseConfig.java</h1><pre class="source lang-java linenums">package com.serviciudad.config;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+/**
+ * Configuracion de base de datos y JPA.
+ * 
+ * Esta clase configura el DataSource con HikariCP como connection pool,
+ * el EntityManagerFactory para JPA, y el gestor de transacciones.
+ * 
+ * @author Equipo ServiCiudad Cali
+ * @version 1.0
+ * @since 2025-01-20
+ */
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {
+    &quot;com.serviciudad.repository&quot;,
+    &quot;com.serviciudad.infrastructure.adapter.output.persistence.jpa.repository&quot;
+})
+<span class="fc" id="L34">public class DatabaseConfig {</span>
+
+    @Value(&quot;${spring.datasource.url}&quot;)
+    private String dbUrl;
+
+    @Value(&quot;${spring.datasource.username}&quot;)
+    private String dbUsername;
+
+    @Value(&quot;${spring.datasource.password}&quot;)
+    private String dbPassword;
+
+    @Value(&quot;${spring.datasource.driver-class-name}&quot;)
+    private String dbDriverClassName;
+
+    @Value(&quot;${spring.datasource.hikari.maximum-pool-size:10}&quot;)
+    private int maxPoolSize;
+
+    @Value(&quot;${spring.datasource.hikari.minimum-idle:5}&quot;)
+    private int minIdle;
+
+    @Value(&quot;${spring.jpa.show-sql:false}&quot;)
+    private boolean showSql;
+
+    @Value(&quot;${spring.jpa.hibernate.ddl-auto:none}&quot;)
+    private String ddlAuto;
+
+    @Value(&quot;${spring.jpa.database-platform}&quot;)
+    private String dialect;
+
+    /**
+     * Configura el DataSource utilizando HikariCP.
+     * 
+     * @return DataSource configurado
+     */
+    @Bean
+    public DataSource dataSource() {
+<span class="fc" id="L70">        HikariConfig hikariConfig = new HikariConfig();</span>
+<span class="fc" id="L71">        hikariConfig.setJdbcUrl(dbUrl);</span>
+<span class="fc" id="L72">        hikariConfig.setUsername(dbUsername);</span>
+<span class="fc" id="L73">        hikariConfig.setPassword(dbPassword);</span>
+<span class="fc" id="L74">        hikariConfig.setDriverClassName(dbDriverClassName);</span>
+        
+<span class="fc" id="L76">        hikariConfig.setMaximumPoolSize(maxPoolSize);</span>
+<span class="fc" id="L77">        hikariConfig.setMinimumIdle(minIdle);</span>
+<span class="fc" id="L78">        hikariConfig.setConnectionTimeout(30000);</span>
+<span class="fc" id="L79">        hikariConfig.setIdleTimeout(600000);</span>
+<span class="fc" id="L80">        hikariConfig.setMaxLifetime(1800000);</span>
+<span class="fc" id="L81">        hikariConfig.setConnectionTestQuery(&quot;SELECT 1&quot;);</span>
+<span class="fc" id="L82">        hikariConfig.setPoolName(&quot;ServiCiudadHikariCP&quot;);</span>
+        
+<span class="fc" id="L84">        return new HikariDataSource(hikariConfig);</span>
+    }
+
+    /**
+     * Configura el EntityManagerFactory para JPA.
+     * 
+     * @return LocalContainerEntityManagerFactoryBean configurado
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+<span class="fc" id="L94">        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();</span>
+<span class="fc" id="L95">        em.setDataSource(dataSource());</span>
+<span class="fc" id="L96">        em.setPackagesToScan(</span>
+            &quot;com.serviciudad.domain&quot;,
+            &quot;com.serviciudad.infrastructure.adapter.output.persistence.jpa.entity&quot;
+        );
+
+<span class="fc" id="L101">        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();</span>
+<span class="fc" id="L102">        em.setJpaVendorAdapter(vendorAdapter);</span>
+<span class="fc" id="L103">        em.setJpaProperties(hibernateProperties());</span>
+
+<span class="fc" id="L105">        return em;</span>
+    }
+
+    /**
+     * Configura las propiedades especificas de Hibernate.
+     * 
+     * @return Properties con configuracion de Hibernate
+     */
+    private Properties hibernateProperties() {
+<span class="fc" id="L114">        Properties properties = new Properties();</span>
+<span class="fc" id="L115">        properties.setProperty(&quot;hibernate.dialect&quot;, dialect);</span>
+<span class="fc" id="L116">        properties.setProperty(&quot;hibernate.show_sql&quot;, String.valueOf(showSql));</span>
+<span class="fc" id="L117">        properties.setProperty(&quot;hibernate.format_sql&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L118">        properties.setProperty(&quot;hibernate.use_sql_comments&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L119">        properties.setProperty(&quot;hibernate.hbm2ddl.auto&quot;, ddlAuto);</span>
+<span class="fc" id="L120">        properties.setProperty(&quot;hibernate.jdbc.batch_size&quot;, &quot;20&quot;);</span>
+<span class="fc" id="L121">        properties.setProperty(&quot;hibernate.order_inserts&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L122">        properties.setProperty(&quot;hibernate.order_updates&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L123">        properties.setProperty(&quot;hibernate.jdbc.time_zone&quot;, &quot;America/Bogota&quot;);</span>
+        
+<span class="fc" id="L125">        return properties;</span>
+    }
+
+    /**
+     * Configura el gestor de transacciones JPA.
+     * 
+     * @return PlatformTransactionManager configurado
+     */
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+<span class="fc" id="L135">        JpaTransactionManager transactionManager = new JpaTransactionManager();</span>
+<span class="fc" id="L136">        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());</span>
+<span class="fc" id="L137">        return transactionManager;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

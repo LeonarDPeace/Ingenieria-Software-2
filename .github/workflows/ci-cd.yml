@@ -183,7 +183,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'serviciudad/serviciudad-cali:main'
+          image-ref: 'leonardpeace/serviciudad-cali:main'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
@@ -215,7 +215,7 @@ jobs:
           echo "✅ Coverage: 94% LINE / 81% BRANCH"
           echo ""
           echo "🎯 Deployment configurado para:"
-          echo "   - Image: serviciudad/serviciudad-cali:${{ github.sha }}"
+          echo "   - Image: leonardpeace/serviciudad-cali:${{ github.sha }}"
           echo "   - Environment: Staging"
           echo "   - URL: https://staging.serviciudad.cali.gov.co"
           echo ""
@@ -287,7 +287,7 @@ jobs:
           echo "✅ Canary validation: Passed"
           echo ""
           echo "🎯 Deployment configurado para:"
-          echo "   - Image: serviciudad/serviciudad-cali:latest"
+          echo "   - Image: leonardpeace/serviciudad-cali:latest"
           echo "   - Environment: Production"
           echo "   - URL: https://serviciudad.cali.gov.co"
           echo ""

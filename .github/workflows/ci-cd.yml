@@ -147,7 +147,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: serviciudad/serviciudad-cali
+          images: leonardpeace/serviciudad-cali
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -163,8 +163,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=serviciudad/serviciudad-cali:buildcache
-          cache-to: type=registry,ref=serviciudad/serviciudad-cali:buildcache,mode=max
+          cache-from: type=registry,ref=leonardpeace/serviciudad-cali:buildcache
+          cache-to: type=registry,ref=leonardpeace/serviciudad-cali:buildcache,mode=max
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

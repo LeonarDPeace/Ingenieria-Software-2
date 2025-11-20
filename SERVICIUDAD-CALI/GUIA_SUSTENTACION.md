@@ -83,36 +83,49 @@ start target/site/jacoco/index.html
 https://github.com/LeonarDPeace/Ingenieria-Software-2/actions
 ```
 
-**2.2 Mostrar último workflow run (Commit b262f86):**
+**2.2 Mostrar último workflow run (Commit de95f66):**
 
 **Jobs ejecutados:**
 ```
-✅ Job 1: Build and Test
-   - Compila el proyecto
-   - Ejecuta 199 tests
-   - Genera reporte JaCoCo
-   - Valida thresholds (85% LINE, 81% BRANCH)
-   - Sube artifacts (coverage + test results)
+✅ Job 1: Build and Test (CRÍTICO - CORE REQUIREMENT)
+   - Compila el proyecto (mvn clean compile)
+   - Ejecuta 199 tests (mvn test)
+   - Genera reporte JaCoCo (mvn jacoco:report)
+   - Valida thresholds: 94% LINE > 85% ✅, 81% BRANCH ≥ 81% ✅
+   - Sube artifacts: coverage-report, test-results
+   → STATUS: SUCCESS ✅
 
-⚠️ Job 2: Code Quality Analysis
+⚠️ Job 2: Code Quality Analysis (OPCIONAL)
    - SonarCloud analysis
-   - Status: FAILURE (pero no bloquea - continue-on-error)
+   - STATUS: FAILURE (requiere SONAR_TOKEN)
+   - continue-on-error: true → No bloquea pipeline ✅
 
-⚠️ Job 3: Build Docker Image
-   - Status: FAILURE (requiere Docker Hub secrets)
-   - Configurado como opcional (continue-on-error)
+⚠️ Job 3: Build Docker Image (OPCIONAL)
+   - Build y push a Docker Hub
+   - STATUS: FAILURE (requiere DOCKER_USERNAME, DOCKER_PASSWORD)
+   - continue-on-error: true → No bloquea pipeline ✅
 
-✅ Job 4: Deploy Staging
-   - Se ejecuta independientemente (solo depende de build-and-test)
-   - Muestra información de staging
+⚠️ Job 4: Security Vulnerability Scan (OPCIONAL)
+   - Trivy scan (requiere imagen Docker)
+   - STATUS: FAILURE (depende de Job 3)
+   - continue-on-error: true → No bloquea pipeline ✅
 
-✅ Job 5: Canary Deployment
-   - Se ejecuta independientemente
-   - Muestra implementación local disponible
+✅ Job 5: Deploy to Staging (INFORMATIVO)
+   - Muestra configuración de deployment staging
+   - Indica imagen y environment preparados
+   - STATUS: SUCCESS ✅
 
-✅ Job 6: Deploy Production
-   - Se ejecuta independientemente
-   - Muestra información de producción
+✅ Job 6: Canary Deployment (INFORMATIVO)
+   - Documenta implementación Canary local disponible
+   - Referencias: docker-compose-canary.yml, scripts, monitoreo
+   - STATUS: SUCCESS ✅
+
+✅ Job 7: Deploy to Production (INFORMATIVO)
+   - Muestra pipeline completo ejecutado
+   - Indica deployment disponible localmente
+   - STATUS: SUCCESS ✅
+
+RESULTADO: 4/7 SUCCESS (Core requirement 100% cumplido)
 ```
 
 **2.3 Mostrar configuración en código:**
@@ -122,10 +135,12 @@ code .github/workflows/ci-cd.yml
 ```
 
 **Puntos clave del pipeline:**
-- Línea 48: Comando unificado `mvn clean verify jacoco:report`
-- Línea 86: `continue-on-error: true` en code-quality
-- Línea 130: `continue-on-error: true` en docker-build
-- Línea 225: Job canary-deploy independiente
+- Línea ~48: Comando unificado `mvn clean verify jacoco:report`
+- Línea ~86: `continue-on-error: true` en code-quality (opcional)
+- Línea ~130: `continue-on-error: true` en docker-build (opcional)
+- Línea ~197: deploy-staging (modo información)
+- Línea ~228: canary-deploy (modo información, implementación local)
+- Línea ~268: deploy-production (modo información)
 
 **2.4 Mostrar configuración de thresholds en pom.xml:**
 ```powershell
@@ -386,23 +401,52 @@ El comando `verify` incluye `jacoco:check`. Si cobertura < threshold:
 
 ### P3: ¿Por qué algunos jobs del pipeline fallan?
 
-**R:** Hay 3 tipos de jobs:
+**R:** Hay 3 tipos de jobs en el pipeline:
 
-**✅ CORE (siempre pasan):**
-- Build and Test: Funcional (199 tests, 94% coverage)
+**✅ CORE/CRÍTICOS (deben pasar siempre):**
+- `build-and-test`: Tests + Coverage validation
+  - 199 tests ejecutados ✅
+  - 94% LINE coverage validado ✅
+  - Genera artifacts (test-results, coverage-report) ✅
+  - **Si falla → Pipeline se detiene**
 
-**⚠️ OPCIONALES (pueden fallar, no bloquean):**
-- Code Quality: SonarCloud requiere configuración adicional (`continue-on-error: true`)
-- Docker Build: Requiere Docker Hub secrets (`continue-on-error: true`)
+**⚠️ OPCIONALES (pueden fallar sin bloquear):**
+- `code-quality`: SonarCloud analysis
+  - Requiere: SONAR_TOKEN en GitHub Secrets
+  - `continue-on-error: true` → No bloquea pipeline
+  - Implementación lista, requiere configuración externa
+  
+- `docker-build`: Build y push imagen Docker
+  - Requiere: DOCKER_USERNAME, DOCKER_PASSWORD en GitHub Secrets
+  - `continue-on-error: true` → No bloquea pipeline
+  - Implementación lista, requiere credenciales Docker Hub
+  
+- `security-scan`: Trivy vulnerability scan
+  - Depende de: docker-build (necesita imagen)
+  - `continue-on-error: true` → No bloquea pipeline
+  - Funciona si imagen Docker está disponible
 
-**✅ DEMOSTRACIÓN (siempre pasan):**
-- Deploy Staging: Muestra info de staging
-- Canary Deploy: Muestra implementación local
-- Deploy Production: Muestra info de producción
+**✅ INFORMATIVOS (siempre pasan, modo demo):**
+- `deploy-staging`: Muestra configuración staging preparada
+- `canary-deploy`: Documenta implementación Canary local disponible
+- `deploy-production`: Muestra deployment completo disponible
 
-**Razón:** Los requirements del curso son:
-1. ✅ Tests + Coverage → CUMPLIDO (funciona)
-2. ✅ Pipeline CI/CD → CUMPLIDO (configurado)
+**Estado Actual (Commit de95f66):**
+```
+✅ 1/1 Core jobs SUCCESS (100% requirements cumplidos)
+⚠️ 0/3 Optional jobs (requieren configuración externa)
+✅ 3/3 Demo jobs SUCCESS (muestran implementación)
+
+Resultado: 4/7 jobs SUCCESS → Core requirement CUMPLIDO
+```
+
+**¿Por qué es aceptable?**
+Los requisitos del curso son:
+1. ✅ **Tests + Coverage ≥ 80%** → CUMPLIDO (94% LINE)
+2. ✅ **Pipeline CI/CD funcional** → CUMPLIDO (valida automáticamente)
+3. ✅ **Canary Deployment** → CUMPLIDO (implementado localmente)
+
+Los jobs opcionales (SonarCloud, Docker Hub) requieren infraestructura externa que está fuera del scope académico.
 3. ✅ Canary Deployment → CUMPLIDO (funciona localmente)
 
 No se requiere infraestructura real en la nube.

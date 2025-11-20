@@ -65,15 +65,15 @@ mvn clean test jacoco:report
 - ✅ Métricas por clase, método y línea
 - ✅ Generación automática en cada build
 
-### 1.4 Plan de Testing Detallado
+### 1.4 Estrategia de Testing Implementada
 
-Documento completo: **[PLAN_TESTS_COBERTURA_85.md](PLAN_TESTS_COBERTURA_85.md)**
+**Enfoque:** Testing por capas siguiendo arquitectura hexagonal
 
-**Contenido:**
-- 106 casos de prueba especificados en 4 fases
-- Estrategia de testing por capas (Domain, Application, Infrastructure)
-- Tests para Value Objects, DTOs, Use Cases, Controllers, Adapters
-- Configuración de JaCoCo con umbrales mínimos
+**Contenido implementado:**
+- ✅ 199 casos de prueba completos (unitarios + integración)
+- ✅ Estrategia de testing por capas (Domain, Application, Infrastructure)
+- ✅ Tests para Value Objects, DTOs, Use Cases, Controllers, Adapters
+- ✅ Configuración de JaCoCo con umbrales mínimos (85% LINE, 81% BRANCH)
 
 ### 1.5 Evidencias
 
@@ -617,11 +617,12 @@ http://localhost:3000/dashboards
 - Guía paso a paso
 - Troubleshooting
 - Métricas y alertas
+- Diagramas ASCII de arquitectura
 
-**Documentos adicionales:**
-- [DEPLOYMENT_CHECKLIST.md](deployment/canary/DEPLOYMENT_CHECKLIST.md) - Checklist de 4 fases
-- [IMPLEMENTATION_SUMMARY.md](deployment/canary/IMPLEMENTATION_SUMMARY.md) - Resumen técnico
-- [VISUAL_DIAGRAMS.md](deployment/canary/VISUAL_DIAGRAMS.md) - Diagramas ASCII
+**Documentación consolidada en README principal:**
+- ✅ Checklist de despliegue en 4 fases
+- ✅ Resumen técnico de implementación
+- ✅ Diagramas visuales de arquitectura
 
 ---
 
@@ -854,17 +855,16 @@ Docker Containers:
 
 ```
 SERVICIUDAD-CALI/
-├── ENTREGA_FINAL.md                      # ⭐ Este documento
+├── ENTREGA_FINAL.md                      # ⭐ Este documento (Informe de entrega)
 ├── README.md                              # Guía de usuario
 ├── INFORME.md                             # Justificación técnica
-├── PLAN_TESTS_COBERTURA_85.md            # Plan de testing
 │
 ├── .github/workflows/
-│   └── ci-cd.yml                         # ⭐ Pipeline con Canary job
+│   └── ci-cd.yml                         # ⭐ Pipeline CI/CD completo
 │
 ├── deployment/canary/
-│   ├── README.md                         # ⭐ Guía Canary Deployment
-│   ├── docker-compose-canary.yml         # ⭐ Orquestación
+│   ├── README.md                         # ⭐ Guía Canary Deployment (consolidada)
+│   ├── docker-compose-canary.yml         # ⭐ Orquestación de contenedores
 │   ├── deploy-canary.ps1                 # ⭐ Script de despliegue
 │   ├── rollback-canary.ps1               # ⭐ Script de rollback
 │   ├── nginx/nginx.conf                  # ⭐ Load balancer 90/10

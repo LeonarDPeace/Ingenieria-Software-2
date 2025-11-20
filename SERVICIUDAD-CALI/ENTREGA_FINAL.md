@@ -238,15 +238,18 @@ jobs:
 
 ### 2.5 Evidencias
 
-**Logs del pipeline (Commit 4a22330):**
+**Logs del pipeline (Commit 78ac854):**
 ```
 ✅ build-and-test: SUCCESS
    - Tests: 199 passed, 0 failed
    - Coverage: 94% LINE, 81% BRANCH (> 85% LINE threshold)
+   - Artefactos: test-results, coverage-report
    
-⚠️ code-quality: FAILURE (no bloquea pipeline)
-   - SonarCloud analysis (configurado como opcional)
-   - continue-on-error: true
+✅ code-quality: SUCCESS 🎉 (SonarCloud integrado)
+   - Análisis de calidad de código completado
+   - Quality Gate: PASSED
+   - SonarCloud dashboard disponible
+   - Métricas: Code Smells, Bugs, Vulnerabilities, Technical Debt
    
 ⚠️ docker-build: FAILURE (no bloquea pipeline)
    - Requiere configuración de Docker Hub secrets
@@ -277,8 +280,10 @@ jobs:
 - **Core Jobs (CRÍTICOS):** ✅ 100% (1/1 passing)
   - build-and-test: Tests + Coverage validation
   
-- **Optional Jobs (NO BLOQUEAN):** ⚠️ 0/3 (requieren configuración externa)
-  - code-quality: SonarCloud (requiere token)
+- **Quality Jobs (FUNCIONALES):** ✅ 100% (1/1 passing)
+  - code-quality: SonarCloud analysis ✅ **FUNCIONANDO**
+  
+- **Optional Jobs (NO BLOQUEAN):** ⚠️ 0/2 (requieren configuración externa)
   - docker-build: Docker Hub (requiere credenciales)
   - security-scan: Trivy (requiere imagen Docker)
   
@@ -287,7 +292,10 @@ jobs:
   - canary-deploy: Muestra implementación local
   - deploy-production: Muestra deployment disponible
 
-**Resultado:** ✅ **PIPELINE FUNCIONAL** - Core requirements validados automáticamente
+**Resultado:** ✅ **PIPELINE PROFESIONAL** - 5/7 jobs SUCCESS (71% success rate)
+
+**SonarCloud Dashboard:**
+https://sonarcloud.io/project/overview?id=LeonarDPeace_Ingenieria-Software-2
 
 ---
 
@@ -624,26 +632,38 @@ http://localhost:3000/dashboards
 **Estado:** ✅ **CUMPLIDO**
 
 ```
-Pipeline execution (Commit 4a22330):
+Pipeline execution (Commit 78ac854):
 ✅ build-and-test: SUCCESS
    └─ Coverage: 94% LINE, 81% BRANCH (> 85% LINE required) ✅
    └─ Tests: 199/199 passing ✅
+   └─ Artefactos generados: coverage-report, test-results ✅
    
-⚠️ code-quality: FAILURE (opcional - no bloquea)
+✅ code-quality: SUCCESS 🎉
+   └─ SonarCloud analysis completado ✅
+   └─ Quality Gate: PASSED ✅
+   
 ⚠️ docker-build: FAILURE (opcional - no bloquea)
 ⚠️ security-scan: FAILURE (opcional - no bloquea)
 
 ✅ deploy-staging: SUCCESS (modo información)
 ✅ canary-deploy: SUCCESS (modo información)
 ✅ deploy-production: SUCCESS (modo información)
+
+RESULTADO: 5/7 jobs SUCCESS (71% success rate)
 ```
 
 **Validación:**
 - ✅ Tests ejecutados automáticamente: 199/199 passing
 - ✅ Cobertura validada automáticamente: 94% LINE > 85% threshold
+- ✅ Code Quality análisis: SonarCloud integrado y funcionando
 - ✅ Pipeline ejecuta en cada push a main
 - ✅ Jobs opcionales no bloquean (continue-on-error: true)
 - ✅ Jobs informativos muestran implementación disponible
+
+**Métricas de Calidad (SonarCloud):**
+- Disponibles en: https://sonarcloud.io/project/overview?id=LeonarDPeace_Ingenieria-Software-2
+- Análisis automático en cada commit
+- Quality Gate configurado
 
 ### ✅ Criterio 2: Flujo completo demostrado
 
@@ -689,8 +709,11 @@ Pipeline execution (Commit 4a22330):
 
 **Resultado:** Pipeline completo de 7 jobs ejecuta correctamente:
 - ✅ 1 job crítico (tests + coverage) pasa siempre
-- ⚠️ 3 jobs opcionales (pueden fallar sin bloquear)
+- ✅ 1 job quality (SonarCloud) funcionando 🎉
+- ⚠️ 2 jobs opcionales (pueden fallar sin bloquear)
 - ✅ 3 jobs informativos (muestran implementación disponible)
+
+**Estado Final: 5/7 jobs SUCCESS (71% success rate)**
 
 ### ✅ Criterio 3: Despliegue Canary vía Docker
 
@@ -754,10 +777,10 @@ Docker Containers:
 | Requisito | Estado | Evidencia |
 |-----------|--------|-----------|
 | **1. Cobertura ≥ 80%** | ✅ **94% LINE** | `target/site/jacoco/index.html` |
-| **2. Pipeline CI/CD** | ✅ **Completo** | 7 jobs, core funcional, opcional informativo |
+| **2. Pipeline CI/CD** | ✅ **Completo** | 7 jobs, 5/7 SUCCESS (71%), SonarCloud ✅ |
 | **3. Canary Deploy** | ✅ **Completo** | `deployment/canary/` (local completo) |
-| **Criterio 1: Pipeline + Coverage** | ✅ **Cumplido** | Tests 94% ✅, Pipeline ejecuta ✅ |
-| **Criterio 2: Flujo completo** | ✅ **Cumplido** | Build→Test→Coverage→Deploy Info ✅ |
+| **Criterio 1: Pipeline + Coverage** | ✅ **Cumplido** | Tests 94% ✅, Pipeline 5/7 ✅ |
+| **Criterio 2: Flujo completo** | ✅ **Cumplido** | Build→Test→Quality→Coverage ✅ |
 | **Criterio 3: Docker Canary** | ✅ **Cumplido** | 7 contenedores funcionando localmente |
 | **Criterio 4: Promoción/Rollback** | ✅ **Cumplido** | Scripts + jobs en pipeline |
 
@@ -766,10 +789,12 @@ Docker Containers:
 ```
 ✅ Cobertura de código:     94% LINE / 81% BRANCH (> 85% LINE)
 ✅ Tests passing:            199/199 (100%)
-✅ Pipeline jobs:            7/7 ejecutando (1 crítico, 3 opcionales, 3 info)
+✅ Pipeline jobs:            7/7 configurados, 5/7 SUCCESS (71%)
    ├─ Core (crítico):       1/1 SUCCESS (build-and-test)
-   ├─ Optional:             0/3 (requieren config externa)
+   ├─ Quality:              1/1 SUCCESS (SonarCloud) 🎉
+   ├─ Optional:             0/2 (requieren Docker Hub config)
    └─ Demo (informativos):  3/3 SUCCESS (staging, canary, production)
+✅ Code Quality:             SonarCloud integrado y funcionando
 ✅ Canary containers:        2 versiones + 5 servicios (funcional local)
 ✅ Traffic split:            90% stable / 10% canary
 ✅ Rollback time:            < 30 segundos
@@ -785,9 +810,13 @@ Docker Containers:
   - Pipeline FALLA si cobertura < 85% LINE
   - Genera artefactos: test-results, coverage-report
 
-- ⚠️ **Code Quality (OPTIONAL)**: Configurado pero requiere SonarCloud token
-  - No bloquea pipeline (continue-on-error: true)
-  - Implementación lista, requiere configuración externa
+- ✅ **Code Quality (QUALITY)**: SonarCloud integrado y funcionando 🎉
+  - Análisis automático de calidad de código
+  - Quality Gate: PASSED
+  - Métricas disponibles: Code Smells, Bugs, Security Hotspots
+  - Dashboard: https://sonarcloud.io/project/overview?id=LeonarDPeace_Ingenieria-Software-2
+  - Technical Debt calculado automáticamente
+  - `continue-on-error: true` (no bloquea si falla)
 
 - ⚠️ **Docker Build (OPTIONAL)**: Requiere Docker Hub credentials
   - No bloquea pipeline (continue-on-error: true)  
@@ -877,14 +906,27 @@ start target/site/jacoco/index.html
 # Ir a GitHub Actions
 https://github.com/LeonarDPeace/Ingenieria-Software-2/actions
 
-# Mostrar último pipeline run:
+# Mostrar último pipeline run (Commit 78ac854):
 - ✅ Build and Test (con check de cobertura)
-- ✅ Code Quality
-- ✅ Docker Build
-- ✅ Security Scan
+- ✅ Code Quality (SonarCloud analysis) 🎉 NUEVO!
+- ⚠️ Docker Build (opcional, requiere secrets)
+- ⚠️ Security Scan (opcional, requiere Docker)
 - ✅ Deploy Staging
 - ✅ Canary Deploy (nuevo job)
 - ✅ Deploy Production
+
+RESULTADO: 5/7 jobs SUCCESS (71% success rate)
+
+# Mostrar SonarCloud Dashboard
+https://sonarcloud.io/project/overview?id=LeonarDPeace_Ingenieria-Software-2
+
+Métricas disponibles:
+- Quality Gate: PASSED ✅
+- Code Smells detectados
+- Bugs encontrados
+- Security Hotspots
+- Technical Debt
+- Coverage (94% LINE)
 ```
 
 **3. Despliegue Canary (7 min)**
@@ -938,9 +980,18 @@ A: `.github/workflows/ci-cd.yml` línea 228: `canary-deploy` job
 
 El proyecto **ServiCiudad Cali** cumple **AL 100%** con todos los requisitos del entregable final:
 
-1. ✅ **Cobertura 87%** (> 80% requerido) con suite de 199 tests
-2. ✅ **Pipeline CI/CD completo** con 8 jobs y validación automática de cobertura
+1. ✅ **Cobertura 94% LINE** (> 85% requerido) con suite de 199 tests
+2. ✅ **Pipeline CI/CD completo** con 7 jobs configurados, 5/7 ejecutando exitosamente (71%)
+   - ✅ Build and Test funcionando
+   - ✅ SonarCloud integrado y funcionando 🎉
+   - ✅ Jobs informativos completados
 3. ✅ **Despliegue Canary funcional** con Docker, split traffic 90/10, monitoreo y rollback
+
+**Mejoras destacadas:**
+- 🎉 **SonarCloud integrado**: Análisis automático de calidad de código
+- ✅ **Quality Gate**: Validación automática en cada commit
+- ✅ **71% success rate**: 5 de 7 jobs pasando exitosamente
+- ✅ **Métricas profesionales**: Code Smells, Bugs, Security Hotspots, Technical Debt
 
 **Estado del proyecto:** ✅ **LISTO PARA SUSTENTACIÓN**
 

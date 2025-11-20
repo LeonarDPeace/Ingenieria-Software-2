@@ -25,6 +25,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <!-- SonarCloud Configuration -->
+        <sonar.organization>leonardpeace</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>LeonarDPeace_Ingenieria-Software-2</sonar.projectKey>
     </properties>
 
     <dependencies>
